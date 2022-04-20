@@ -46,6 +46,4 @@ Implement WP admin UI for plugin dependencies
 Plugin Dependencies Tab
 [PR #1724](https://github.com/WordPress/wordpress-develop/pull/1724)
 
-Currently the PRs have been closed.
-
-A feature plugin for PR #1724 is at https://github.com/afragen/plugin-dependencies-tab
+Currently the above PRs have been closed.
