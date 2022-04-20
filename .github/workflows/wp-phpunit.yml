@@ -6,10 +6,12 @@ name: WordPress Tests
 on:
   push:
     branches:
-      - master
+      - trunk
+      - develop
   pull_request:
     branches:
-      - master
+      - trunk
+      - develop
 
 jobs:
   run:

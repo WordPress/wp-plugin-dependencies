@@ -18,7 +18,7 @@ jobs:
         run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
 
       - name: Build project
-        run: git archive -o /tmp/plugin-dependencies-tab-${{ steps.tag.outputs.tag }}.zip --prefix=plugin-dependencies-tab/ ${{ steps.tag.outputs.tag }}
+        run: git archive -o /tmp/wp-plugin-dependencies-${{ steps.tag.outputs.tag }}.zip --prefix=wp-plugin-dependencies/ ${{ steps.tag.outputs.tag }}
 
       - name: Create Release
         id: create_release
@@ -37,6 +37,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /tmp/plugin-dependencies-tab-${{ steps.tag.outputs.tag }}.zip
-          asset_name: plugin-dependencies-tab-${{ steps.tag.outputs.tag }}.zip
+          asset_path: /tmp/wp-plugin-dependencies-${{ steps.tag.outputs.tag }}.zip
+          asset_name: wp-plugin-dependencies-${{ steps.tag.outputs.tag }}.zip
           asset_content_type: application/zip
