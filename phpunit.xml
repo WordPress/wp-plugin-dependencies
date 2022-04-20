@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<phpunit
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	>
+	<testsuites>
+		<testsuite name="plugin-dependencies-tab">
+			<directory suffix=".php">./tests/</directory>
+			<exclude>./tests/test-sample.php</exclude>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./wp-admin</directory>
+		</whitelist>
+	</filter>
+</phpunit>

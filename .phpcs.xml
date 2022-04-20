@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="WP Core">
+    <description>Keep long array syntax.</description>
+
+    <!-- Include main ruleset.xml -->
+    <rule ref="/Users/afragen/code-standards/ruleset.xml"/>
+
+    <rule ref="Generic.Arrays.DisallowShortArraySyntax" />
+    <!-- Use only long arrays -->
+    <rule ref="Generic.Arrays">
+        <exclude name="Generic.Arrays.DisallowLongArraySyntax.Found" />
+    </rule>
+</ruleset>
