@@ -12,7 +12,7 @@
  * Plugin Name: WP Plugin Dependencies
  * Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
- * Author: Andy Fragen
+ * Author: Andy Fragen, Colin Stewart
  * Version: 0.12.9
  * License: MIT
  * Network: true
