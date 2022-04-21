@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 0.12.9 / 2022-04-19
 * add plugin cards for slugs with no API data
 * hide action links and bottom of card in plugin cards for slugs with no API data
 

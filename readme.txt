@@ -1,9 +1,8 @@
 # Plugin Dependencies
 
-Plugin Name: Plugin Dependencies
+Contributors: afragen, costdev
 Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
 Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
-Contributors: afragen, costdev
 License: MIT
 Network: true
 Requires at least: 5.2
@@ -33,3 +32,23 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 0.12.9 / 2022-04-19
+* add plugin cards for slugs with no API data
+* hide action links and bottom of card in plugin cards for slugs with no API data
+
+#### 0.12.3
+*rename and reschuffle some functions
+
+#### 0.12.2 / 2022-04-06
+* harden a bit
+* clean up some testing stuff
+* `plugin_install_description` filter committed to core
+
+#### 0.12.0 / 2022-04-03
+* readme.txt
+* fix PHP error if no plugins with `Requires Plugins` header found
+* only show single, relevant admin notice
+
+#### 0.11.6.4
+* plugin to date with new changelog

@@ -1,14 +1,12 @@
-# WordPress Feature Project: WP Plugin Dependencies
+# WordPress Feature Project: Plugin Dependencies
 
- * Plugin Name: Plugin Dependencies
- * Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
- * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
- * Contributors: afragen, costdev
- * License: MIT
- * Network: true
- * Requires at least: 5.2
- * Requires PHP: 5.6
- * Stable tag: trunk
+* Contributors: afragen, costdev
+* Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
+* License: MIT
+* Network: true
+* Requires at least: 5.2
+* Requires PHP: 5.6
+* Stable tag: trunk
 
 ## Descripton
 
