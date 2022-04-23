@@ -33,8 +33,8 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 
 ## Changelog
 
-#### 1.0.0 / 2022-04-23
-* initial release
+#### 0.13.0 / 2022-04-23
+* prep for initial release
 
 #### 0.12.9 / 2022-04-19
 * add plugin cards for slugs with no API data

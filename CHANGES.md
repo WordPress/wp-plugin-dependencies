@@ -1,7 +1,7 @@
 [unreleased]
 
-#### 1.0.0 / 2022-04-23
-* initial release
+#### 0.13.0 / 2022-04-23
+* prep for initial release
 
 #### 0.12.9 / 2022-04-19
 * add plugin cards for slugs with no API data
