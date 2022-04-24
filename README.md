@@ -8,7 +8,7 @@
 * Requires PHP: 5.6
 * Stable tag: trunk
 
-## Descripton
+## Description
 
 Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin install page. If a requiring plugin does not have all it's dependencies installed and active, it will not activate.
 
