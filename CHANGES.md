@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 0.13.1 / 2022-04-25
+* fix `parse_headers()`
+
 #### 0.13.0 / 2022-04-23
 * prep for initial release
 
