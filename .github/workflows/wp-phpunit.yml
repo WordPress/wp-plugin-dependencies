@@ -24,10 +24,10 @@ jobs:
         phpunit-versions: ['9.5.20']
         include:
           - php-versions: '5.6'
-            phpunit-versions: '7.5.20'
+            phpunit-versions: '5.7.27'
             operating-system: ubuntu-18.04
           - php-versions: '7.0'
-            phpunit-versions: '7.5.20'
+            phpunit-versions: '5.7.27'
             operating-system: ubuntu-18.04
           - php-versions: '7.1'
             phpunit-versions: '7.5.20'
