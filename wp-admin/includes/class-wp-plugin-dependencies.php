@@ -205,14 +205,10 @@ class WP_Plugin_Dependencies {
 
 		$this->plugin_data = (array) get_site_transient( 'wp_plugin_dependencies_plugin_data' );
 		foreach ( $this->slugs as $slug ) {
-			// Set timeout for individual data, remove from $this->plugin_data if timeout expired.
-			$data_timeout = get_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}" );
-			if ( ! $data_timeout || time() > $data_timeout[ $slug ] ) {
+			// Set transient for individual data, remove from $this->plugin_data if transient expired.
+			if ( ! get_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}" ) ) {
 				unset( $this->plugin_data[ $slug ] );
-			}
-			if ( ! $data_timeout ) {
-				$data_timeout[ $slug ] = strtotime( '+12 hours' );
-				set_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}", $data_timeout, DAY_IN_SECONDS );
+				set_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}", true, 12 * HOUR_IN_SECONDS );
 			}
 
 			// Don't hit plugins API if data exists.
