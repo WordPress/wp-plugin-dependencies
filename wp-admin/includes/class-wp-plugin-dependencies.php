@@ -197,13 +197,24 @@ class WP_Plugin_Dependencies {
 	 */
 	public function get_dot_org_data() {
 		global $pagenow;
+
 		$pages = array( 'plugin-install.php', 'plugins.php' );
 		if ( ! in_array( $pagenow, $pages, true ) ) {
 			return;
 		}
 
 		$this->plugin_data = (array) get_site_transient( 'wp_plugin_dependencies_plugin_data' );
-		foreach ( $this->slugs as $key => $slug ) {
+		foreach ( $this->slugs as $slug ) {
+			// Set timeout for individual data, remove from $this->plugin_data if timeout expired.
+			$data_timeout = get_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}" );
+			if ( ! $data_timeout || time() > $data_timeout[ $slug ] ) {
+				unset( $this->plugin_data[ $slug ] );
+			}
+			if ( ! $data_timeout ) {
+				$data_timeout[ $slug ] = strtotime( '+12 hours' );
+				set_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}", $data_timeout, DAY_IN_SECONDS );
+			}
+
 			// Don't hit plugins API if data exists.
 			if ( array_key_exists( $slug, (array) $this->plugin_data ) ) {
 				continue;
@@ -228,10 +239,6 @@ class WP_Plugin_Dependencies {
 			}
 
 			$this->plugin_data[ $response->slug ] = (array) $response;
-
-			if ( ! in_array( $slug, $this->slugs, true ) ) {
-				unset( $this->plugin_data[ $key ] );
-			}
 		}
 
 		// Remove from $this->plugin_data if slug no longer a dependency.
@@ -243,7 +250,7 @@ class WP_Plugin_Dependencies {
 		}
 
 		ksort( $this->plugin_data );
-		set_site_transient( 'wp_plugin_dependencies_plugin_data', $this->plugin_data, 12 * HOUR_IN_SECONDS );
+		set_site_transient( 'wp_plugin_dependencies_plugin_data', $this->plugin_data, 0 );
 	}
 
 	/**
