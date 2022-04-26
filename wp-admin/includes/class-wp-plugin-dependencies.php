@@ -96,20 +96,20 @@ class WP_Plugin_Dependencies {
 	 */
 	public function parse_headers() {
 		$this->get_plugins();
-		$required_headers = array();
+		$all_requires_headers = array();
 		foreach ( array_keys( $this->plugins ) as $plugin ) {
-			$plugin_required_headers = array();
-			$requires_plugins        = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
+			$temp_requires    = array();
+			$requires_plugins = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
 			if ( ! empty( $requires_plugins['RequiresPlugins'] ) ) {
-				$required_headers[ $plugin ]        = $requires_plugins;
-				$plugin_required_headers[ $plugin ] = $requires_plugins;
-				$sanitized_requires_slugs           = implode( ',', $this->sanitize_required_headers( $plugin_required_headers ) );
+				$all_requires_headers[ $plugin ] = $requires_plugins;
+				$temp_requires[ $plugin ]        = $requires_plugins;
+				$sanitized_requires_slugs        = implode( ',', $this->sanitize_required_headers( $temp_requires ) );
 
 				$this->requires_plugins[ $plugin ]['RequiresPlugins'] = $sanitized_requires_slugs;
 			}
 		}
 
-		return $required_headers;
+		return $all_requires_headers;
 	}
 
 	/**
