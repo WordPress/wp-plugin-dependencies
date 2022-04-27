@@ -33,6 +33,9 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 
 ## Changelog
 
+#### 0.14.0
+* updated required plugin data expiration
+
 #### 0.13.1 / 2022-04-25
 * fix `parse_headers()`
 

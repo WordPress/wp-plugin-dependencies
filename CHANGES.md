@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 0.14.0
 * updated required plugin data expiration
 
 #### 0.13.1 / 2022-04-25
