@@ -96,20 +96,20 @@ class WP_Plugin_Dependencies {
 	 */
 	public function parse_headers() {
 		$this->get_plugins();
-		$required_headers = array();
+		$all_requires_headers = array();
 		foreach ( array_keys( $this->plugins ) as $plugin ) {
-			$plugin_required_headers = array();
-			$requires_plugins        = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
+			$temp_requires    = array();
+			$requires_plugins = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
 			if ( ! empty( $requires_plugins['RequiresPlugins'] ) ) {
-				$required_headers[ $plugin ]        = $requires_plugins;
-				$plugin_required_headers[ $plugin ] = $requires_plugins;
-				$sanitized_requires_slugs           = implode( ',', $this->sanitize_required_headers( $plugin_required_headers ) );
+				$all_requires_headers[ $plugin ] = $requires_plugins;
+				$temp_requires[ $plugin ]        = $requires_plugins;
+				$sanitized_requires_slugs        = implode( ',', $this->sanitize_required_headers( $temp_requires ) );
 
 				$this->requires_plugins[ $plugin ]['RequiresPlugins'] = $sanitized_requires_slugs;
 			}
 		}
 
-		return $required_headers;
+		return $all_requires_headers;
 	}
 
 	/**
@@ -197,13 +197,20 @@ class WP_Plugin_Dependencies {
 	 */
 	public function get_dot_org_data() {
 		global $pagenow;
+
 		$pages = array( 'plugin-install.php', 'plugins.php' );
 		if ( ! in_array( $pagenow, $pages, true ) ) {
 			return;
 		}
 
 		$this->plugin_data = (array) get_site_transient( 'wp_plugin_dependencies_plugin_data' );
-		foreach ( $this->slugs as $key => $slug ) {
+		foreach ( $this->slugs as $slug ) {
+			// Set transient for individual data, remove from $this->plugin_data if transient expired.
+			if ( ! get_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}" ) ) {
+				unset( $this->plugin_data[ $slug ] );
+				set_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}", true, 12 * HOUR_IN_SECONDS );
+			}
+
 			// Don't hit plugins API if data exists.
 			if ( array_key_exists( $slug, (array) $this->plugin_data ) ) {
 				continue;
@@ -228,10 +235,6 @@ class WP_Plugin_Dependencies {
 			}
 
 			$this->plugin_data[ $response->slug ] = (array) $response;
-
-			if ( ! in_array( $slug, $this->slugs, true ) ) {
-				unset( $this->plugin_data[ $key ] );
-			}
 		}
 
 		// Remove from $this->plugin_data if slug no longer a dependency.
@@ -243,7 +246,7 @@ class WP_Plugin_Dependencies {
 		}
 
 		ksort( $this->plugin_data );
-		set_site_transient( 'wp_plugin_dependencies_plugin_data', $this->plugin_data, 12 * HOUR_IN_SECONDS );
+		set_site_transient( 'wp_plugin_dependencies_plugin_data', $this->plugin_data, 0 );
 	}
 
 	/**
