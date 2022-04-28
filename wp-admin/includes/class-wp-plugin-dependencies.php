@@ -23,6 +23,13 @@ class WP_Plugin_Dependencies {
 	protected $plugins;
 
 	/**
+	 * Holds theme data.
+	 *
+	 * @var array
+	 */
+	protected $themes;
+
+	/**
 	 * Holds an array of sanitized plugin dependency slugs.
 	 *
 	 * @var array
@@ -89,23 +96,61 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
+	 * Get listing of themes and store name.
+	 *
+	 * @return array
+	 */
+	public function get_themes() {
+		if ( ! function_exists( 'wp_get_themes' ) ) {
+			require_once ABSPATH . '/includes/theme.php';
+		}
+		foreach ( array_keys( wp_get_themes() ) as $theme ) {
+			$theme_obj                      = wp_get_theme( $theme );
+			$this->themes[ $theme ]['Name'] = $theme_obj->get( 'Name' );
+		}
+
+		return $this->themes;
+	}
+
+	/**
 	 * Parse 'Requires Plugins' header.
 	 * Store result with dependent plugin.
+	 *
+	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
 	 *
 	 * @return \stdClass
 	 */
 	public function parse_headers() {
+		global $wp_filesystem;
+
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
 		$this->get_plugins();
+		$this->get_themes();
 		$all_requires_headers = array();
 		foreach ( array_keys( $this->plugins ) as $plugin ) {
 			$temp_requires    = array();
-			$requires_plugins = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
+			$requires_plugins = get_file_data( $wp_filesystem->wp_plugins_dir() . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
 			if ( ! empty( $requires_plugins['RequiresPlugins'] ) ) {
 				$all_requires_headers[ $plugin ] = $requires_plugins;
 				$temp_requires[ $plugin ]        = $requires_plugins;
 				$sanitized_requires_slugs        = implode( ',', $this->sanitize_required_headers( $temp_requires ) );
 
 				$this->requires_plugins[ $plugin ]['RequiresPlugins'] = $sanitized_requires_slugs;
+			}
+		}
+		foreach ( array_keys( $this->themes ) as $theme ) {
+			$temp_requires    = array();
+			$requires_plugins = get_file_data( $wp_filesystem->wp_themes_dir() . '/' . $theme . '/style.css', array( 'RequiresPlugins' => 'Requires Plugins' ) );
+			if ( ! empty( $requires_plugins['RequiresPlugins'] ) ) {
+				$all_requires_headers[ $theme ] = $requires_plugins;
+				$temp_requires[ $theme ]        = $requires_plugins;
+				$sanitized_requires_slugs       = implode( ',', $this->sanitize_required_headers( $temp_requires ) );
+
+				$this->requires_plugins[ $theme ]['RequiresPlugins'] = $sanitized_requires_slugs;
 			}
 		}
 
@@ -131,9 +176,13 @@ class WP_Plugin_Dependencies {
 					$sanitized_slugs[] = $slug;
 				}
 			}
-			$sanitized_slugs                          = array_unique( $sanitized_slugs );
-			$this->plugins[ $key ]['RequiresPlugins'] = $sanitized_slugs;
-			$all_slugs                                = array_merge( $all_slugs, $sanitized_slugs );
+			$sanitized_slugs = array_unique( $sanitized_slugs );
+			if ( strpos( $key, '/' ) || strpos( $key, '.php' ) ) {
+				$this->plugins[ $key ]['RequiresPlugins'] = $sanitized_slugs;
+			} else {
+				$this->themes[ $key ]['RequiresPlugins'] = $sanitized_slugs;
+			}
+			$all_slugs = array_merge( $all_slugs, $sanitized_slugs );
 		}
 		$all_slugs = array_unique( $all_slugs );
 		sort( $all_slugs );
@@ -462,6 +511,13 @@ class WP_Plugin_Dependencies {
 				$plugin_data['slug'] = isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : $plugin_data['TextDomain'];
 				if ( in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
 					$sources[] = $plugin['Name'];
+				}
+			}
+		}
+		foreach ( $this->themes as $theme ) {
+			if ( ! empty( $theme['RequiresPlugins'] ) ) {
+				if ( in_array( $plugin_data['slug'], $theme['RequiresPlugins'], true ) ) {
+					$sources[] = $theme['Name'];
 				}
 			}
 		}
