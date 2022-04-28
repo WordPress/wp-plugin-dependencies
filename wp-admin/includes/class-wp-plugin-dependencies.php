@@ -92,14 +92,23 @@ class WP_Plugin_Dependencies {
 	 * Parse 'Requires Plugins' header.
 	 * Store result with dependent plugin.
 	 *
+	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
+	 *
 	 * @return \stdClass
 	 */
 	public function parse_headers() {
+		global $wp_filesystem;
+
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
 		$this->get_plugins();
 		$all_requires_headers = array();
 		foreach ( array_keys( $this->plugins ) as $plugin ) {
 			$temp_requires    = array();
-			$requires_plugins = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
+			$requires_plugins = get_file_data( $wp_filesystem->wp_plugins_dir() . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
 			if ( ! empty( $requires_plugins['RequiresPlugins'] ) ) {
 				$all_requires_headers[ $plugin ] = $requires_plugins;
 				$temp_requires[ $plugin ]        = $requires_plugins;
