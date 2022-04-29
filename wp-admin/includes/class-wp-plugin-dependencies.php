@@ -191,7 +191,7 @@ class WP_Plugin_Dependencies {
 				}
 			}
 			$sanitized_slugs = array_unique( $sanitized_slugs );
-			if ( str_contains( $key, '/' ) || str_contains( $key, '.php' ) ) {
+			if ( str_contains( $key, '.php' ) ) {
 				$this->plugins[ $key ]['RequiresPlugins'] = $sanitized_slugs;
 			} else {
 				$this->themes[ $key ]['RequiresPlugins'] = $sanitized_slugs;
@@ -363,7 +363,7 @@ class WP_Plugin_Dependencies {
 	 * @return string (content buffer)
 	 */
 	protected function append_theme_content( $theme ) {
-		$names = $this->get_requires_plugins_names( 'theme', $theme );
+		$names = $this->get_requires_plugins_names( $theme );
 
 		/**
 		 * Append Requires Plugins info.
@@ -451,7 +451,7 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		$names = $this->get_requires_plugins_names( 'theme', $theme_data );
+		$names = $this->get_requires_plugins_names( $theme_data );
 
 		if ( ! empty( $names ) ) {
 			print '<script>';
@@ -674,10 +674,9 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		if ( $this->is_plugin( $data ) ) {
+		if ( str_contains( $data, '.php' ) ) {
 			$requires = $this->plugins[ $data ]['RequiresPlugins'];
-		}
-		if ( 'theme' === $type ) {
+		} else {
 			$requires = $this->themes[ $data['slug'] ]['RequiresPlugins'];
 		}
 		foreach ( $requires as $require ) {
@@ -690,17 +689,6 @@ class WP_Plugin_Dependencies {
 		}
 
 		return $names;
-	}
-
-	/**
-	 * Is this a plugin filename?
-	 *
-	 * @param string $filename Filename.
-	 *
-	 * @return bool
-	 */
-	private function is_plugin( $filename ) {
-		return str_contains( $filename, '.php' );
 	}
 }
 
