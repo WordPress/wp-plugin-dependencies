@@ -313,8 +313,9 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
+		$sources = $this->get_dependency_sources( $plugin_data );
 		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_data ) ) . '");';
+		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
 		print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
 		print '</script>';
 	}
@@ -329,7 +330,6 @@ class WP_Plugin_Dependencies {
 	 */
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
 		$names = $this->get_requires_plugins_names( $plugin_file );
-
 		if ( ! empty( $names ) ) {
 			print '<script>';
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
