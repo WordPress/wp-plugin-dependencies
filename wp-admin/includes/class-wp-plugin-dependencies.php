@@ -544,7 +544,7 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		if ( $this->is_plugin( $data ) ) {
+		if ( str_contains( $data, '.php' ) ) {
 			$requires = $this->plugins[ $data ]['RequiresPlugins'];
 		}
 		foreach ( $requires as $require ) {
@@ -557,17 +557,6 @@ class WP_Plugin_Dependencies {
 		}
 
 		return $names;
-	}
-
-	/**
-	 * Is this a plugin filename?
-	 *
-	 * @param string $filename Filename.
-	 *
-	 * @return bool
-	 */
-	private function is_plugin( $filename ) {
-		return str_contains( $filename, '.php' );
 	}
 }
 
