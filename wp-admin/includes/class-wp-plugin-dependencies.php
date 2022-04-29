@@ -231,6 +231,8 @@ class WP_Plugin_Dependencies {
 		set_site_transient( 'wp_plugin_dependencies_deactivate_plugins', $deactivate_requires, 10 );
 	}
 
+	// TODO: Need to figure out what to do with themes having unmet dependencies.
+
 	/**
 	 * Modify plugins_api() response.
 	 *
