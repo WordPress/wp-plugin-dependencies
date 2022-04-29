@@ -365,17 +365,10 @@ class WP_Plugin_Dependencies {
 		ob_start();
 		?>
 			<p>
-				<strong>
-					<?php
-						printf(
-							/* translators: %s: opening/closing paragraph and italic tags */
-							esc_html__( 'Requires: %s' ),
-							esc_attr( $names )
-						);
-					?>
-				</strong>
+				<strong><?php esc_html_e( 'Requires:' ); ?></strong>
+				<?php echo( esc_html( $names ) ); ?>
 			</p>
-			<?php
+		<?php
 
 			return trim( ob_get_clean(), '1' );
 	}
