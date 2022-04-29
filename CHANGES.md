@@ -1,4 +1,5 @@
 [unreleased]
+* use transients to reset theme if dependencies for chosen theme aren't met
 
 #### 0.15.0 / 2022-04-28
 * refactor with `get_requires_plugins_names()`

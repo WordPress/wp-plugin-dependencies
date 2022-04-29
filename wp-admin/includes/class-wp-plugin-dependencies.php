@@ -112,6 +112,11 @@ class WP_Plugin_Dependencies {
 		if ( ! $wp_theme_directories ) {
 			register_theme_directory( $wp_filesystem->wp_themes_dir() );
 		}
+		$current_theme = get_site_transient( 'wp_current_theme' );
+		if ( wp_get_theme()->get_stylesheet() !== $current_theme ) {
+			set_site_transient( 'wp_previous_theme', $current_theme, 0 );
+		}
+		set_site_transient( 'wp_current_theme', wp_get_theme()->get_stylesheet(), 0 );
 
 		foreach ( array_keys( wp_get_themes() ) as $theme ) {
 			$theme_obj                      = wp_get_theme( $theme );
@@ -212,14 +217,28 @@ class WP_Plugin_Dependencies {
 	public function deactivate_unmet_dependencies() {
 		$dependencies        = $this->get_dependency_filepaths();
 		$deactivate_requires = array();
+		$current_theme       = get_site_transient( 'wp_current_theme' );
+		$previous_theme      = get_site_transient( 'wp_previous_theme' );
 
 		foreach ( array_keys( $this->requires_plugins ) as $requires ) {
-			if ( array_key_exists( $requires, $this->plugins ) ) {
-				$plugin_dependencies = $this->plugins[ $requires ]['RequiresPlugins'];
+			if ( array_key_exists( $requires, $this->plugins ) || array_key_exists( $requires, $this->themes ) ) {
+				if ( str_contains( $requires, '.php' ) ) {
+					$plugin_dependencies = $this->plugins[ $requires ]['RequiresPlugins'];
+				} else {
+					$plugin_dependencies = $this->themes[ $requires ]['RequiresPlugins'];
+				}
 				foreach ( $plugin_dependencies as $plugin_dependency ) {
-					if ( is_plugin_active( $requires ) ) {
-						if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
-							$deactivate_requires[] = $requires;
+					if ( str_contains( $requires, '.php' ) ) {
+						if ( is_plugin_active( $requires ) ) {
+							if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
+								$deactivate_requires[] = $requires;
+							}
+						}
+					} else {
+						if ( $requires === $current_theme ) {
+							if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
+								$deactivate_requires[] = $requires;
+							}
 						}
 					}
 				}
@@ -227,11 +246,15 @@ class WP_Plugin_Dependencies {
 		}
 
 		$deactivate_requires = array_unique( $deactivate_requires );
-		deactivate_plugins( $deactivate_requires );
+		foreach ( $deactivate_requires as $deactivate ) {
+			if ( str_contains( $deactivate, '.php' ) ) {
+				deactivate_plugins( $deactivate );
+			} else {
+				switch_theme( $previous_theme );
+			}
+		}
 		set_site_transient( 'wp_plugin_dependencies_deactivate_plugins', $deactivate_requires, 10 );
 	}
-
-	// TODO: Need to figure out what to do with themes having unmet dependencies.
 
 	/**
 	 * Modify plugins_api() response.
@@ -348,7 +371,6 @@ class WP_Plugin_Dependencies {
 			if ( ! isset( $theme['RequiresPlugins'] ) ) {
 				continue;
 			}
-
 			$prepared_themes[ $slug ]['description'] .= $this->append_theme_content( $theme );
 		}
 
@@ -365,9 +387,7 @@ class WP_Plugin_Dependencies {
 	protected function append_theme_content( $theme ) {
 		$names = $this->get_requires_plugins_names( $theme );
 
-		/**
-		 * Append Requires Plugins info.
-		 */
+		// Append Requires info.
 		ob_start();
 		?>
 			<p>
