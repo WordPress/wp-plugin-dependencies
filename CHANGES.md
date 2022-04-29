@@ -1,4 +1,5 @@
 [unreleased]
+* refactor with `get_requires_plugins_names()`
 
 #### 0.14.0
 * updated required plugin data expiration
