@@ -67,6 +67,10 @@ class WP_Plugin_Dependencies {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
+			if ( ! is_multisite() ) {
+				add_filter( 'wp_prepare_themes_for_js', array( $this, 'modify_theme_messaging' ) );
+			}
+
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
@@ -106,7 +110,13 @@ class WP_Plugin_Dependencies {
 		}
 		foreach ( array_keys( wp_get_themes() ) as $theme ) {
 			$theme_obj                      = wp_get_theme( $theme );
+			$this->themes[ $theme ]['slug'] = $theme;
 			$this->themes[ $theme ]['Name'] = $theme_obj->get( 'Name' );
+		}
+
+		if ( is_multisite() ) {
+			// TODO:
+			// add_action( "after_theme_row_{$theme}", [ $this, 'wp_theme_update_row' ], 10, 2 );
 		}
 
 		return $this->themes;
@@ -177,7 +187,7 @@ class WP_Plugin_Dependencies {
 				}
 			}
 			$sanitized_slugs = array_unique( $sanitized_slugs );
-			if ( strpos( $key, '/' ) || strpos( $key, '.php' ) ) {
+			if ( str_contains( $key, '/' ) || str_contains( $key, '.php' ) ) {
 				$this->plugins[ $key ]['RequiresPlugins'] = $sanitized_slugs;
 			} else {
 				$this->themes[ $key ]['RequiresPlugins'] = $sanitized_slugs;
@@ -247,7 +257,7 @@ class WP_Plugin_Dependencies {
 	public function get_dot_org_data() {
 		global $pagenow;
 
-		$pages = array( 'plugin-install.php', 'plugins.php' );
+		$pages = array( 'plugin-install.php', 'plugins.php', 'themes.php' );
 		if ( ! in_array( $pagenow, $pages, true ) ) {
 			return;
 		}
@@ -321,6 +331,56 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
+	 * Call theme messaging for single site installation.
+	 *
+	 * @param array $prepared_themes Array of prepared themes.
+	 *
+	 * @return mixed
+	 */
+	public function modify_theme_messaging( $prepared_themes ) {
+		foreach ( (array) $this->themes as $slug => $theme ) {
+			if ( ! isset( $theme['RequiresPlugins'] ) ) {
+				continue;
+			}
+
+			$prepared_themes[ $slug ]['description'] .= $this->append_theme_content( $theme );
+		}
+
+		return $prepared_themes;
+	}
+
+	/**
+	 * Create theme update messaging for single site installation.
+	 *
+	 * @param array $theme Theme data.
+	 *
+	 * @return string (content buffer)
+	 */
+	protected function append_theme_content( $theme ) {
+		$names = $this->get_requires_plugins_names( 'theme', $theme );
+
+		/**
+		 * Append Requires Plugins info.
+		 */
+		ob_start();
+		?>
+			<p>
+				<strong>
+					<?php
+						printf(
+							/* translators: %s: opening/closing paragraph and italic tags */
+							esc_html__( 'Requires: %s' ),
+							esc_attr( $names )
+						);
+					?>
+				</strong>
+			</p>
+			<?php
+
+			return trim( ob_get_clean(), '1' );
+	}
+
+	/**
 	 * Actually make modifications to plugin row of plugin dependencies.
 	 *
 	 * @param string $plugin_file Plugin file.
@@ -368,21 +428,9 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
-		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+		$names = $this->get_requires_plugins_names( 'plugin', $plugin_file );
 
-		// Exit if no plugin data found.
-		if ( empty( $this->plugin_data ) ) {
-			return;
-		}
-
-		$requires = $this->plugins[ $plugin_file ]['RequiresPlugins'];
-		foreach ( $requires as $require ) {
-			if ( isset( $this->plugin_data[ $require ] ) ) {
-				$names[] = $this->plugin_data[ $require ]['name'];
-			}
-		}
 		if ( ! empty( $names ) ) {
-			$names = implode( ', ', $names );
 			print '<script>';
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
 			print '</script>';
@@ -506,7 +554,7 @@ class WP_Plugin_Dependencies {
 	private function get_dependency_sources( $plugin_data ) {
 		$sources = array();
 		foreach ( $this->plugins as $plugin ) {
-			if ( ! empty( $plugin['RequiresPlugins'] ) ) {
+			if ( isset( $plugin_data['TextDomain'] ) && ! empty( $plugin['RequiresPlugins'] ) ) {
 				// Default TextDomain derived from plugin directory name, should be slug equivalent.
 				$plugin_data['slug'] = isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : $plugin_data['TextDomain'];
 				if ( in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
@@ -516,7 +564,7 @@ class WP_Plugin_Dependencies {
 		}
 		foreach ( $this->themes as $theme ) {
 			if ( ! empty( $theme['RequiresPlugins'] ) ) {
-				if ( in_array( $plugin_data['slug'], $theme['RequiresPlugins'], true ) ) {
+				if ( in_array( $plugin_data['slug'], $theme, true ) ) {
 					$sources[] = $theme['Name'];
 				}
 			}
@@ -586,6 +634,40 @@ class WP_Plugin_Dependencies {
 			$hide_selectors = implode( ', ', $hide_selectors );
 			printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
 		}
+	}
+
+	/**
+	 * Get names of required plugins.
+	 *
+	 * @param string $type plugin|theme.
+	 * @param array  $data Array of plugin or theme data.
+	 *
+	 * @return string
+	 */
+	private function get_requires_plugins_names( $type, $data ) {
+		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+
+		// Exit if no plugin data found.
+		if ( empty( $this->plugin_data ) ) {
+			return;
+		}
+
+		if ( 'plugin' === $type ) {
+			$requires = $this->plugins[ $data ]['RequiresPlugins'];
+		}
+		if ( 'theme' === $type ) {
+			$requires = $this->themes[ $data['slug'] ]['RequiresPlugins'];
+		}
+		foreach ( $requires as $require ) {
+			if ( isset( $this->plugin_data[ $require ] ) ) {
+				$names[] = $this->plugin_data[ $require ]['name'];
+			}
+		}
+		if ( ! empty( $names ) ) {
+			$names = implode( ', ', $names );
+		}
+
+		return $names;
 	}
 }
 
