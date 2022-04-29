@@ -328,21 +328,9 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
-		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+		$names = $this->get_requires_plugins_names( 'plugin', $plugin_file );
 
-		// Exit if no plugin data found.
-		if ( empty( $this->plugin_data ) ) {
-			return;
-		}
-
-		$requires = $this->plugins[ $plugin_file ]['RequiresPlugins'];
-		foreach ( $requires as $require ) {
-			if ( isset( $this->plugin_data[ $require ] ) ) {
-				$names[] = $this->plugin_data[ $require ]['name'];
-			}
-		}
 		if ( ! empty( $names ) ) {
-			$names = implode( ', ', $names );
 			print '<script>';
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
 			print '</script>';
@@ -539,6 +527,40 @@ class WP_Plugin_Dependencies {
 			$hide_selectors = implode( ', ', $hide_selectors );
 			printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
 		}
+	}
+
+	/**
+	 * Get names of required plugins.
+	 *
+	 * @param string $type plugin|theme.
+	 * @param array  $data Array of plugin or theme data.
+	 *
+	 * @return string
+	 */
+	private function get_requires_plugins_names( $type, $data ) {
+		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+
+		// Exit if no plugin data found.
+		if ( empty( $this->plugin_data ) ) {
+			return;
+		}
+
+		if ( 'plugin' === $type ) {
+			$requires = $this->plugins[ $data ]['RequiresPlugins'];
+		}
+		if ( 'theme' === $type ) {
+			$requires = $this->themes[ $data['slug'] ]['RequiresPlugins'];
+		}
+		foreach ( $requires as $require ) {
+			if ( isset( $this->plugin_data[ $require ] ) ) {
+				$names[] = $this->plugin_data[ $require ]['name'];
+			}
+		}
+		if ( ! empty( $names ) ) {
+			$names = implode( ', ', $names );
+		}
+
+		return $names;
 	}
 }
 
