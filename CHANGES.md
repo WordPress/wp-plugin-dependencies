@@ -1,5 +1,9 @@
 [unreleased]
 
+#### 0.15.0 / 2022-04-28
+* refactor with `get_requires_plugins_names()`
+* update admin notice for multisite
+
 #### 0.14.0
 * updated required plugin data expiration
 
