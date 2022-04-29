@@ -27,7 +27,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @var array
 	 */
-	protected $themes;
+	protected $themes = array();
 
 	/**
 	 * Holds an array of sanitized plugin dependency slugs.
@@ -105,18 +105,22 @@ class WP_Plugin_Dependencies {
 	 * @return array
 	 */
 	public function get_themes() {
+		global $wp_filesystem, $wp_theme_directories;
 		if ( ! function_exists( 'wp_get_themes' ) ) {
 			require_once ABSPATH . '/includes/theme.php';
 		}
+		if ( ! $wp_theme_directories ) {
+			register_theme_directory( $wp_filesystem->wp_themes_dir() );
+		}
+
 		foreach ( array_keys( wp_get_themes() ) as $theme ) {
 			$theme_obj                      = wp_get_theme( $theme );
 			$this->themes[ $theme ]['slug'] = $theme;
 			$this->themes[ $theme ]['Name'] = $theme_obj->get( 'Name' );
-		}
 
-		if ( is_multisite() ) {
-			// TODO:
-			// add_action( "after_theme_row_{$theme}", [ $this, 'wp_theme_update_row' ], 10, 2 );
+			if ( is_multisite() ) {
+				add_action( "after_theme_row_{$theme}", array( $this, 'modify_theme_row_elements_requires' ), 10, 2 );
+			}
 		}
 
 		return $this->themes;
@@ -370,7 +374,7 @@ class WP_Plugin_Dependencies {
 			</p>
 		<?php
 
-			return trim( ob_get_clean(), '1' );
+		return trim( ob_get_clean(), '1' );
 	}
 
 	/**
@@ -426,6 +430,30 @@ class WP_Plugin_Dependencies {
 		if ( ! empty( $names ) ) {
 			print '<script>';
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
+			print '</script>';
+		}
+	}
+
+	/**
+	 * Modify the plugin row elements.
+	 * Add `Requires: ...` information
+	 *
+	 * @param string $theme Theme slug.
+	 *
+	 * @return void
+	 */
+	public function modify_theme_row_elements_requires( $theme ) {
+		$theme_data = $this->themes[ $theme ];
+
+		if ( ! isset( $theme_data['RequiresPlugins'] ) ) {
+			return;
+		}
+
+		$names = $this->get_requires_plugins_names( 'theme', $theme_data );
+
+		if ( ! empty( $names ) ) {
+			print '<script>';
+			print 'jQuery("tr[data-slug=\'' . esc_attr( $theme ) . '\'] .theme-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
 			print '</script>';
 		}
 	}
