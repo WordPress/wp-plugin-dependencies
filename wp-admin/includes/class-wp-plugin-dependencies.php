@@ -412,8 +412,9 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
+		$sources = $this->get_dependency_sources( $plugin_data );
 		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_data ) ) . '");';
+		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
 		print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
 		print '</script>';
 	}
@@ -674,10 +675,11 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
+		$data = isset( $data['slug'] ) ? $data['slug'] : $data;
 		if ( str_contains( $data, '.php' ) ) {
 			$requires = $this->plugins[ $data ]['RequiresPlugins'];
 		} else {
-			$requires = $this->themes[ $data['slug'] ]['RequiresPlugins'];
+			$requires = $this->themes[ $data ]['RequiresPlugins'];
 		}
 		foreach ( $requires as $require ) {
 			if ( isset( $this->plugin_data[ $require ] ) ) {
