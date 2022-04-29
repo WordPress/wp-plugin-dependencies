@@ -92,14 +92,23 @@ class WP_Plugin_Dependencies {
 	 * Parse 'Requires Plugins' header.
 	 * Store result with dependent plugin.
 	 *
+	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
+	 *
 	 * @return \stdClass
 	 */
 	public function parse_headers() {
+		global $wp_filesystem;
+
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
 		$this->get_plugins();
 		$all_requires_headers = array();
 		foreach ( array_keys( $this->plugins ) as $plugin ) {
 			$temp_requires    = array();
-			$requires_plugins = get_file_data( WP_PLUGIN_DIR . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
+			$requires_plugins = get_file_data( $wp_filesystem->wp_plugins_dir() . '/' . $plugin, array( 'RequiresPlugins' => 'Requires Plugins' ) );
 			if ( ! empty( $requires_plugins['RequiresPlugins'] ) ) {
 				$all_requires_headers[ $plugin ] = $requires_plugins;
 				$temp_requires[ $plugin ]        = $requires_plugins;
@@ -319,21 +328,9 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
-		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+		$names = $this->get_requires_plugins_names( 'plugin', $plugin_file );
 
-		// Exit if no plugin data found.
-		if ( empty( $this->plugin_data ) ) {
-			return;
-		}
-
-		$requires = $this->plugins[ $plugin_file ]['RequiresPlugins'];
-		foreach ( $requires as $require ) {
-			if ( isset( $this->plugin_data[ $require ] ) ) {
-				$names[] = $this->plugin_data[ $require ]['name'];
-			}
-		}
 		if ( ! empty( $names ) ) {
-			$names = implode( ', ', $names );
 			print '<script>';
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
 			print '</script>';
@@ -404,7 +401,7 @@ class WP_Plugin_Dependencies {
 					. esc_html__( '%1$s plugin(s) could not be activated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
 					. '</p></div>',
 				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
-				'<a href=' . esc_url_raw( admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+				'<a href=' . esc_url_raw( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 				'</a>'
 			);
 		} else {
@@ -418,7 +415,7 @@ class WP_Plugin_Dependencies {
 						/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
 						. esc_html__( 'There are additional plugins that must be installed. Go to the %1$sDependencies%2$s install page.' )
 						. '</p></div>',
-					'<a href=' . esc_url_raw( admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+					'<a href=' . esc_url_raw( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 					'</a>'
 				);
 			}
@@ -530,6 +527,37 @@ class WP_Plugin_Dependencies {
 			$hide_selectors = implode( ', ', $hide_selectors );
 			printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
 		}
+	}
+
+	/**
+	 * Get names of required plugins.
+	 *
+	 * @param string $type plugin|theme.
+	 * @param array  $data Array of plugin or theme data.
+	 *
+	 * @return string
+	 */
+	private function get_requires_plugins_names( $type, $data ) {
+		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+
+		// Exit if no plugin data found.
+		if ( empty( $this->plugin_data ) ) {
+			return;
+		}
+
+		if ( 'plugin' === $type ) {
+			$requires = $this->plugins[ $data ]['RequiresPlugins'];
+		}
+		foreach ( $requires as $require ) {
+			if ( isset( $this->plugin_data[ $require ] ) ) {
+				$names[] = $this->plugin_data[ $require ]['name'];
+			}
+		}
+		if ( ! empty( $names ) ) {
+			$names = implode( ', ', $names );
+		}
+
+		return $names;
 	}
 }
 
