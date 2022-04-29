@@ -542,13 +542,13 @@ class WP_Plugin_Dependencies {
 					$type                = __( 'plugin(s)' );
 				} else {
 					$deactivated_names[] = $this->themes[ $deactivated ]['Name'];
-					$type                = __( 'theme(s)' );
+					$type                = __( 'theme' );
 				}
 			}
 			$deactivated_names = implode( ', ', $deactivated_names );
 			printf(
 				'<div class="notice-error notice is-dismissible"><p>'
-					/* translators: 1: plugin or theme names, 2: 'plugins(s) or 'theme(s)', 3: opening tag and link to Dependencies install page, 4: closing tag */
+					/* translators: 1: plugin or theme names, 2: 'plugin(s) or 'theme', 3: opening tag and link to Dependencies install page, 4: closing tag */
 					. esc_html__( '%1$s %2$s could not be activated. There are uninstalled or inactive dependencies. Go to the %3$sDependencies%4$s install page.' )
 					. '</p></div>',
 				'<strong>' . esc_html( $deactivated_names ) . '</strong>',
