@@ -585,7 +585,7 @@ class WP_Plugin_Dependencies {
 		}
 		foreach ( $this->themes as $theme ) {
 			if ( ! empty( $theme['RequiresPlugins'] ) ) {
-				if ( in_array( $plugin_data['slug'], $theme, true ) ) {
+				if ( in_array( $plugin_data['slug'], $theme['RequiresPlugins'], true ) ) {
 					$sources[] = $theme['Name'];
 				}
 			}
