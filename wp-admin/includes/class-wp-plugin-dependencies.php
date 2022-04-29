@@ -427,7 +427,7 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
-		$names = $this->get_requires_plugins_names( 'plugin', $plugin_file );
+		$names = $this->get_requires_plugins_names( $plugin_file );
 
 		if ( ! empty( $names ) ) {
 			print '<script>';
@@ -662,12 +662,11 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Get names of required plugins.
 	 *
-	 * @param string $type plugin|theme.
-	 * @param array  $data Array of plugin or theme data.
+	 * @param array $data Array of plugin or theme data.
 	 *
 	 * @return string
 	 */
-	private function get_requires_plugins_names( $type, $data ) {
+	private function get_requires_plugins_names( $data ) {
 		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
 
 		// Exit if no plugin data found.
@@ -675,7 +674,7 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		if ( 'plugin' === $type ) {
+		if ( $this->is_plugin( $data ) ) {
 			$requires = $this->plugins[ $data ]['RequiresPlugins'];
 		}
 		if ( 'theme' === $type ) {
@@ -691,6 +690,17 @@ class WP_Plugin_Dependencies {
 		}
 
 		return $names;
+	}
+
+	/**
+	 * Is this a plugin filename?
+	 *
+	 * @param string $filename Filename.
+	 *
+	 * @return bool
+	 */
+	private function is_plugin( $filename ) {
+		return str_contains( $filename, '.php' );
 	}
 }
 
