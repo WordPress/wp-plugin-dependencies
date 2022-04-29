@@ -548,9 +548,6 @@ class WP_Plugin_Dependencies {
 		if ( 'plugin' === $type ) {
 			$requires = $this->plugins[ $data ]['RequiresPlugins'];
 		}
-		if ( 'theme' === $type ) {
-			$requires = $this->themes[ $data['slug'] ]['RequiresPlugins'];
-		}
 		foreach ( $requires as $require ) {
 			if ( isset( $this->plugin_data[ $require ] ) ) {
 				$names[] = $this->plugin_data[ $require ]['name'];
