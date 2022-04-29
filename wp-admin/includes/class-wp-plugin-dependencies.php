@@ -514,17 +514,25 @@ class WP_Plugin_Dependencies {
 		// Plugin deactivated if dependencies not met.
 		// Transient on a 10 second timeout.
 		$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins' );
+		$type                = '';
 		if ( ! empty( $deactivate_requires ) ) {
 			foreach ( $deactivate_requires as $deactivated ) {
-				$deactivated_plugins[] = $this->plugins[ $deactivated ]['Name'];
+				if ( str_contains( $deactivated, '.php' ) ) {
+					$deactivated_names[] = $this->plugins[ $deactivated ]['Name'];
+					$type                = __( 'plugin(s)' );
+				} else {
+					$deactivated_names[] = $this->themes[ $deactivated ]['Name'];
+					$type                = __( 'theme(s)' );
+				}
 			}
-			$deactivated_plugins = implode( ', ', $deactivated_plugins );
+			$deactivated_names = implode( ', ', $deactivated_names );
 			printf(
 				'<div class="notice-error notice is-dismissible"><p>'
-					/* translators: 1: plugin names, 2: opening tag and link to Dependencies install page, 3: closing tag */
-					. esc_html__( '%1$s plugin(s) could not be activated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
+					/* translators: 1: plugin or theme names, 2: 'plugins(s) or 'theme(s)', 3: opening tag and link to Dependencies install page, 4: closing tag */
+					. esc_html__( '%1$s %2$s could not be activated. There are uninstalled or inactive dependencies. Go to the %3$sDependencies%4$s install page.' )
 					. '</p></div>',
-				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
+				'<strong>' . esc_html( $deactivated_names ) . '</strong>',
+				esc_html( $type ),
 				'<a href=' . esc_url_raw( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 				'</a>'
 			);
