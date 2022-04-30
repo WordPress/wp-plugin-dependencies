@@ -2,7 +2,7 @@
 /**
  * Class SampleTest
  *
- * @package Plugin_Dependencies_Tab
+ * @package WP_Plugin_Dependencies
  */
 
 /**

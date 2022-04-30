@@ -2,7 +2,7 @@
 /**
  * Test WP_Plugin_Dependencies class.
  *
- * @package Plugin_Dependencies_Tab
+ * @package WP_Plugin_Dependencies
  *
  * @group admin
  * @group plugins
