@@ -112,8 +112,8 @@ class WP_Plugin_Dependencies {
 		$current_theme = get_site_transient( 'wp_current_theme' );
 		if ( wp_get_theme()->get_stylesheet() !== $current_theme ) {
 			set_site_transient( 'wp_previous_theme', $current_theme, 0 );
+			set_site_transient( 'wp_current_theme', wp_get_theme()->get_stylesheet(), 0 );
 		}
-		set_site_transient( 'wp_current_theme', wp_get_theme()->get_stylesheet(), 0 );
 
 		foreach ( array_keys( wp_get_themes() ) as $theme ) {
 			$theme_obj                      = wp_get_theme( $theme );
@@ -248,6 +248,7 @@ class WP_Plugin_Dependencies {
 				deactivate_plugins( $deactivate );
 			} else {
 				switch_theme( $previous_theme );
+				set_site_transient( 'wp_current_theme', $previous_theme, 0 );
 			}
 		}
 		set_site_transient( 'wp_plugin_dependencies_deactivate_plugins', $deactivate_requires, 10 );
