@@ -8,10 +8,12 @@ on:
     branches:
       - trunk
       - develop
+      - themes
   pull_request:
     branches:
       - trunk
       - develop
+      - themes
 
 jobs:
   run:
