@@ -67,9 +67,7 @@ class WP_Plugin_Dependencies {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
-			if ( ! is_multisite() ) {
-				add_filter( 'wp_prepare_themes_for_js', array( $this, 'modify_theme_messaging' ) );
-			}
+			add_filter( 'wp_prepare_themes_for_js', array( $this, 'modify_theme_messaging' ) );
 
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
