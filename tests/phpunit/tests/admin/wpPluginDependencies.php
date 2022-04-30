@@ -17,6 +17,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	public static function wpTearDownAfterClass() {
+		array_map( 'unlink', array_filter( (array) glob( self::$plugin_dir . '/*' ) ) );
 		rmdir( self::$plugin_dir );
 	}
 
