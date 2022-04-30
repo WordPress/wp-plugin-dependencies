@@ -33,6 +33,13 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 
 ## Changelog
 
+#### 0.15.1 / 2022-04-29
+* minor cleanup
+
+#### 0.15.0 / 2022-04-28
+* refactor with `get_requires_plugins_names()`
+* update admin notice for multisite
+
 #### 0.14.0
 * updated required plugin data expiration
 
