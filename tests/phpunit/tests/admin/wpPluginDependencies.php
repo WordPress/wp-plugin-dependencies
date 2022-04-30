@@ -32,7 +32,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @param string $dir_path Optional. Path for directory where the plugin should live.
 	 * @return array Two-membered array of filename and full plugin path.
 	 */
-	private function create_plugin( $data = "<?php\n/*\nPlugin Name: Test\n*/", $filename, $dir_path = false ) {
+	private function create_plugin( $filename, $data = "<?php\n/*\nPlugin Name: Test\n*/",  $dir_path = false ) {
 		if ( false === $filename ) {
 			$filename = __FUNCTION__ . '.php';
 		}
@@ -117,8 +117,8 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			$plugin_data = "<?php\n/*\n" . implode( "\n", $plugin_data ) . "\n*/\n";
 
 			$plugin_file = $this->create_plugin(
-				$plugin_data,
 				$plugin_name . '.php',
+				$plugin_data,
 				self::$plugin_dir
 			);
 
