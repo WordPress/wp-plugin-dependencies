@@ -13,7 +13,7 @@
  * Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart
- * Version: 0.15.0
+ * Version: 0.15.1
  * License: MIT
  * Network: true
  * Requires at least: 5.2

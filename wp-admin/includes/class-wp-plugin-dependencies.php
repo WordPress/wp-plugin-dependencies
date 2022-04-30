@@ -313,8 +313,9 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
+		$sources = $this->get_dependency_sources( $plugin_data );
 		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $this->get_dependency_sources( $plugin_data ) ) . '");';
+		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
 		print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
 		print '</script>';
 	}
@@ -328,8 +329,7 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
-		$names = $this->get_requires_plugins_names( 'plugin', $plugin_file );
-
+		$names = $this->get_requires_plugins_names( $plugin_file );
 		if ( ! empty( $names ) ) {
 			print '<script>';
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . esc_html( $names ) . '");';
@@ -532,12 +532,11 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Get names of required plugins.
 	 *
-	 * @param string $type plugin|theme.
-	 * @param array  $data Array of plugin or theme data.
+	 * @param array $data Array of plugin or theme data.
 	 *
 	 * @return string
 	 */
-	private function get_requires_plugins_names( $type, $data ) {
+	private function get_requires_plugins_names( $data ) {
 		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
 
 		// Exit if no plugin data found.
@@ -545,7 +544,7 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		if ( 'plugin' === $type ) {
+		if ( str_contains( $data, '.php' ) ) {
 			$requires = $this->plugins[ $data ]['RequiresPlugins'];
 		}
 		foreach ( $requires as $require ) {
