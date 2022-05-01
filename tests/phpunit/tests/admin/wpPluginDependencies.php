@@ -132,7 +132,8 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$plugins      = $this->make_prop_accessible( $dependencies, 'plugins' );
 		$plugins->setValue( $dependencies, $headers );
 
-		$actual = $dependencies->parse_headers();
+		$actual = $dependencies->parse_plugin_headers();
+		echo $actual;
 
 		foreach ( $plugin_names as $plugin_name ) {
 			if ( $expected ) {
