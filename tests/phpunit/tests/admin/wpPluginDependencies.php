@@ -98,7 +98,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	/**
 	 * @dataProvider data_parse_headers
 	 *
-	 * @covers WP_Plugin_Dependencies::parse_headers
+	 * @covers WP_Plugin_Dependencies::parse_plugin_headers
 	 *
 	 * @param array    $headers .
 	 * @param stdClass $expected     The expected parsed headers.
