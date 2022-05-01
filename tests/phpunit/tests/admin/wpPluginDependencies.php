@@ -2,7 +2,7 @@
 /**
  * Test WP_Plugin_Dependencies class.
  *
- * @package Plugin_Dependencies_Tab
+ * @package WP_Plugin_Dependencies
  *
  * @group admin
  * @group plugins
@@ -96,14 +96,14 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @dataProvider data_parse_headers
+	 * @dataProvider data_parse_plugin_headers
 	 *
 	 * @covers WP_Plugin_Dependencies::parse_plugin_headers
 	 *
 	 * @param array    $headers .
 	 * @param stdClass $expected     The expected parsed headers.
 	 */
-	public function test_parse_headers( $headers, $expected ) {
+	public function test_parse_plugin_headers( $headers, $expected ) {
 		$plugin_names = array();
 
 		foreach ( $headers as $plugin_name => $plugin ) {
@@ -149,7 +149,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @return array
 	 */
-	public function data_parse_headers() {
+	public function data_parse_plugin_headers() {
 		return array(
 			'no dependencies'                        => array(
 				'plugins_data' => array(
