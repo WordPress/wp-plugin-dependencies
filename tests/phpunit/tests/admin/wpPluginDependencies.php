@@ -117,6 +117,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 			$plugin_data = "<?php\n/*\n" . implode( "\n", $plugin_data ) . "\n*/\n";
 
+			echo $plugin_name;
 			$plugin_file = $this->create_plugin(
 				$plugin_name . '.php',
 				$plugin_data,
