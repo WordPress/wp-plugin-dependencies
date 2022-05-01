@@ -45,6 +45,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$filename  = wp_unique_filename( $dir_path, $filename );
 		$full_name = $dir_path . '/' . $filename;
 
+		echo $full_name;
 		$file = fopen( $full_name, 'w' );
 		fwrite( $file, $data );
 		fclose( $file );
@@ -117,7 +118,6 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 			$plugin_data = "<?php\n/*\n" . implode( "\n", $plugin_data ) . "\n*/\n";
 
-			echo $plugin_name;
 			$plugin_file = $this->create_plugin(
 				$plugin_name . '.php',
 				$plugin_data,
