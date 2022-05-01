@@ -76,10 +76,8 @@ class WP_Plugin_Dependencies {
 			// TODO: $this->get_dot_org_data() for core PR.
 			add_action( 'plugins_loaded', array( $this, 'get_dot_org_data' ) );
 
-			$required_headers_plugins = $this->parse_plugin_headers();
-			$required_headers_themes  = $this->parse_theme_headers();
-			$required_headers         = array_merge( $required_headers_plugins, $required_headers_themes );
-			$this->slugs              = $this->sanitize_required_headers( $required_headers );
+			$required_headers = array_merge( $this->parse_plugin_headers(), $this->parse_theme_headers() );
+			$this->slugs      = $this->sanitize_required_headers( $required_headers );
 			$this->deactivate_unmet_dependencies();
 		}
 	}
