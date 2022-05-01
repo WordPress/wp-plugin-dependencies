@@ -76,8 +76,10 @@ class WP_Plugin_Dependencies {
 			// TODO: $this->get_dot_org_data() for core PR.
 			add_action( 'plugins_loaded', array( $this, 'get_dot_org_data' ) );
 
-			$required_headers = $this->parse_headers();
-			$this->slugs      = $this->sanitize_required_headers( $required_headers );
+			$required_headers_plugins = $this->parse_plugin_headers();
+			$required_headers_themes  = $this->parse_theme_headers();
+			$required_headers         = array_merge( $required_headers_plugins, $required_headers_themes );
+			$this->slugs              = $this->sanitize_required_headers( $required_headers );
 			$this->deactivate_unmet_dependencies();
 		}
 	}
@@ -136,7 +138,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return \stdClass
 	 */
-	public function parse_headers() {
+	public function parse_plugin_headers() {
 		global $wp_filesystem;
 
 		if ( ! $wp_filesystem ) {
@@ -145,7 +147,6 @@ class WP_Plugin_Dependencies {
 		}
 
 		$this->get_plugins();
-		$this->get_themes();
 		$all_requires_headers = array();
 		foreach ( array_keys( $this->plugins ) as $plugin ) {
 			$temp_requires    = array();
@@ -158,6 +159,28 @@ class WP_Plugin_Dependencies {
 				$this->requires_plugins[ $plugin ]['RequiresPlugins'] = $sanitized_requires_slugs;
 			}
 		}
+
+		return $all_requires_headers;
+	}
+
+	/**
+	 * Parse 'Requires Plugins' header.
+	 * Store result with dependent plugin.
+	 *
+	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
+	 *
+	 * @return \stdClass
+	 */
+	public function parse_theme_headers() {
+		global $wp_filesystem;
+
+		if ( ! $wp_filesystem ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		$this->get_themes();
+		$all_requires_headers = array();
 		foreach ( array_keys( $this->themes ) as $theme ) {
 			$temp_requires    = array();
 			$requires_plugins = get_file_data( $wp_filesystem->wp_themes_dir() . '/' . $theme . '/style.css', array( 'RequiresPlugins' => 'Requires Plugins' ) );
