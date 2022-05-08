@@ -68,7 +68,7 @@ class WP_Plugin_Dependencies {
 			// TODO: $this->get_dot_org_data() for core PR.
 			add_action( 'plugins_loaded', array( $this, 'get_dot_org_data' ) );
 
-			$required_headers = $this->parse_headers();
+			$required_headers = $this->parse_plugin_headers();
 			$this->slugs      = $this->sanitize_required_headers( $required_headers );
 			$this->deactivate_unmet_dependencies();
 		}
@@ -96,7 +96,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return \stdClass
 	 */
-	public function parse_headers() {
+	public function parse_plugin_headers() {
 		global $wp_filesystem;
 
 		if ( ! $wp_filesystem ) {
