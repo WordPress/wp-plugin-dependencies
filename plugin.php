@@ -13,7 +13,7 @@
  * Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
  * Description: Parses 'Requires Plugin' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart
- * Version: 0.16.0
+ * Version: 0.16.1
  * License: MIT
  * Network: true
  * Requires at least: 5.2
@@ -30,6 +30,11 @@ namespace WP_Plugin_Dependencies;
  */
 if ( ! defined( 'WPINC' ) ) {
 	die;
+}
+
+// Deactivate plugin when committed to core.
+if ( version_compare( get_bloginfo( 'version' ), '6.1-RC1', '>=' ) ) {
+	deactivate_plugins( __FILE__ );
 }
 
 /**
