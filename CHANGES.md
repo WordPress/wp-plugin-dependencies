@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 0.16.1 / 2022-05-24
+* add auto-deactivate for when committed to trunk, will need updating later
+
 #### 0.16.0 / 2022-05-08
 * rename `parse_headers()` to `parse_plugin_headers()`, future proofing
 * update unit tests
