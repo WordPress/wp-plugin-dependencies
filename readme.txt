@@ -1,4 +1,4 @@
-# Plugin Dependencies
+# WP Plugin Dependencies
 
 Contributors: afragen, costdev
 Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
