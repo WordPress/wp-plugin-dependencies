@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 0.16.2 / 2022-05-27
+* update requirements to WP 6.0
+
 #### 0.16.1 / 2022-05-24
 * add auto-deactivate for when committed to trunk, will need updating later
 
