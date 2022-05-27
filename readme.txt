@@ -5,7 +5,7 @@ Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
 Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 License: MIT
 Network: true
-Requires at least: 5.2
+Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
 Stable tag: trunk
@@ -32,6 +32,12 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 0.16.2 / 2022-05-27
+* update requirements to WP 6.0
+
+#### 0.16.1 / 2022-05-24
+* add auto-deactivate for when committed to trunk, will need updating later
 
 #### 0.16.0 / 2022-05-08
 * rename `parse_headers()` to `parse_plugin_headers()`, future proofing

@@ -4,7 +4,7 @@
 * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 * License: MIT
 * Network: true
-* Requires at least: 5.2
+* Requires at least: 6.0
 * Requires PHP: 5.6
 * Stable tag: trunk
 
