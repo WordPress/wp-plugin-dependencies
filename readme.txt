@@ -1,4 +1,4 @@
-# WP Plugin Dependencies
+# CHANGEME-WP Plugin Dependencies
 
 Contributors: afragen, costdev
 Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
@@ -13,6 +13,8 @@ Stable tag: trunk
 ## Description
 
 Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin install page. If a requiring plugin does not have all it's dependencies installed and active, it will not activate.
+
+[Make post for Plugin Dependencies Feature Project](https://make.wordpress.org/core/2022/02/24/feature-project-plugin-dependencies/)
 
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #1724](https://github.com/WordPress/wordpress-develop/pull/1724)
 
