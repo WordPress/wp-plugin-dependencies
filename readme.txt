@@ -8,7 +8,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: trunk
+Stable tag: 1.0.0
 
 ## Description
 
@@ -34,6 +34,10 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.0.0 / 2022-05-31 🎂
+* fix typo
+* initial dot org release
 
 #### 0.16.2 / 2022-05-27
 * update requirements to WP 6.0

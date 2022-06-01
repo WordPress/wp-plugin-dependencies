@@ -1,5 +1,9 @@
 [unreleased]
 
+#### 1.0.0 / 2022-05-31 🎂
+* fix typo
+* initial dot org release
+
 #### 0.16.2 / 2022-05-27
 * update requirements to WP 6.0
 
