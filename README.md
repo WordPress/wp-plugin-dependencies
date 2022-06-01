@@ -6,7 +6,6 @@
 * Network: true
 * Requires at least: 6.0
 * Requires PHP: 5.6
-* Stable tag: trunk
 
 ## Description
 
