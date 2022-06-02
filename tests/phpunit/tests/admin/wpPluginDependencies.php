@@ -283,10 +283,8 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function test_slug_sanitization( $requires_plugins, $expected ) {
 		$dependencies = new WP_Plugin_Dependencies();
 		$sanitize     = $this->make_method_accessible( $dependencies, 'sanitize_required_headers');
-
-		$headers = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
-		$actual  = $sanitize->invoke( $dependencies, $headers );
-		//$actual  = ( new WP_Plugin_Dependencies() )->sanitize_required_headers( $headers );
+		$headers      = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
+		$actual       = $sanitize->invoke( $dependencies, $headers );
 		$this->assertSameSetsWithIndex( $expected, $actual );
 	}
 
