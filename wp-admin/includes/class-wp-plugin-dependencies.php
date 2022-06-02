@@ -96,7 +96,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return \stdClass
 	 */
-	public function parse_plugin_headers() {
+	private function parse_plugin_headers() {
 		global $wp_filesystem;
 
 		if ( ! $wp_filesystem ) {

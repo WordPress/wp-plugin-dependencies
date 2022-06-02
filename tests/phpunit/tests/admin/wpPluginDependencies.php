@@ -105,8 +105,9 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @covers WP_Plugin_Dependencies::get_plugins
 	 */
 	public function test_get_plugins() {
-		$get_plugins = $this->make_method_accessible(new WP_Plugin_Dependencies(), 'get_plugins');
-		$actual = $get_plugins->invoke( new WP_Plugin_Dependencies() );
+		$dependencies = new WP_Plugin_Dependencies();
+		$get_plugins  = $this->make_method_accessible( $dependencies, 'get_plugins');
+		$actual = $get_plugins->invoke( $dependencies );
 		//$actual = ( new WP_Plugin_Dependencies() )->get_plugins();
 		$this->assertIsArray( $actual, 'Did not return an array' );
 		$this->assertNotEmpty( $actual, 'The plugins array is empty' );
@@ -149,7 +150,10 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$plugins      = $this->make_prop_accessible( $dependencies, 'plugins' );
 		$plugins->setValue( $dependencies, $headers );
 
-		$actual = $dependencies->parse_plugin_headers();
+		$parse_plugin_headers = $this->make_method_accessible( $dependencies, 'parse_plugin_headers');
+		$actual               = $parse_plugin_headers->invoke( $dependencies );
+
+		//$actual = $dependencies->parse_plugin_headers();
 
 		foreach ( $plugin_names as $plugin_name ) {
 			if ( $expected ) {
