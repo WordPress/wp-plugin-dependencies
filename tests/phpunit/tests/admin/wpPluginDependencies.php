@@ -68,6 +68,21 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Helper method.
+	 *
+	 * Makes a class function accessible.
+	 *
+	 * @param object|string $obj_or_class The object or class.
+	 * @param string        $function     The class method.
+	 * @return ReflectionMethod The accessible method.
+	 */
+	private function make_method_accessible( $obj_or_class, $function ) {
+		$method = new ReflectionMethod( $obj_or_class, $function );
+		$method->setAccessible( true );
+		return $method;
+	}
+
+	/**
 	 * @covers WP_Plugin_Dependencies::__construct()
 	 */
 	public function test__construct() {
@@ -90,7 +105,9 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @covers WP_Plugin_Dependencies::get_plugins
 	 */
 	public function test_get_plugins() {
-		$actual = ( new WP_Plugin_Dependencies() )->get_plugins();
+		$get_plugins = $this->make_method_accessible(new WP_Plugin_Dependencies(), 'get_plugins');
+		$actual = $get_plugins->invoke( new WP_Plugin_Dependencies() );
+		//$actual = ( new WP_Plugin_Dependencies() )->get_plugins();
 		$this->assertIsArray( $actual, 'Did not return an array' );
 		$this->assertNotEmpty( $actual, 'The plugins array is empty' );
 	}
