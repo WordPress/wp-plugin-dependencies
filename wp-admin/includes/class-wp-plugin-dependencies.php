@@ -79,7 +79,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return array
 	 */
-	private function get_plugins() {
+	public function get_plugins() {
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
