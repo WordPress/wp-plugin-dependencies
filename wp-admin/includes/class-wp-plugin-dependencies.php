@@ -96,7 +96,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return \stdClass
 	 */
-	protected function parse_plugin_headers() {
+	public function parse_plugin_headers() {
 		global $wp_filesystem;
 
 		if ( ! $wp_filesystem ) {
@@ -127,7 +127,7 @@ class WP_Plugin_Dependencies {
 	 * @param array $required_headers Array of required plugin headers.
 	 * @return array
 	 */
-	protected function sanitize_required_headers( $required_headers ) {
+	public function sanitize_required_headers( $required_headers ) {
 		$all_slugs = array();
 		foreach ( $required_headers as $key => $headers ) {
 			$sanitized_slugs = array();
