@@ -1,4 +1,6 @@
 [unreleased]
+* change 'Activate' plugin action link to 'Cannot Activate' text when plugin has unmet dependencies
+* remove checkbox from plugin row when plugin has unmet dependencies
 
 #### 1.0.0 / 2022-05-31 🎂
 * fix typo

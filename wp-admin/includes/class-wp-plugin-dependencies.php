@@ -300,6 +300,7 @@ class WP_Plugin_Dependencies {
 	 */
 	public function modify_requires_plugin_row( $plugin_file ) {
 		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements_requires' ), 10, 1 );
+		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'cannot_activate_unmet_dependencies' ), 10, 2 );
 	}
 
 	/**
@@ -360,6 +361,51 @@ class WP_Plugin_Dependencies {
 		}
 
 		return $actions;
+	}
+
+	/**
+	 * Exchange 'Activate' link for 'Cannot Activate' text if dependencies not met.
+	 * Add 'Dependencies' link to install plugin tab.
+	 *
+	 * @param array  $actions     Plugin action links.
+	 * @param string $plugin_file File name.
+	 *
+	 * @return array
+	 */
+	public function cannot_activate_unmet_dependencies( $actions, $plugin_file ) {
+		$dependencies        = $this->get_dependency_filepaths();
+		$plugin_dependencies = $this->plugins[ $plugin_file ]['RequiresPlugins'];
+
+		foreach ( $plugin_dependencies as $plugin_dependency ) {
+			if ( isset( $actions['activate'] ) ) {
+				if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
+					$actions['activate']     = __( 'Cannot Activate' );
+					$actions['dependencies'] = sprintf(
+					/* translators: 1: opening tag link to Dependencies tab 2: closing tag */
+						__( '%1$sDependencies%2$s' ),
+						'<a href=' . esc_url_raw( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+						'</a>'
+					);
+					add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
+					break;
+				}
+			}
+		}
+
+		return $actions;
+	}
+
+	/**
+	 * Hide plugin row column checkbox for plugins with unmet dependencies.
+	 *
+	 * @param string $plugin_file File name.
+	 *
+	 * @return void
+	 */
+	public function hide_column_checkbox( $plugin_file ) {
+		print '<script>';
+		print 'jQuery(".inactive[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
+		print '</script>';
 	}
 
 	/**
