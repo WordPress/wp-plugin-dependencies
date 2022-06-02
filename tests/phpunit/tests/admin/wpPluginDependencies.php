@@ -107,8 +107,8 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function test_get_plugins() {
 		$dependencies = new WP_Plugin_Dependencies();
 		$get_plugins  = $this->make_method_accessible( $dependencies, 'get_plugins');
-		$actual = $get_plugins->invoke( $dependencies );
-		//$actual = ( new WP_Plugin_Dependencies() )->get_plugins();
+		$actual       = $get_plugins->invoke( $dependencies );
+
 		$this->assertIsArray( $actual, 'Did not return an array' );
 		$this->assertNotEmpty( $actual, 'The plugins array is empty' );
 	}
@@ -152,8 +152,6 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 		$parse_plugin_headers = $this->make_method_accessible( $dependencies, 'parse_plugin_headers');
 		$actual               = $parse_plugin_headers->invoke( $dependencies );
-
-		//$actual = $dependencies->parse_plugin_headers();
 
 		foreach ( $plugin_names as $plugin_name ) {
 			if ( $expected ) {
@@ -283,8 +281,12 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @param array  $expected         The sanitized dependency slug(s).
 	 */
 	public function test_slug_sanitization( $requires_plugins, $expected ) {
+		$dependencies = new WP_Plugin_Dependencies();
+		$sanitize     = $this->make_method_accessible( $dependencies, 'sanitize_required_headers');
+
 		$headers = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
-		$actual  = ( new WP_Plugin_Dependencies() )->sanitize_required_headers( $headers );
+		$actual  = $sanitize->invoke( $dependencies, $headers );
+		//$actual  = ( new WP_Plugin_Dependencies() )->sanitize_required_headers( $headers );
 		$this->assertSameSetsWithIndex( $expected, $actual );
 	}
 
