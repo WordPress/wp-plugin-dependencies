@@ -10,7 +10,7 @@
 
 /**
  * Plugin Name: Plugin Dependencies
- * Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
+ * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart
  * Version: 1.0.0
@@ -18,7 +18,7 @@
  * Network: true
  * Requires at least: 6.0
  * Requires PHP: 5.6
- * GitHub Plugin URI: WordPress/wp-plugin-dependencies
+ * GitHub Plugin URI: https://github.com/WordPress/wp-plugin-dependencies
  * Primary Branch: trunk
  */
 

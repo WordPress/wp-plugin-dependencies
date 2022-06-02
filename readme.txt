@@ -1,7 +1,6 @@
-# WP Plugin Dependencies
+# Plugin Dependencies
 
 Contributors: afragen, costdev
-Plugin URI:  https://github.com/WordPress/wp-plugin-dependencies
 Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 License: MIT
 Network: true
@@ -15,6 +14,8 @@ Stable tag: 1.0.0
 Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin install page. If a requiring plugin does not have all it's dependencies installed and active, it will not activate.
 
 [Make post for Plugin Dependencies Feature Project](https://make.wordpress.org/core/2022/02/24/feature-project-plugin-dependencies/)
+
+Please open issues at [WordPress/wp-plugin-dependencies issues](https://github.com/WordPress/wp-plugin-dependencies/issues)
 
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #1724](https://github.com/WordPress/wordpress-develop/pull/1724)
 
