@@ -423,7 +423,7 @@ class WP_Plugin_Dependencies {
 					$actions['dependencies'] = sprintf(
 					/* translators: 1: opening tag link to Dependencies tab 2: closing tag */
 						__( '%1$sDependencies%2$s' ),
-						'<a href=' . esc_url_raw( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 						'</a>'
 					);
 					add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
@@ -487,7 +487,7 @@ class WP_Plugin_Dependencies {
 					. esc_html__( '%1$s plugin(s) could not be activated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
 					. '</p></div>',
 				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
-				'<a href=' . esc_url_raw( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+				'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 				'</a>'
 			);
 		} else {
@@ -501,7 +501,7 @@ class WP_Plugin_Dependencies {
 						/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
 						. esc_html__( 'There are additional plugins that must be installed. Go to the %1$sDependencies%2$s install page.' )
 						. '</p></div>',
-					'<a href=' . esc_url_raw( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 					'</a>'
 				);
 			}
