@@ -498,20 +498,20 @@ class WP_Plugin_Dependencies {
 			$intersect       = array_intersect( $this->slugs, $installed_slugs );
 			asort( $intersect );
 			if ( $intersect !== $this->slugs ) {
-				$message_html = esc_html__( 'There are additional plugins that must be installed.' );
+				$message_html = __( 'There are additional plugins that must be installed.' );
 				
 				//Display link (if not already on Dependencies install page)
 				if ( 'plugin-install.php' !== $pagenow || 'dependencies' !== $_GET['tab'] ) {
 					$message_html .= ' ' . sprintf(
 							/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
-							esc_html__( 'Go to the %1$sDependencies%2$s install page.' ),
+							__( 'Go to the %1$sDependencies%2$s install page.' ),
 							'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 							'</a>'
 						);
 				}
 
 				print '<div class="notice-warning notice is-dismissible"><p>';
-				print $message_html;
+				print wp_kses_post( $message_html );
 				print '</p></div>';
 			}
 		}
