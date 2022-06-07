@@ -1,5 +1,9 @@
 [unreleased]
 
+#### 1.1.1 / 2022-06-06
+* limit scope of class methods where we can
+* update screenshots
+
 #### 1.1.0 / 2022-06-02
 * change 'Activate' plugin action link to 'Cannot Activate' text when plugin has unmet dependencies
 * remove checkbox from plugin row when plugin has unmet dependencies
