@@ -1,4 +1,5 @@
 [unreleased]
+* don't display admin notice link to Dependencies tab when on Dependencies tab
 
 #### 1.1.1 / 2022-06-06
 * limit scope of class methods where we can
