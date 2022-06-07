@@ -474,7 +474,7 @@ class WP_Plugin_Dependencies {
 	 */
 	public function admin_notices() {
 		global $pagenow;
-		
+
 		// Plugin deactivated if dependencies not met.
 		// Transient on a 10 second timeout.
 		$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins' );
@@ -499,20 +499,23 @@ class WP_Plugin_Dependencies {
 			asort( $intersect );
 			if ( $intersect !== $this->slugs ) {
 				$message_html = __( 'There are additional plugins that must be installed.' );
-				
-				//Display link (if not already on Dependencies install page)
-				if ( 'plugin-install.php' !== $pagenow || 'dependencies' !== $_GET['tab'] ) {
+
+				// Display link (if not already on Dependencies install page).
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
+				if ( 'plugin-install.php' !== $pagenow || 'dependencies' !== $tab ) {
 					$message_html .= ' ' . sprintf(
 							/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
-							__( 'Go to the %1$sDependencies%2$s install page.' ),
-							'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
-							'</a>'
-						);
+						__( 'Go to the %1$sDependencies%2$s install page.' ),
+						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+						'</a>'
+					);
 				}
 
-				print '<div class="notice-warning notice is-dismissible"><p>';
-				print wp_kses_post( $message_html );
-				print '</p></div>';
+				printf(
+					'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
+					wp_kses_post( $message_html )
+				);
 			}
 		}
 	}
