@@ -31,7 +31,7 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 
 ## Screenshots
 
-1. Plugin is a Dependency
+1. Plugin is a Dependency and Plugin needing Dependencies
 2. Plugin with Dependencies
 2. Plugin Dependencies tab
 
