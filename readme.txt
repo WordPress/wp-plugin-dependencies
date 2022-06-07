@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 
 ## Description
 
@@ -36,6 +36,10 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.1.1 / 2022-06-06
+* limit scope of class methods where we can
+* update screenshots
 
 #### 1.1.0 / 2022-06-02
 * change 'Activate' plugin action link to 'Cannot Activate' text when plugin has unmet dependencies
