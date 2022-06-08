@@ -486,7 +486,7 @@ class WP_Plugin_Dependencies {
 			printf(
 				'<div class="notice-error notice is-dismissible"><p>'
 					/* translators: 1: plugin names, 2: opening tag and link to Dependencies install page, 3: closing tag */
-					. esc_html__( '%1$s plugin(s) could not be activated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
+					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
 					. '</p></div>',
 				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
 				'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
