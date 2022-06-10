@@ -314,10 +314,17 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
-		$sources = $this->get_dependency_sources( $plugin_data );
+		$sources            = $this->get_dependency_sources( $plugin_data );
+		$requires_filepaths = $this->get_requires_paths( $plugin_data );
+		$dep_paths = $this->get_dependency_filepaths();
 		print '<script>';
 		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
-		print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
+		foreach ( $requires_filepaths as $filepath ) {
+			if ( is_plugin_active( $filepath ) ) {
+				print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
+				break;
+			}
+		}
 		print '</script>';
 	}
 
@@ -565,6 +572,31 @@ class WP_Plugin_Dependencies {
 		$sources = implode( ', ', $sources );
 
 		return $sources;
+	}
+
+	/**
+	 * Get array of plugin requirement filepaths.
+	 *
+	 * @param array $plugin_data Array of plugin data.
+	 *
+	 * @return array
+	 */
+	private function get_requires_paths( $plugin_data ) {
+		$paths = array();
+		foreach ( $this->plugins as $filepath => $plugin ) {
+			if ( ! empty( $plugin['RequiresPlugins'] ) ) {
+				// Default TextDomain derived from plugin directory name, should be slug equivalent.
+				$plugin_data['slug'] = isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : $plugin_data['TextDomain'];
+				if ( in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
+					$paths[] = $filepath;
+				}
+			}
+		}
+		$paths = array_filter( $paths );
+		$paths = array_unique( $paths );
+		sort( $paths );
+
+		return $paths;
 	}
 
 	/**

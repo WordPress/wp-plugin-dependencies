@@ -1,5 +1,6 @@
 [unreleased]
 * don't display admin notice link to Dependencies tab when on Dependencies tab
+* be more specific about only removing dependency plugin row checkbox when a requiring plugin is active
 
 #### 1.1.1 / 2022-06-06
 * limit scope of class methods where we can
