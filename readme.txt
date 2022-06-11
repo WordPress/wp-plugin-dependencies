@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 
 ## Description
 
@@ -36,6 +36,10 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.2.0 / 2022-06-10
+* don't display admin notice link to Dependencies tab when on Dependencies tab
+* be more specific about only removing dependency plugin row checkbox when a requiring plugin is active
 
 #### 1.1.1 / 2022-06-06
 * limit scope of class methods where we can
