@@ -26,6 +26,8 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 
 * Ensures that plugins with unmet dependencies cannot be activated.
 
+There are several single file plugins that may be used for testing in `test-plugins/`.
+
 ## Phase 1 - Architecture & Design Discussion
 
 Discussion of architecture and design elements and features. This will be done via [issues](https://github.com/WordPress/wp-plugin-dependencies/issues).

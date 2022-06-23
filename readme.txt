@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 
 ## Description
 
@@ -29,6 +29,8 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 * Ensures that plugins with unmet dependencies cannot be activated.
 * If the dependency API data is not available a generic plugin card will be displayed in the Dependencies tab.
 
+There are several single file plugins that may be used for testing in `test-plugins/`.
+
 ## Screenshots
 
 1. Plugin is a Dependency and Plugin needing Dependencies
@@ -36,6 +38,9 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.2.1 / 2022-06-23
+* added several single file testing plugins to `test-plugins/`
 
 #### 1.2.0 / 2022-06-10
 * don't display admin notice link to Dependencies tab when on Dependencies tab
