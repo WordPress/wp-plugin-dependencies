@@ -1,6 +1,6 @@
 [unreleased]
 * fix `get_requires_plugin_names()` to account for empty header
-* update regex to allow for some non-ascii languages as slugs
+* update regex to allow for some non-ascii languages and symbols as slugs
 
 #### 1.2.1 / 2022-06-23
 * added several single file testing plugins to `test-plugins/`
