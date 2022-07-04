@@ -1,4 +1,5 @@
 [unreleased]
+* fix `get_requires_plugin_names()` to account for empty header
 
 #### 1.2.1 / 2022-06-23
 * added several single file testing plugins to `test-plugins/`

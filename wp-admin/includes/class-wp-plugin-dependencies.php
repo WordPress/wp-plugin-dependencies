@@ -686,7 +686,7 @@ class WP_Plugin_Dependencies {
 			$names = implode( ', ', $names );
 		}
 
-		return $names;
+		return isset( $names ) ? $names : '';
 	}
 }
 
