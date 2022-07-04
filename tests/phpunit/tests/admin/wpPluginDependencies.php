@@ -275,6 +275,33 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 				),
 				'expected'     => array( 'RequiresPlugins' => '"hello-dolly, woocommerce"' ),
 			),
+			'cyrillic dependencies'                 => array(
+				'plugins_data' => array(
+					'test-plugin' => array(
+						'Plugin Name'      => 'Test Plugin',
+						'Requires Plugins' => 'я-делюсь',
+					),
+				),
+				'expected'     => array( 'RequiresPlugins' => 'я-делюсь' ),
+			),
+			'arabic dependencies'                 => array(
+				'plugins_data' => array(
+					'test-plugin' => array(
+						'Plugin Name'      => 'Test Plugin',
+						'Requires Plugins' => 'لينوكس-ويكى',
+					),
+				),
+				'expected'     => array( 'RequiresPlugins' => 'لينوكس-ويكى' ),
+			),
+			'chinese dependencies'                 => array(
+				'plugins_data' => array(
+					'test-plugin' => array(
+						'Plugin Name'      => 'Test Plugin',
+						'Requires Plugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress',
+					),
+				),
+				'expected'     => array( 'RequiresPlugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress' ),
+			),
 		);
 	}
 
