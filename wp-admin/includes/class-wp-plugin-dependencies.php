@@ -136,7 +136,7 @@ class WP_Plugin_Dependencies {
 				$slug = trim( $slug );
 
 				// Match to dot org slug format.
-				if ( preg_match( '/^[a-z0-9-]+$/', $slug ) ) {
+				if ( preg_match( '/^[a-z0-9\-\p{Cyrillic}\p{Arabic}\p{Han}]+$/mu', $slug ) ) {
 					$sanitized_slugs[] = $slug;
 				}
 			}
