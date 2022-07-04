@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.3.0 / 2022-07-04 🎆
 * fix `get_requires_plugin_names()` to account for empty header
 * update regex to allow for some non-ascii languages and symbols as slugs
 
