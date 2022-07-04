@@ -275,6 +275,42 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 				),
 				'expected'     => array( 'RequiresPlugins' => '"hello-dolly, woocommerce"' ),
 			),
+			'cyrillic dependencies'                 => array(
+				'plugins_data' => array(
+					'test-plugin' => array(
+						'Plugin Name'      => 'Test Plugin',
+						'Requires Plugins' => 'я-делюсь',
+					),
+				),
+				'expected'     => array( 'RequiresPlugins' => 'я-делюсь' ),
+			),
+			'arabic dependencies'                 => array(
+				'plugins_data' => array(
+					'test-plugin' => array(
+						'Plugin Name'      => 'Test Plugin',
+						'Requires Plugins' => 'لينوكس-ويكى',
+					),
+				),
+				'expected'     => array( 'RequiresPlugins' => 'لينوكس-ويكى' ),
+			),
+			'chinese dependencies'                 => array(
+				'plugins_data' => array(
+					'test-plugin' => array(
+						'Plugin Name'      => 'Test Plugin',
+						'Requires Plugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress',
+					),
+				),
+				'expected'     => array( 'RequiresPlugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress' ),
+			),
+			'symbol dependencies'                 => array(
+				'plugins_data' => array(
+					'test-plugin' => array(
+						'Plugin Name'      => 'Test Plugin',
+						'Requires Plugins' => '★-wpsymbols-★',
+					),
+				),
+				'expected'     => array( 'RequiresPlugins' => '★-wpsymbols-★' ),
+			),
 		);
 	}
 
@@ -336,6 +372,22 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			'two dependencies in quotes'             => array(
 				'requires_plugins' => '"hello-dolly, woocommerce"',
 				'expected'         => array(),
+			),
+			'cyrillic dependencies'                  => array(
+				'requires_plugins' => 'я-делюсь',
+				'expected'         => array( 'я-делюсь' ),
+			),
+			'arabic dependencies'                    => array(
+				'requires_plugins' => 'لينوكس-ويكى',
+				'expected'         => array( 'لينوكس-ويكى' ),
+			),
+			'chinese dependencies'                   => array(
+				'requires_plugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress',
+				'expected'         => array( '唐诗宋词chinese-poem', '社交登录', '腾讯微博一键登录', '豆瓣秀-for-wordpress' ),
+			),
+			'symbol dependencies'                    => array(
+				'requires_plugins' => '★-wpsymbols-★',
+				'expected'         => array( '★-wpsymbols-★' ),
 			),
 		);
 	}

@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 
 ## Description
 
@@ -38,6 +38,10 @@ There are several single file plugins that may be used for testing in `test-plug
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.3.0 / 2022-07-04 🎆
+* fix `get_requires_plugin_names()` to account for empty header
+* update regex to allow for some non-ascii languages and symbols as slugs
 
 #### 1.2.1 / 2022-06-23
 * added several single file testing plugins to `test-plugins/`
