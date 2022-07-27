@@ -1,4 +1,5 @@
 [unreleased]
+* bring more inline with PR
 
 #### 1.3.0 / 2022-07-04 🎆
 * fix `get_requires_plugin_names()` to account for empty header
