@@ -65,11 +65,9 @@ class WP_Plugin_Dependencies {
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'in_admin_header', array( $this, 'hide_action_links' ) );
 
-			// TODO: $this->get_dot_org_data() for core PR.
-			add_action( 'plugins_loaded', array( $this, 'get_dot_org_data' ) );
-
 			$required_headers = $this->parse_plugin_headers();
 			$this->slugs      = $this->sanitize_required_headers( $required_headers );
+			$this->get_dot_org_data();
 			$this->deactivate_unmet_dependencies();
 		}
 	}
