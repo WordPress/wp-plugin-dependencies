@@ -52,24 +52,31 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
+	 * Static function to get rolling.
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		( new WP_Plugin_Dependencies() )->start();
+	}
+
+	/**
 	 * Initialize, load filters, and get started.
 	 *
 	 * @return void
 	 */
-	public function init() {
+	public function start() {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
-			add_action( 'admin_init', array( $this, 'modify_plugin_row' ) );
+			add_action( 'admin_init', array( $this, 'modify_plugin_row' ), 15 );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'in_admin_header', array( $this, 'hide_action_links' ) );
 
-			// TODO: $this->get_dot_org_data() for core PR.
-			add_action( 'plugins_loaded', array( $this, 'get_dot_org_data' ) );
-
 			$required_headers = $this->parse_plugin_headers();
 			$this->slugs      = $this->sanitize_required_headers( $required_headers );
+			$this->get_dot_org_data();
 			$this->deactivate_unmet_dependencies();
 		}
 	}
@@ -286,9 +293,9 @@ class WP_Plugin_Dependencies {
 	 * @param string $plugin_file Plugin file.
 	 */
 	public function modify_dependency_plugin_row( $plugin_file ) {
-		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
-		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
+		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
+		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 	}
 
 	/**
@@ -301,6 +308,7 @@ class WP_Plugin_Dependencies {
 	public function modify_requires_plugin_row( $plugin_file ) {
 		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements_requires' ), 10, 1 );
 		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'cannot_activate_unmet_dependencies' ), 10, 2 );
+		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'cannot_activate_unmet_dependencies' ), 10, 2 );
 	}
 
 	/**
@@ -316,7 +324,6 @@ class WP_Plugin_Dependencies {
 	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
 		$sources            = $this->get_dependency_sources( $plugin_data );
 		$requires_filepaths = $this->get_requires_paths( $plugin_data );
-		$dep_paths          = $this->get_dependency_filepaths();
 		print '<script>';
 		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
 		foreach ( $requires_filepaths as $filepath ) {
@@ -614,7 +621,7 @@ class WP_Plugin_Dependencies {
 				'slug'              => $args['slug'],
 				'version'           => '',
 				'author'            => '',
-				'contributors'      => '',
+				'contributors'      => array(),
 				'requires'          => '',
 				'tested'            => '',
 				'requires_php'      => '',
@@ -689,5 +696,3 @@ class WP_Plugin_Dependencies {
 		return isset( $names ) ? $names : '';
 	}
 }
-
-( new WP_Plugin_Dependencies() )->init();
