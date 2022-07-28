@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.4.0 / 2022-07-28
 * bring more inline with PR
 * remove action on class requires, use hook
 * fix multisite compatibility
