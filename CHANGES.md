@@ -1,5 +1,6 @@
 [unreleased]
 * bring more inline with PR
+* remove action on class requires, use hook
 
 #### 1.3.0 / 2022-07-04 🎆
 * fix `get_requires_plugin_names()` to account for empty header
