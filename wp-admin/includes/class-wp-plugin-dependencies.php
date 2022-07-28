@@ -52,11 +52,20 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
+	 * Static function to get rolling.
+	 *
+	 * @return void
+	 */
+	public static function init() {
+		( new WP_Plugin_Dependencies() )->start();
+	}
+
+	/**
 	 * Initialize, load filters, and get started.
 	 *
 	 * @return void
 	 */
-	public function init() {
+	public function start() {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
