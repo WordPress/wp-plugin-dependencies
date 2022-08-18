@@ -1,5 +1,9 @@
 <?php
 /**
+ * Testing plugin
+ *
+ * @package wp-plugin-dependencies
+ *
  * Plugin Name: Test Dependencies 1
  * Author: WordPress Core Contributors
  * Version: 0.1
