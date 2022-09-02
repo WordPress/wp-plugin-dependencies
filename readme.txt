@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.4.1
+Stable tag: 1.5.0
 
 ## Description
 
@@ -38,6 +38,11 @@ There are several single file plugins that may be used for testing in `test-plug
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.5.0 / 2022-09-02
+* add `afragen/add-plugin-dependency-api` as composer requirement
+* update test plugins removing `hello-dolly` and adding `git-updater` as non dot org example
+* check empty plugin response for error
 
 #### 1.4.1 / 2022-08-18
 * oops, fixed typo in one of the testing plugins

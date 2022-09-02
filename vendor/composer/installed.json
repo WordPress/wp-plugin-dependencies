@@ -1,14 +1,9 @@
 {
-    "_readme": [
-        "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
-        "This file is @generated automatically"
-    ],
-    "content-hash": "133d8e17a838ccc294d7b8754f93d39b",
     "packages": [
         {
             "name": "afragen/add-plugin-dependency-api",
             "version": "0.4.0",
+            "version_normalized": "0.4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/add-plugin-dependency-api.git",
@@ -23,7 +18,9 @@
             "require": {
                 "php": ">=5.6"
             },
+            "time": "2022-09-02T23:28:32+00:00",
             "type": "library",
+            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "add-plugin-dependency-api.php"
@@ -52,18 +49,9 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-09-02T23:28:32+00:00"
+            "install-path": "../afragen/add-plugin-dependency-api"
         }
     ],
-    "packages-dev": [],
-    "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
-    "prefer-stable": true,
-    "prefer-lowest": false,
-    "platform": {
-        "php": ">=5.6"
-    },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "dev": false,
+    "dev-package-names": []
 }
