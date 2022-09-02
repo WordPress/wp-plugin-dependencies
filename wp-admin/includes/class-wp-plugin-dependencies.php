@@ -615,7 +615,7 @@ class WP_Plugin_Dependencies {
 	 * @return \stdClass
 	 */
 	private function get_empty_plugins_api_response( $response, $args ) {
-		if ( is_wp_error( $response ) ) {
+		if ( is_wp_error( $response ) || property_exists( $response, 'error' ) ) {
 			$response = array(
 				'name'              => $args['slug'],
 				'slug'              => $args['slug'],
