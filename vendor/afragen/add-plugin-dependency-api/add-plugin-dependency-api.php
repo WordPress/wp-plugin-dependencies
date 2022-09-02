@@ -52,18 +52,12 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 				foreach ( $rest_endpoints as $endpoint ) {
 					$url      = add_query_arg( 'slug', $args->slug, trailingslashit( $endpoint ) );
 					$response = wp_remote_get( $url );
-					$response = json_decode( wp_remote_retrieve_body( $response ) );
+					$response = json_decode( wp_remote_retrieve_body( $response ), true );
 					if ( null === $response || isset( $response->error ) || isset( $response->code ) ) {
 						$message = isset( $response->error ) ? $response->error : null;
 						return new \WP_Error( 'error', 'Error retrieving plugin data.', $message );
 					}
 					break;
-				}
-
-				foreach ( $response as $key => $value ) {
-					if ( is_object( $value ) ) {
-						$response->$key = (array) $value;
-					}
 				}
 
 				// Add slug to hook_extra.
@@ -79,7 +73,7 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 				);
 			}
 
-			return $response;
+			return (object) $response;
 		}
 
 		/**

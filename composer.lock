@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "afragen/add-plugin-dependency-api",
-            "version": "0.3.0",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/add-plugin-dependency-api.git",
-                "reference": "2f116b1c465f7bcba5aae3818de4b58a0641040f"
+                "reference": "19eaaf5695e394cf768f39b7005985df75146f2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afragen/add-plugin-dependency-api/zipball/2f116b1c465f7bcba5aae3818de4b58a0641040f",
-                "reference": "2f116b1c465f7bcba5aae3818de4b58a0641040f",
+                "url": "https://api.github.com/repos/afragen/add-plugin-dependency-api/zipball/19eaaf5695e394cf768f39b7005985df75146f2f",
+                "reference": "19eaaf5695e394cf768f39b7005985df75146f2f",
                 "shasum": ""
             },
             "require": {
@@ -43,8 +43,8 @@
             ],
             "description": "Library that helps WordPress plugin dependency management.",
             "support": {
-                "issues": "https://github.com/afragen/add-plugin-dependencies-api/issues",
-                "source": "https://github.com/afragen/add-plugin-dependencies-api"
+                "issues": "https://github.com/afragen/add-plugin-dependency-api/issues",
+                "source": "https://github.com/afragen/add-plugin-dependency-api"
             },
             "funding": [
                 {
@@ -52,7 +52,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-09-02T21:30:14+00:00"
+            "time": "2022-09-02T23:28:32+00:00"
         }
     ],
     "packages-dev": [],

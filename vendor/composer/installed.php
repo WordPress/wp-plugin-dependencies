@@ -3,7 +3,7 @@
         'name' => 'wordpress/wp-plugin-dependencies',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '8885c0f3d8a313b339b7563d22cf5a90f4c7a410',
+        'reference' => '651ff7e24444939895c335604d18e7d6d23cdccb',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'afragen/add-plugin-dependency-api' => array(
-            'pretty_version' => '0.3.0',
-            'version' => '0.3.0.0',
-            'reference' => '2f116b1c465f7bcba5aae3818de4b58a0641040f',
+            'pretty_version' => '0.4.0',
+            'version' => '0.4.0.0',
+            'reference' => '19eaaf5695e394cf768f39b7005985df75146f2f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../afragen/add-plugin-dependency-api',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'wordpress/wp-plugin-dependencies' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '8885c0f3d8a313b339b7563d22cf5a90f4c7a410',
+            'reference' => '651ff7e24444939895c335604d18e7d6d23cdccb',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
