@@ -10,4 +10,3 @@ phpunit.xml export-ignore
 /bin export-ignore
 /.github export-ignore
 /.wordpress-org export-ignore
-/vendor export-ignore
