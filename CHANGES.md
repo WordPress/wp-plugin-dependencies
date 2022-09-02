@@ -1,4 +1,5 @@
 [unreleased]
+* update test plugins removing `hello-dolly` and adding `git-updater` as non dot org example
 
 #### 1.4.1 / 2022-08-18
 * oops, fixed typo in one of the testing plugins
