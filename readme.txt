@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 
 ## Description
 
@@ -38,6 +38,9 @@ There are several single file plugins that may be used for testing in `test-plug
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.4.1 / 2022-08-18
+* oops, fixed typo in one of the testing plugins
 
 #### 1.4.0 / 2022-07-28
 * bring more inline with PR
