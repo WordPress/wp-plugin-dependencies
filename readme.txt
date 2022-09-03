@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 
 ## Description
 
@@ -38,6 +38,9 @@ There are several single file plugins that may be used for testing in `test-plug
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.5.1 / 2022-09-02
+* fix for actual `gravityforms` slug
 
 #### 1.5.0 / 2022-09-02
 * add `afragen/add-plugin-dependency-api` as composer requirement

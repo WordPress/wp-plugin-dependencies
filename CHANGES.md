@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 1.5.1 / 2022-09-02
+* fix for actual `gravityforms` slug
+
 #### 1.5.0 / 2022-09-02
 * add `afragen/add-plugin-dependency-api` as composer requirement
 * update test plugins removing `hello-dolly` and adding `git-updater` as non dot org example
