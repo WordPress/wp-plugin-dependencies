@@ -1,4 +1,6 @@
 [unreleased]
+* move `plugin_dependency_endpoints` hook outside of class
+composer update
 
 #### 1.5.1 / 2022-09-02
 * fix for actual `gravityforms` slug
