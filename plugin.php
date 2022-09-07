@@ -50,6 +50,16 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	);
 }
 
+// Add the sites with REST enpoints that return plugins_api() data when passed `slug` query arg.
+add_filter(
+	'plugin_dependency_endpoints',
+	function () {
+		return array(
+			'https://git-updater.com/wp-json/git-updater/v1/plugins-api/',
+		);
+	}
+);
+
 /**
  * Class Init
  */
@@ -65,18 +75,8 @@ class Init {
 
 		add_filter( 'install_plugins_tabs', array( $this, 'add_install_tab' ), 10, 1 );
 		add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
-
-		// Add the sites with REST enpoints that return plugins_api() data when passed `slug` query arg.
-		add_filter(
-			'plugin_dependency_endpoints',
-			function () {
-				return array(
-					'https://git-updater.com/wp-json/git-updater/v1/plugins-api/',
-				);
-			}
-		);
-
 		add_action( 'install_plugins_dependencies', 'display_plugins_table' );
+
 		add_action( 'admin_init', array( 'WP_Plugin_Dependencies', 'init' ) );
 	}
 
