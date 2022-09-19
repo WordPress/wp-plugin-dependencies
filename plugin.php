@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Deactivate plugin when committed to core.
-if ( version_compare( get_bloginfo( 'version' ), '6.1-RC1', '>=' ) ) {
+if ( version_compare( get_bloginfo( 'version' ), '6.2-RC1', '>=' ) ) {
 	deactivate_plugins( __FILE__ );
 }
 
