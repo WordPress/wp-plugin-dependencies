@@ -1,6 +1,7 @@
 [unreleased]
 * move `plugin_dependency_endpoints` hook outside of class
 composer update
+* add filter `wp_plugin_dependencies_slugs` to modify slugs in cases of non-premium plugin replaced with premium plugin
 
 #### 1.5.1 / 2022-09-02
 * fix for actual `gravityforms` slug
