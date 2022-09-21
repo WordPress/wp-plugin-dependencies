@@ -2,13 +2,14 @@
 * move `plugin_dependency_endpoints` hook outside of class
 composer update
 * add filter `wp_plugin_dependencies_slugs` to modify slugs in cases of non-premium plugin replaced with premium plugin
+* keep checking plugins API for plugin with generic response
 
 #### 1.5.1 / 2022-09-02
 * fix for actual `gravityforms` slug
 
 #### 1.5.0 / 2022-09-02
 * add `afragen/add-plugin-dependency-api` as composer requirement
-* update test plugins removing `hello-dolly` and adding `git-updater` as non dot org example
+* update test plugins removing `hello-dolly` and adding `git-updater` as non-dot org example
 * check empty plugin response for error
 
 #### 1.4.1 / 2022-08-18
