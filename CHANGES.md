@@ -3,6 +3,8 @@
 composer update
 * add filter `wp_plugin_dependencies_slugs` to modify slugs in cases of non-premium plugin replaced with premium plugin
 * keep checking plugins API for plugin with generic response
+* update conditional for generic response
+* update testing plugins
 
 #### 1.5.1 / 2022-09-02
 * fix for actual `gravityforms` slug
