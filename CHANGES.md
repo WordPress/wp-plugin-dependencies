@@ -1,6 +1,8 @@
 [unreleased]
+
+#### 1.6.0 / 2022-10-15
 * move `plugin_dependency_endpoints` hook outside of class
-composer update
+* composer update
 * add filter `wp_plugin_dependencies_slugs` to modify slugs in cases of non-premium plugin replaced with premium plugin
 * keep checking plugins API for plugin with generic response
 * update conditional for generic response

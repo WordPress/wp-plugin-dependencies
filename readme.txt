@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.5.1
+Stable tag: 1.6.0
 
 ## Description
 
@@ -38,6 +38,14 @@ There are several single file plugins that may be used for testing in `test-plug
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.6.0 / 2022-10-15
+* move `plugin_dependency_endpoints` hook outside of class
+* composer update
+* add filter `wp_plugin_dependencies_slugs` to modify slugs in cases of non-premium plugin replaced with premium plugin
+* keep checking plugins API for plugin with generic response
+* update conditional for generic response
+* update testing plugins
 
 #### 1.5.1 / 2022-09-02
 * fix for actual `gravityforms` slug
