@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart
- * Version: 1.5.1
+ * Version: 1.6.0
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Deactivate plugin when committed to core.
-if ( version_compare( get_bloginfo( 'version' ), '6.1-RC1', '>=' ) ) {
+if ( version_compare( get_bloginfo( 'version' ), '6.2-RC1', '>=' ) ) {
 	deactivate_plugins( __FILE__ );
 }
 
@@ -50,6 +50,16 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	);
 }
 
+// Add the sites with REST enpoints that return plugins_api() data when passed `slug` query arg.
+add_filter(
+	'plugin_dependency_endpoints',
+	function () {
+		return array(
+			'https://git-updater.com/wp-json/git-updater/v1/plugins-api/',
+		);
+	}
+);
+
 /**
  * Class Init
  */
@@ -65,18 +75,8 @@ class Init {
 
 		add_filter( 'install_plugins_tabs', array( $this, 'add_install_tab' ), 10, 1 );
 		add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
-
-		// Add the sites with REST enpoints that return plugins_api() data when passed `slug` query arg.
-		add_filter(
-			'plugin_dependency_endpoints',
-			function () {
-				return array(
-					'https://git-updater.com/wp-json/git-updater/v1/plugins-api/',
-				);
-			}
-		);
-
 		add_action( 'install_plugins_dependencies', 'display_plugins_table' );
+
 		add_action( 'admin_init', array( 'WP_Plugin_Dependencies', 'init' ) );
 	}
 

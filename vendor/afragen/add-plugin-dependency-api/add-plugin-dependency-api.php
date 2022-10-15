@@ -52,6 +52,8 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 				foreach ( $rest_endpoints as $endpoint ) {
 					$url      = add_query_arg( 'slug', $args->slug, trailingslashit( $endpoint ) );
 					$response = wp_remote_get( $url );
+
+					// Convert response to associative array.
 					$response = json_decode( wp_remote_retrieve_body( $response ), true );
 					if ( null === $response || isset( $response->error ) || isset( $response->code ) ) {
 						$message = isset( $response->error ) ? $response->error : null;
@@ -79,7 +81,8 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 		/**
 		 * Filter `upgrader_post_install` for plugin dependencies.
 		 *
-		 * @uses Git Updater PRO REST API.
+		 * For correct renaming of downloaded plugin directory,
+		 * some downloads may not be formatted correctly.
 		 *
 		 * @param bool  $true       Default is true.
 		 * @param array $hook_extra Array of data from hook.

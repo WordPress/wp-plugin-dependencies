@@ -24,7 +24,9 @@ You can use **composer** to install this package within your WordPress plugin / 
 composer require afragen/add-plugin-dependency-api
 ```
 
-2. Add a filter to your plugin that requires a dependency that returns an array containing a REST endpoint that returns a valid `plugins_api()` response.
+2. Add a filter to your plugin that requires a dependency that returns an array or JSON response containing a REST endpoint that returns a valid `plugins_api()` response.
+
+A query arg of the plugin slug, `?slug=my-plugin-dependency`, will be passed to the endpoint returned from the filter. The slug originates from the `Require Plugins` header.
 
 ```php
 // Add the sites with REST enpoints that return plugins_api() data when passed `slug` query arg.
@@ -37,6 +39,8 @@ add_filter(
 	}
 );
 ```
+
+To see an example REST endpoint return view <https://git-updater.com/wp-json/git-updater/v1/plugins-api/?slug=git-updater> in the browser.
 
 ## Development
 

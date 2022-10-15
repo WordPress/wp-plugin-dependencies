@@ -147,7 +147,15 @@ class WP_Plugin_Dependencies {
 					$sanitized_slugs[] = $slug;
 				}
 			}
-			$sanitized_slugs                          = array_unique( $sanitized_slugs );
+			$sanitized_slugs = array_unique( $sanitized_slugs );
+
+			/**
+			 * Filter slugs to allow for slug switching between non-premium and premium plugins.
+			 *
+			 * @param array
+			 */
+			$sanitized_slugs = apply_filters( 'wp_plugin_dependencies_slugs', $sanitized_slugs );
+
 			$this->plugins[ $key ]['RequiresPlugins'] = $sanitized_slugs;
 			$all_slugs                                = array_merge( $all_slugs, $sanitized_slugs );
 		}
@@ -227,6 +235,11 @@ class WP_Plugin_Dependencies {
 				set_site_transient( "wp_plugin_dependencies_plugin_timeout_{$slug}", true, 12 * HOUR_IN_SECONDS );
 			}
 
+			// Check plugins API if generic data present.
+			if ( empty( $this->plugin_data[ $slug ]['last_updated'] ) ) {
+				unset( $this->plugin_data[ $slug ] );
+			}
+
 			// Don't hit plugins API if data exists.
 			if ( array_key_exists( $slug, (array) $this->plugin_data ) ) {
 				continue;
@@ -243,7 +256,7 @@ class WP_Plugin_Dependencies {
 			);
 			$response = plugins_api( 'plugin_information', $args );
 
-			// If a proper slug is present but has no plugin data, generic data will be returned.
+			// If a proper slug is present but has incomplete plugin data, generic data will be returned.
 			$response = $this->get_empty_plugins_api_response( $response, $args );
 
 			if ( is_wp_error( $response ) ) {
@@ -615,7 +628,9 @@ class WP_Plugin_Dependencies {
 	 * @return \stdClass
 	 */
 	private function get_empty_plugins_api_response( $response, $args ) {
-		if ( is_wp_error( $response ) || property_exists( $response, 'error' ) ) {
+		if ( is_wp_error( $response ) || property_exists( $response, 'error' )
+			|| ! property_exists( $response, 'slug' ) || ! property_exists( $response, 'short_description' )
+		) {
 			$response = array(
 				'name'              => $args['slug'],
 				'slug'              => $args['slug'],
@@ -626,7 +641,7 @@ class WP_Plugin_Dependencies {
 				'tested'            => '',
 				'requires_php'      => '',
 				'sections'          => array( 'description' => '' ),
-				'short_description' => __( 'This plugin has no API data. Please contact the plugin developer and ask them to integrate with plugin dependencies.' ),
+				'short_description' => __( 'This required plugin does not support plugin dependencies. Please contact the plugin’s developer and ask them to add dependencies support.' ),
 				'download_link'     => '',
 				'banners'           => array(),
 				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$args['slug']}.svg" ),
