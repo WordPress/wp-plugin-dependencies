@@ -502,6 +502,11 @@ class WP_Plugin_Dependencies {
 	public function admin_notices() {
 		global $pagenow;
 
+		// Exit early if user unable to act on notice.
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			return;
+		}
+
 		// Plugin deactivated if dependencies not met.
 		// Transient on a 10 second timeout.
 		$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins' );
