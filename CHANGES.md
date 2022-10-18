@@ -1,4 +1,5 @@
 [unreleased]
+* more precise check of dependency slug for file path
 
 #### 1.6.0 / 2022-10-15
 * move `plugin_dependency_endpoints` hook outside of class
