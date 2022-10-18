@@ -50,16 +50,18 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 				$rest_endpoints = apply_filters( 'plugin_dependency_endpoints', [] );
 
 				foreach ( $rest_endpoints as $endpoint ) {
-					$url      = add_query_arg( 'slug', $args->slug, trailingslashit( $endpoint ) );
+					$url      = add_query_arg( 'slug', $args->slug, untrailingslashit( $endpoint ) );
 					$response = wp_remote_get( $url );
 
 					// Convert response to associative array.
 					$response = json_decode( wp_remote_retrieve_body( $response ), true );
-					if ( null === $response || isset( $response->error ) || isset( $response->code ) ) {
-						$message = isset( $response->error ) ? $response->error : null;
-						return new \WP_Error( 'error', 'Error retrieving plugin data.', $message );
+					if ( null === $response || isset( $response['error'] ) || isset( $response['code'] ) ) {
+						$message  = isset( $response['error'] ) ? $response['error'] : null;
+						$response = new \WP_Error( 'error', 'Error retrieving plugin data.', $message );
 					}
-					break;
+					if ( ! is_wp_error( $response ) ) {
+						break;
+					}
 				}
 
 				// Add slug to hook_extra.

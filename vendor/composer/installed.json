@@ -2,23 +2,23 @@
     "packages": [
         {
             "name": "afragen/add-plugin-dependency-api",
-            "version": "0.4.1",
-            "version_normalized": "0.4.1.0",
+            "version": "0.4.2",
+            "version_normalized": "0.4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/afragen/add-plugin-dependency-api.git",
-                "reference": "0995c7b5c14932b3bf0666aaf919bd463c553ebb"
+                "reference": "cd2fa40f807009596b07b6545b3dd55af95079f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/afragen/add-plugin-dependency-api/zipball/0995c7b5c14932b3bf0666aaf919bd463c553ebb",
-                "reference": "0995c7b5c14932b3bf0666aaf919bd463c553ebb",
+                "url": "https://api.github.com/repos/afragen/add-plugin-dependency-api/zipball/cd2fa40f807009596b07b6545b3dd55af95079f3",
+                "reference": "cd2fa40f807009596b07b6545b3dd55af95079f3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6"
             },
-            "time": "2022-09-07T14:05:43+00:00",
+            "time": "2022-10-18T19:40:42+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
