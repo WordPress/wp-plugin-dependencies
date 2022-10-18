@@ -1,6 +1,9 @@
 [unreleased]
+
+#### 1.6.1 / 2022-10-18
 * more precise check of dependency slug for file path
 * don't show admin notice to users who are unable to act upon them
+* update composer dependencies
 * add skeleton JSON response for Gravity Forms
 
 #### 1.6.0 / 2022-10-15
