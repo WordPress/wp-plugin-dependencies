@@ -684,7 +684,7 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Get names of required plugins.
 	 *
-	 * @param array $data Array of plugin or theme data.
+	 * @param string $data Plugin file.
 	 *
 	 * @return string
 	 */
