@@ -502,6 +502,11 @@ class WP_Plugin_Dependencies {
 	public function admin_notices() {
 		global $pagenow;
 
+		// Exit early if user unable to act on notice.
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			return;
+		}
+
 		// Plugin deactivated if dependencies not met.
 		// Transient on a 10 second timeout.
 		$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins' );
@@ -557,7 +562,7 @@ class WP_Plugin_Dependencies {
 		$dependency_filepaths = array();
 		foreach ( $this->slugs as $slug ) {
 			foreach ( array_keys( $this->plugins ) as $plugin ) {
-				if ( false !== strpos( $plugin, trailingslashit( $slug ) ) ) {
+				if ( dirname( $plugin ) === $slug ) {
 					$dependency_filepaths[ $slug ] = $plugin;
 					break;
 				} else {
@@ -684,7 +689,7 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Get names of required plugins.
 	 *
-	 * @param array $data Array of plugin or theme data.
+	 * @param string $data Plugin file.
 	 *
 	 * @return string
 	 */

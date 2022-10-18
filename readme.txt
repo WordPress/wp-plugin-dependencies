@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.0
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 
 ## Description
 
@@ -38,6 +38,12 @@ There are several single file plugins that may be used for testing in `test-plug
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.6.1 / 2022-10-18
+* more precise check of dependency slug for file path
+* don't show admin notice to users who are unable to act upon them
+* update composer dependencies
+* add skeleton JSON response for Gravity Forms
 
 #### 1.6.0 / 2022-10-15
 * move `plugin_dependency_endpoints` hook outside of class
