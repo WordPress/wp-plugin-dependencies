@@ -56,6 +56,7 @@ add_filter(
 	function () {
 		return array(
 			'https://git-updater.com/wp-json/git-updater/v1/plugins-api/',
+			'https://pub.thefragens.com/gravityforms.json',
 		);
 	}
 );
