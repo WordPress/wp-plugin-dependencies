@@ -1,5 +1,6 @@
 [unreleased]
 * more precise check of dependency slug for file path
+* don't show admin notice to users who are unable to act upon them
 
 #### 1.6.0 / 2022-10-15
 * move `plugin_dependency_endpoints` hook outside of class
