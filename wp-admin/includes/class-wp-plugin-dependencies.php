@@ -565,9 +565,8 @@ class WP_Plugin_Dependencies {
 				if ( dirname( $plugin ) === $slug ) {
 					$dependency_filepaths[ $slug ] = $plugin;
 					break;
-				} else {
-					$dependency_filepaths[ $slug ] = false;
 				}
+				$dependency_filepaths[ $slug ] = false;
 			}
 		}
 
