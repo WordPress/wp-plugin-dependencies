@@ -6,8 +6,8 @@ License: MIT
 Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
-Tested up to: 6.0
-Stable tag: 1.6.1
+Tested up to: 6.1
+Stable tag: 1.6.2
 
 ## Description
 
@@ -38,6 +38,9 @@ There are several single file plugins that may be used for testing in `test-plug
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.6.2 / 2022-10-18
+* composer update better checking in `afragen/add-plugin-dependency-api`
 
 #### 1.6.1 / 2022-10-18
 * more precise check of dependency slug for file path

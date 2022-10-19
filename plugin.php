@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart
- * Version: 1.6.1
+ * Version: 1.6.2
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -50,7 +50,7 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	);
 }
 
-// Add the sites with REST enpoints that return plugins_api() data when passed `slug` query arg.
+// Add the sites with REST endpoints that return plugins_api() data when passed `slug` query arg.
 add_filter(
 	'plugin_dependency_endpoints',
 	function () {
