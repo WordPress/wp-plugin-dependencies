@@ -42,6 +42,20 @@ class WP_Plugin_Dependencies {
 	 * @var array
 	 */
 	protected $requires_plugins;
+	
+	/**
+	 * Holds plugin directory names to compare with cache.
+	 *
+	 * @var array
+	 */
+	private $plugin_dirnames = array();
+	
+	/**
+	 * Holds cached plugin directory names.
+	 *
+	 * @var array
+	 */
+	private $plugin_dirnames_cache = array();
 
 	/**
 	 * Constructor.
@@ -604,14 +618,34 @@ class WP_Plugin_Dependencies {
 	 */
 	private function get_dependency_filepaths() {
 		$dependency_filepaths = array();
-		foreach ( $this->slugs as $slug ) {
+
+		if ( empty( $this->slugs ) || empty( $this->plugins ) ) {
+			return $dependency_filepaths;
+		}
+
+		// Cache the plugin directory names.
+		if ( empty( $this->plugin_dirnames )
+			|| ( ! empty( $this->plugin_dirnames ) && $this->plugin_dirnames_cache !== $this->plugins )
+		) {
+			$this->plugin_dirnames             = array();
+			$this->plugin_dirnames_cache = $this->plugins;
+
 			foreach ( array_keys( $this->plugins ) as $plugin ) {
-				if ( dirname( $plugin ) === $slug ) {
-					$dependency_filepaths[ $slug ] = $plugin;
-					break;
+				$dirname = dirname( $plugin );
+
+				if ( '.' !== $dirname ) {
+					$this->plugin_dirnames[ $dirname ] = $plugin;
 				}
-				$dependency_filepaths[ $slug ] = false;
 			}
+		}
+
+		foreach ( $this->slugs as $slug ) {
+			if ( isset( $this->plugin_dirnames[ $slug ] ) ) {
+				$dependency_filepaths[ $slug ] = $this->plugin_dirnames[ $slug ];
+				continue;
+			}
+
+			$dependency_filepaths[ $slug ] = false;
 		}
 
 		return $dependency_filepaths;
