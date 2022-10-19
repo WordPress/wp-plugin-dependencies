@@ -391,6 +391,11 @@ class WP_Plugin_Dependencies {
 				if ( $name !== $plugin_data['name'] ) {
 					continue;
 				}
+
+				if ( empty( $plugin_data['version'] ) ) {
+					$details_links[ $name ] = $name;
+					continue;
+				}
 			}
 		}
 
