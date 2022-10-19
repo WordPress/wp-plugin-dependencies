@@ -584,9 +584,13 @@ class WP_Plugin_Dependencies {
 			if ( in_array( dirname( $file ), $this->slugs, true )
 				&& in_array( $requires['RequiresPlugins'], $this->slugs, true )
 			) {
-				$circular_dependencies[] = $file;
+				$slug                                   = $requires['RequiresPlugins'];
+				$circular_dependencies[ $slug ]['file'] = $file;
+				$circular_dependencies[ $slug ]['name'] = $this->plugin_data[ $slug ]['name'];
+				$circular_dependencies['names'][]       = $circular_dependencies[ $slug ]['name'];
 			}
 		}
+		asort( $circular_dependencies['names'] );
 
 		return $circular_dependencies;
 	}
