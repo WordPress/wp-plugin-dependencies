@@ -460,7 +460,7 @@ class WP_Plugin_Dependencies {
 			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
 				$actions['activate']     = __( 'Cannot Activate' );
 				$actions['dependencies'] = sprintf(
-				/* translators: 1: opening tag link to Dependencies tab 2: closing tag */
+					/* translators: 1: Opening link tag to the Dependencies tab, 2: Closing link tag. */
 					__( '%1$sDependencies%2$s' ),
 					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
 					'</a>'
