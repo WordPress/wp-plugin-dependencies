@@ -674,8 +674,11 @@ class WP_Plugin_Dependencies {
 		if ( is_wp_error( $response ) || property_exists( $response, 'error' )
 			|| ! property_exists( $response, 'slug' ) || ! property_exists( $response, 'short_description' )
 		) {
-			$response = array(
-				'name'              => $args['slug'],
+			$dependencies = $this->get_dependency_filepaths();
+			$file         = $dependencies[ $args['slug'] ];
+			$args['name'] = null !== $this->plugins[ $file ] ? $this->plugins[ $file ]['Name'] : $args['slug'];
+			$response     = array(
+				'name'              => $args['name'],
 				'slug'              => $args['slug'],
 				'version'           => '',
 				'author'            => '',
@@ -693,7 +696,7 @@ class WP_Plugin_Dependencies {
 				'rating'            => 0,
 				'active_installs'   => 0,
 			);
-			$response = (object) $response;
+			$response     = (object) $response;
 		}
 
 		return $response;
