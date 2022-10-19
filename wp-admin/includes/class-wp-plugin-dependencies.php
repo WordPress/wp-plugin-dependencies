@@ -447,10 +447,10 @@ class WP_Plugin_Dependencies {
 	public function cannot_activate_unmet_dependencies( $actions, $plugin_file ) {
 		$dependencies          = $this->get_dependency_filepaths();
 		$plugin_dependencies   = $this->plugins[ $plugin_file ]['RequiresPlugins'];
-		$circular_dependencies = $this->get_circular_dependencies();
-		if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
-			return $actions;
-		}
+		// $circular_dependencies = $this->get_circular_dependencies();
+		// if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
+		// return $actions;
+		// }
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
 			if ( isset( $actions['activate'] ) ) {
 				if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
@@ -559,11 +559,11 @@ class WP_Plugin_Dependencies {
 			}
 		}
 		$circular_dependencies = $this->get_circular_dependencies();
-		foreach ( $circular_dependencies as $key => $plugin ) {
-			if ( is_plugin_active( $plugin ) ) {
-				unset( $circular_dependencies[ $key ] );
-			}
-		}
+		// foreach ( $circular_dependencies as $key => $plugin ) {
+		// if ( is_plugin_active( $plugin ) ) {
+		// unset( $circular_dependencies[ $key ] );
+		// }
+		// }
 		if ( ! empty( $circular_dependencies ) && count( $circular_dependencies ) > 1 ) {
 			$messages = __( 'You have a circular dependency with the following plugins: ' . implode( ', ', $circular_dependencies ) );
 			printf(
