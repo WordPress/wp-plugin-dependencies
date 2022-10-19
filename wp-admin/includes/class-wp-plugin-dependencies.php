@@ -188,6 +188,11 @@ class WP_Plugin_Dependencies {
 		}
 
 		$deactivate_requires = array_unique( $deactivate_requires );
+		foreach ( $deactivate_requires as $key => $plugin ) {
+			if ( in_array( $plugin, $this->get_circular_dependencies(), true ) ) {
+				unset( $deactivate_requires[ $key ] );
+			}
+		}
 		deactivate_plugins( $deactivate_requires );
 		set_site_transient( 'wp_plugin_dependencies_deactivate_plugins', $deactivate_requires, 10 );
 	}
@@ -440,9 +445,12 @@ class WP_Plugin_Dependencies {
 	 * @return array
 	 */
 	public function cannot_activate_unmet_dependencies( $actions, $plugin_file ) {
-		$dependencies        = $this->get_dependency_filepaths();
-		$plugin_dependencies = $this->plugins[ $plugin_file ]['RequiresPlugins'];
-
+		$dependencies          = $this->get_dependency_filepaths();
+		$plugin_dependencies   = $this->plugins[ $plugin_file ]['RequiresPlugins'];
+		$circular_dependencies = $this->get_circular_dependencies();
+		if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
+			return $actions;
+		}
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
 			if ( isset( $actions['activate'] ) ) {
 				if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
@@ -550,6 +558,32 @@ class WP_Plugin_Dependencies {
 				);
 			}
 		}
+		$circular_dependencies = $this->get_circular_dependencies();
+		if ( ! empty( $circular_dependencies ) && count( $circular_dependencies ) > 1 ) {
+			$messages = __( 'You have a circular dependency with the following plugins: ' . implode( ', ', $circular_dependencies ) );
+			printf(
+				'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
+				esc_html( $messages )
+			);
+		}
+	}
+
+	/**
+	 * Get circular dependencies.
+	 *
+	 * @return array
+	 */
+	private function get_circular_dependencies() {
+		$circular_dependencies = array();
+		foreach ( $this->requires_plugins as $file => $requires ) {
+			if ( in_array( dirname( $file ), $this->slugs, true )
+				&& in_array( $requires['RequiresPlugins'], $this->slugs, true )
+			) {
+				$circular_dependencies[] = $file;
+			}
+		}
+
+		return $circular_dependencies;
 	}
 
 	/**
