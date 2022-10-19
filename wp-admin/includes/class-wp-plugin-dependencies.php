@@ -445,8 +445,8 @@ class WP_Plugin_Dependencies {
 	 * @return array
 	 */
 	public function cannot_activate_unmet_dependencies( $actions, $plugin_file ) {
-		$dependencies          = $this->get_dependency_filepaths();
-		$plugin_dependencies   = $this->plugins[ $plugin_file ]['RequiresPlugins'];
+		$dependencies        = $this->get_dependency_filepaths();
+		$plugin_dependencies = $this->plugins[ $plugin_file ]['RequiresPlugins'];
 		// $circular_dependencies = $this->get_circular_dependencies();
 		// if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
 		// return $actions;
@@ -565,16 +565,17 @@ class WP_Plugin_Dependencies {
 		// }
 		// }
 		if ( ! empty( $circular_dependencies ) && count( $circular_dependencies ) > 1 ) {
-			$messages = __( 'You have a circular dependency with the following plugins: ' . implode( ', ', $circular_dependencies ) );
+			$messages  = __( 'You have circular dependencies with the following plugins: ' . implode( ', ', $circular_dependencies['names'] ) );
+			$messages .= '<br>' . __( 'Please contact the plugin developers and make them aware.' );
 			printf(
 				'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
-				esc_html( $messages )
+				wp_kses_post( $messages )
 			);
 		}
 	}
 
 	/**
-	 * Get circular dependencies.
+	 * Get circular dependency data.
 	 *
 	 * @return array
 	 */

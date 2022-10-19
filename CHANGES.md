@@ -1,5 +1,5 @@
 [unreleased]
-* allow activation of circular dependencies
+* notification of circular dependencies
 
 #### 1.6.2 / 2022-10-18
 * composer update better checking in `afragen/add-plugin-dependency-api`
