@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 1.6.2 / 2022-10-18
+* composer update better checking in `afragen/add-plugin-dependency-api`
+
 #### 1.6.1 / 2022-10-18
 * more precise check of dependency slug for file path
 * don't show admin notice to users who are unable to act upon them
