@@ -559,6 +559,11 @@ class WP_Plugin_Dependencies {
 			}
 		}
 		$circular_dependencies = $this->get_circular_dependencies();
+		foreach ( $circular_dependencies as $key => $plugin ) {
+			if ( is_plugin_active( $plugin ) ) {
+				unset( $circular_dependencies[ $key ] );
+			}
+		}
 		if ( ! empty( $circular_dependencies ) && count( $circular_dependencies ) > 1 ) {
 			$messages = __( 'You have a circular dependency with the following plugins: ' . implode( ', ', $circular_dependencies ) );
 			printf(
