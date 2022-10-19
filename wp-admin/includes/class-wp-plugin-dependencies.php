@@ -377,7 +377,7 @@ class WP_Plugin_Dependencies {
 	 * @param string $plugin_file Plugin file name.
 	 * @param string $names       Names of required plugins.
 	 *
-	 * @return string
+	 * @return string 'View details' like links for required plugins.
 	 */
 	private function get_view_details_link( $plugin_file, $names ) {
 		$details_links = array();
