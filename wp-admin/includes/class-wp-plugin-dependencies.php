@@ -417,7 +417,7 @@ class WP_Plugin_Dependencies {
 	 * @param array  $actions     Action links.
 	 * @param string $plugin_file Plugin file.
 	 *
-	 * @return array
+	 * @return array Plugin action links after checking for an active requiring plugin.
 	 */
 	public function unset_action_links( $actions, $plugin_file ) {
 		foreach ( $this->requires_plugins as $plugin => $requires ) {
