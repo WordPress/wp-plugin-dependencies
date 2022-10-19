@@ -50,6 +50,14 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 				$rest_endpoints = apply_filters( 'plugin_dependency_endpoints', [] );
 
 				foreach ( $rest_endpoints as $endpoint ) {
+					// Allow endpoint to return JSON file but ensure returning for correct slug.
+					$parsed_endpoint = ltrim( parse_url( $endpoint, PHP_URL_PATH ), '/' );
+					if ( false !== strpos( $parsed_endpoint, '.json' )
+						&& false === strpos( $parsed_endpoint, $args->slug )
+					) {
+						continue;
+					}
+
 					$url      = add_query_arg( 'slug', $args->slug, untrailingslashit( $endpoint ) );
 					$response = wp_remote_get( $url );
 
