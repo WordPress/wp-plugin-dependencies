@@ -448,6 +448,7 @@ class WP_Plugin_Dependencies {
 		$dependencies          = $this->get_dependency_filepaths();
 		$plugin_dependencies   = $this->plugins[ $plugin_file ]['RequiresPlugins'];
 		// $circular_dependencies = $this->get_circular_dependencies();
+		
 		// if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
 		// 	return $actions;
 		// }
