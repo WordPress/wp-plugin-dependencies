@@ -445,25 +445,28 @@ class WP_Plugin_Dependencies {
 	 * @return array
 	 */
 	public function cannot_activate_unmet_dependencies( $actions, $plugin_file ) {
-		$dependencies        = $this->get_dependency_filepaths();
-		$plugin_dependencies = $this->plugins[ $plugin_file ]['RequiresPlugins'];
+		$dependencies          = $this->get_dependency_filepaths();
+		$plugin_dependencies   = $this->plugins[ $plugin_file ]['RequiresPlugins'];
 		// $circular_dependencies = $this->get_circular_dependencies();
 		// if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
-		// return $actions;
+		// 	return $actions;
 		// }
-		foreach ( $plugin_dependencies as $plugin_dependency ) {
-			if ( isset( $actions['activate'] ) ) {
-				if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
-					$actions['activate']     = __( 'Cannot Activate' );
-					$actions['dependencies'] = sprintf(
-					/* translators: 1: opening tag link to Dependencies tab 2: closing tag */
-						__( '%1$sDependencies%2$s' ),
-						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
-						'</a>'
-					);
-					add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
-					break;
-				}
+
+		if ( ! isset( $actions['activate'] ) ) {
+			return $actions;
+		}
+
+		foreach ( $plugin_dependencies as $plugin_dependency ) {		
+			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
+				$actions['activate']     = __( 'Cannot Activate' );
+				$actions['dependencies'] = sprintf(
+				/* translators: 1: opening tag link to Dependencies tab 2: closing tag */
+					__( '%1$sDependencies%2$s' ),
+					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+					'</a>'
+				);
+				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
+				break;
 			}
 		}
 
