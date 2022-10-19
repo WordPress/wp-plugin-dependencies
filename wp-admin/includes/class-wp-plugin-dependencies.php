@@ -681,7 +681,7 @@ class WP_Plugin_Dependencies {
 		) {
 			$dependencies = $this->get_dependency_filepaths();
 			$file         = $dependencies[ $args['slug'] ];
-			$args['name'] = null !== $this->plugins[ $file ] ? $this->plugins[ $file ]['Name'] : $args['slug'];
+			$args['name'] = $file ? $this->plugins[ $file ]['Name'] : $args['slug'];
 			$response     = array(
 				'name'              => $args['name'],
 				'slug'              => $args['slug'],
