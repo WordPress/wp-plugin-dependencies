@@ -423,12 +423,7 @@ class WP_Plugin_Dependencies {
 		foreach ( $this->requires_plugins as $plugin => $requires ) {
 			$dependents = explode( ',', $requires['RequiresPlugins'] );
 			if ( is_plugin_active( $plugin ) && in_array( dirname( $plugin_file ), $dependents, true ) ) {
-				if ( isset( $actions['delete'] ) ) {
-					unset( $actions['delete'] );
-				}
-				if ( isset( $actions['deactivate'] ) ) {
-					unset( $actions['deactivate'] );
-				}
+				unset( $actions['delete'], $actions['deactivate'] );
 			}
 		}
 
