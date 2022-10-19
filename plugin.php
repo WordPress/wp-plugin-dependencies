@@ -50,7 +50,7 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	);
 }
 
-// Add the sites with REST enpoints that return plugins_api() data when passed `slug` query arg.
+// Add the sites with REST endpoints that return plugins_api() data when passed `slug` query arg.
 add_filter(
 	'plugin_dependency_endpoints',
 	function () {
