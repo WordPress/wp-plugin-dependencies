@@ -388,19 +388,8 @@ class WP_Plugin_Dependencies {
 		foreach ( $dependencies as $dependency ) {
 			$plugin_data = $this->plugin_data[ $dependency ];
 			foreach ( $names_arr as $name ) {
-				if ( $name === $plugin_data['name'] ) {
-					if ( empty( $plugin_data['version'] ) ) {
-						$details_links[ $name ] = $name;
-					} else {
-						$details_links[ $name ] = sprintf(
-							"<a href='%s' class='thickbox open-plugin-details-modal' aria-label='%s' data-title='%s'>%s</a>",
-							network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $plugin_data['slug'] . '&TB_iframe=true&width=600&height=550' ),
-							/* translators: %s: Plugin name. */
-							sprintf( __( 'More information about %s' ), $name ),
-							$name,
-							$name
-						);
-					}
+				if ( $name !== $plugin_data['name'] ) {
+					continue;
 				}
 			}
 		}
