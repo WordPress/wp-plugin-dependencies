@@ -717,4 +717,3 @@ class WP_Plugin_Dependencies {
 		return isset( $names ) ? $names : '';
 	}
 }
-
