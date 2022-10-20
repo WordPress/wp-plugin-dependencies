@@ -83,7 +83,8 @@ class Init {
 			'install_plugins_table_header',
 			function() {
 				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				if ( isset( $_GET['tab'] ) && 'dependencies' === $_GET['tab'] ) {
+				$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
+				if ( 'dependencies' === $tab ) {
 					echo '<p>' . esc_html__( 'These suggestions are based on dependencies required by installed plugins.' ) . '</p>';
 				}
 			}
