@@ -627,10 +627,10 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Return empty plugins_api() response.
 	 *
-	 * @param \stdClass|WP_Error $response Response from plugins_api().
+	 * @param stdClass|WP_Error $response Response from plugins_api().
 	 * @param array              $args     Array of arguments passed to plugins_api().
 	 *
-	 * @return \stdClass
+	 * @return stdClass
 	 */
 	private function get_empty_plugins_api_response( $response, $args ) {
 		if ( is_wp_error( $response ) || property_exists( $response, 'error' )
