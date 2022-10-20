@@ -41,7 +41,7 @@ if ( version_compare( get_bloginfo( 'version' ), '6.2-RC1', '>=' ) ) {
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 } else {
-	\deactivate_plugins( __FILE__ );
+	deactivate_plugins( __FILE__ );
 
 	wp_die(
 		wp_kses_post(
