@@ -244,8 +244,7 @@ class WP_Plugin_Dependencies {
 	public function get_dot_org_data() {
 		global $pagenow;
 
-		$pages = array( 'plugin-install.php', 'plugins.php' );
-		if ( ! in_array( $pagenow, $pages, true ) ) {
+		if ( ! in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ), true ) ) {
 			return;
 		}
 
@@ -470,7 +469,6 @@ class WP_Plugin_Dependencies {
 		$dependencies        = $this->get_dependency_filepaths();
 		$plugin_dependencies = $this->plugins[ $plugin_file ]['RequiresPlugins'];
 		// $circular_dependencies = $this->get_circular_dependencies();
-
 		// if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
 		// return $actions;
 		// }
@@ -728,7 +726,8 @@ class WP_Plugin_Dependencies {
 	 */
 	private function get_empty_plugins_api_response( $response, $args ) {
 		if ( is_wp_error( $response ) || property_exists( $response, 'error' )
-			|| ! property_exists( $response, 'slug' ) || ! property_exists( $response, 'short_description' )
+			|| ! property_exists( $response, 'slug' )
+			|| ! property_exists( $response, 'short_description' )
 		) {
 			$dependencies = $this->get_dependency_filepaths();
 			$file         = $dependencies[ $args['slug'] ];
