@@ -309,6 +309,8 @@ class WP_Plugin_Dependencies {
 	 * Actually make modifications to plugin row of plugin dependencies.
 	 *
 	 * @param string $plugin_file Plugin file.
+	 *
+	 * @return void
 	 */
 	public function modify_dependency_plugin_row( $plugin_file ) {
 		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
