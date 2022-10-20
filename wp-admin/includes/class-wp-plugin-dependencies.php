@@ -762,7 +762,7 @@ class WP_Plugin_Dependencies {
 	 * Hide plugin card action links for plugins with no API data.
 	 *
 	 * @global $pagenow Current page.
-     *
+	 *
 	 * @return void
 	 */
 	public function hide_action_links() {
