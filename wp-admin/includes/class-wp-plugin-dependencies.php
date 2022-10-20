@@ -457,8 +457,8 @@ class WP_Plugin_Dependencies {
 			return $actions;
 		}
 
-		foreach ( $plugin_dependencies as $plugin_dependency ) {		
-			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
+		foreach ( $plugin_dependencies as $plugin_dependency ) {
+			if ( ! isset( $dependencies[ $plugin_dependency ] ) || is_plugin_active( $dependencies[ $plugin_dependency ] ) ) {
 				$actions['activate']     = __( 'Cannot Activate' );
 				$actions['dependencies'] = sprintf(
 					/* translators: 1: Opening link tag to the Dependencies tab, 2: Closing link tag. */
