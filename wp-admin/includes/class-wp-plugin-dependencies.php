@@ -101,7 +101,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
 	 *
-	 * @return \stdClass
+	 * @return stdClass
 	 */
 	private function parse_plugin_headers() {
 		global $wp_filesystem;
@@ -195,11 +195,11 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Modify plugins_api() response.
 	 *
-	 * @param \stdClas  $res    Object of results.
+	 * @param stdClass  $res    Object of results.
 	 * @param string    $action Variable for plugins_api().
-	 * @param \stdClass $args   Object of plugins_api() args.
+	 * @param stdClass $args   Object of plugins_api() args.
 	 *
-	 * @return \stdClass
+	 * @return stdClass
 	 */
 	public function plugins_api_result( $res, $action, $args ) {
 		if ( property_exists( $args, 'browse' ) && 'dependencies' === $args->browse ) {
@@ -664,7 +664,7 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Hide plugin card action links for plugins with no API data.
 	 *
-	 * @global $pagenow Current page.
+	 * @global string $pagenow Current page.
 	 * @return void
 	 */
 	public function hide_action_links() {
