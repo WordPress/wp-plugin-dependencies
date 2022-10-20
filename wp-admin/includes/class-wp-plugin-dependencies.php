@@ -387,7 +387,7 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		$links = $this->get_view_details_link( $plugin_file, $names );
+		$links = $this->get_view_details_links( $plugin_file, $names );
 
 		print '<script>';
 		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . wp_kses_post( $links ) . '");';
