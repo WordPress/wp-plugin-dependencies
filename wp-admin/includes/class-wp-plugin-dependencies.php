@@ -364,7 +364,7 @@ class WP_Plugin_Dependencies {
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
 		$names = $this->get_requires_plugins_names( $plugin_file );
 		if ( ! empty( $names ) ) {
-			$names = $this->get_view_details_link( $plugin_file, $names );
+			$names = $this->get_view_details_links( $plugin_file, $names );
 			print '<script>';
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . wp_kses_post( $names ) . '");';
 			print '</script>';
@@ -379,7 +379,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return string 'View details' like links for required plugins.
 	 */
-	private function get_view_details_link( $plugin_file, $names ) {
+	private function get_view_details_links( $plugin_file, $names ) {
 		$details_links = array();
 		$names_arr     = explode( ', ', $names );
 		$dependencies  = $this->requires_plugins[ $plugin_file ]['RequiresPlugins'];
