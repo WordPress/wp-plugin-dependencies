@@ -558,19 +558,23 @@ class WP_Plugin_Dependencies {
 				);
 			}
 		}
-		$circular_dependencies = $this->get_circular_dependencies();
-		// foreach ( $circular_dependencies as $key => $plugin ) {
-		// if ( is_plugin_active( $plugin ) ) {
-		// unset( $circular_dependencies[ $key ] );
-		// }
-		// }
-		if ( ! empty( $circular_dependencies ) && count( $circular_dependencies ) > 1 ) {
-			$messages  = __( 'You have circular dependencies with the following plugins: ' . implode( ', ', $circular_dependencies['names'] ) );
-			$messages .= '<br>' . __( 'Please contact the plugin developers and make them aware.' );
-			printf(
-				'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
-				wp_kses_post( $messages )
-			);
+
+		// Only display on plugins.php or plugin-install.php.
+		if ( in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ) ) ) {
+			$circular_dependencies = $this->get_circular_dependencies();
+			// foreach ( $circular_dependencies as $key => $plugin ) {
+			// if ( is_plugin_active( $plugin ) ) {
+			// unset( $circular_dependencies[ $key ] );
+			// }
+			// }
+			if ( ! empty( $circular_dependencies ) && count( $circular_dependencies ) > 1 ) {
+				$messages  = __( 'You have circular dependencies with the following plugins: ' . implode( ', ', $circular_dependencies['names'] ) );
+				$messages .= '<br>' . __( 'Please contact the plugin developers and make them aware.' );
+				printf(
+					'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
+					wp_kses_post( $messages )
+				);
+			}
 		}
 	}
 
