@@ -697,12 +697,14 @@ class WP_Plugin_Dependencies {
 
 		// Exit if no plugin data found.
 		if ( empty( $this->plugin_data ) ) {
-			return;
+			return '';
 		}
 
-		if ( str_contains( $data, '.php' ) ) {
-			$requires = $this->plugins[ $data ]['RequiresPlugins'];
+		if ( ! str_contains( $data, '.php' ) ) {
+			return '';
 		}
+
+		$requires = $this->plugins[ $data ]['RequiresPlugins'];
 		foreach ( $requires as $require ) {
 			if ( isset( $this->plugin_data[ $require ] ) ) {
 				$names[] = $this->plugin_data[ $require ]['name'];
@@ -715,3 +717,4 @@ class WP_Plugin_Dependencies {
 		return isset( $names ) ? $names : '';
 	}
 }
+
