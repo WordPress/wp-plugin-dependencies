@@ -540,7 +540,7 @@ class WP_Plugin_Dependencies {
 		}
 
 		// Only display on specific pages.
-		if ( in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ) ) ) {
+		if ( in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ), true ) ) {
 
 			// Plugin deactivated if dependencies not met.
 			// Transient on a 10 second timeout.
