@@ -1,5 +1,6 @@
 [unreleased]
 * notification of circular dependencies
+* add info text under Dependencies tab, I found a hook 🙌
 
 #### 1.6.2 / 2022-10-18
 * composer update better checking in `afragen/add-plugin-dependency-api`
