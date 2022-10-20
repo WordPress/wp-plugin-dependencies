@@ -420,11 +420,13 @@ class WP_Plugin_Dependencies {
 					continue;
 				}
 
+				$name_attr              = esc_attr( $name );
 				$details_links[ $name ] = sprintf(
 					'<a href="%s" class="thickbox open-plugin-details-modal" aria-label="%s" data-title="%s">%s</a>',
 					esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $plugin_data['slug'] . '&TB_iframe=true&width=600&height=550' ) ),
 					/* translators: %s: Plugin name. */
-					sprintf( __( 'More information about %s' ), esc_attr( $name ) ),
+					sprintf( __( 'More information about %s' ), $name_attr ),
+					$name_attr,
 					$name
 				);
 			}
