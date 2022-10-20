@@ -515,52 +515,53 @@ class WP_Plugin_Dependencies {
 			return;
 		}
 
-		// Plugin deactivated if dependencies not met.
-		// Transient on a 10 second timeout.
-		$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins' );
-		if ( ! empty( $deactivate_requires ) ) {
-			foreach ( $deactivate_requires as $deactivated ) {
-				$deactivated_plugins[] = $this->plugins[ $deactivated ]['Name'];
-			}
-			$deactivated_plugins = implode( ', ', $deactivated_plugins );
-			printf(
-				'<div class="notice-error notice is-dismissible"><p>'
+		// Only display on specific pages.
+		if ( in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ) ) ) {
+
+			// Plugin deactivated if dependencies not met.
+			// Transient on a 10 second timeout.
+			$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins' );
+			if ( ! empty( $deactivate_requires ) ) {
+				foreach ( $deactivate_requires as $deactivated ) {
+					$deactivated_plugins[] = $this->plugins[ $deactivated ]['Name'];
+				}
+				$deactivated_plugins = implode( ', ', $deactivated_plugins );
+				printf(
+					'<div class="notice-error notice is-dismissible"><p>'
 					/* translators: 1: plugin names, 2: opening tag and link to Dependencies install page, 3: closing tag */
 					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
 					. '</p></div>',
-				'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
-				'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
-				'</a>'
-			);
-		} else {
-			// More dependencies to install.
-			$installed_slugs = array_map( 'dirname', array_keys( $this->plugins ) );
-			$intersect       = array_intersect( $this->slugs, $installed_slugs );
-			asort( $intersect );
-			if ( $intersect !== $this->slugs ) {
-				$message_html = __( 'There are additional plugins that must be installed.' );
+					'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
+					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+					'</a>'
+				);
+			} else {
+				// More dependencies to install.
+				$installed_slugs = array_map( 'dirname', array_keys( $this->plugins ) );
+				$intersect       = array_intersect( $this->slugs, $installed_slugs );
+				asort( $intersect );
+				if ( $intersect !== $this->slugs ) {
+					$message_html = __( 'There are additional plugins that must be installed.' );
 
-				// Display link (if not already on Dependencies install page).
-				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
-				if ( 'plugin-install.php' !== $pagenow || 'dependencies' !== $tab ) {
-					$message_html .= ' ' . sprintf(
+					// Display link (if not already on Dependencies install page).
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
+					if ( 'plugin-install.php' !== $pagenow || 'dependencies' !== $tab ) {
+						$message_html .= ' ' . sprintf(
 							/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
-						__( 'Go to the %1$sDependencies%2$s install page.' ),
-						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
-						'</a>'
+							__( 'Go to the %1$sDependencies%2$s install page.' ),
+							'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+							'</a>'
+						);
+					}
+
+					printf(
+						'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
+						wp_kses_post( $message_html )
 					);
 				}
-
-				printf(
-					'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
-					wp_kses_post( $message_html )
-				);
 			}
-		}
 
-		// Only display on plugins.php or plugin-install.php.
-		if ( in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ) ) ) {
 			$circular_dependencies = $this->get_circular_dependencies();
 			// foreach ( $circular_dependencies as $key => $plugin ) {
 			// if ( is_plugin_active( $plugin ) ) {
