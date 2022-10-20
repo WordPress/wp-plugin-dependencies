@@ -442,7 +442,7 @@ class WP_Plugin_Dependencies {
 	 * @param array  $actions     Plugin action links.
 	 * @param string $plugin_file File name.
 	 *
-	 * @return array
+	 * @return array Plugin action links after checking for unmet dependencies.
 	 */
 	public function cannot_activate_unmet_dependencies( $actions, $plugin_file ) {
 		$dependencies          = $this->get_dependency_filepaths();
