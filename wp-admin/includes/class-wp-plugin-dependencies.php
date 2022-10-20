@@ -42,14 +42,14 @@ class WP_Plugin_Dependencies {
 	 * @var array
 	 */
 	protected $requires_plugins;
-	
+
 	/**
 	 * Holds plugin directory names to compare with cache.
 	 *
 	 * @var array
 	 */
 	private $plugin_dirnames = array();
-	
+
 	/**
 	 * Holds cached plugin directory names.
 	 *
@@ -115,7 +115,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
 	 *
-	 * @return \stdClass
+	 * @return array
 	 */
 	private function parse_plugin_headers() {
 		global $wp_filesystem;
@@ -146,6 +146,7 @@ class WP_Plugin_Dependencies {
 	 * Sanitize headers.
 	 *
 	 * @param array $required_headers Array of required plugin headers.
+	 *
 	 * @return array
 	 */
 	private function sanitize_required_headers( $required_headers ) {
@@ -237,6 +238,8 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Get plugin data from WordPress API.
 	 * Store result in $this->plugin_data.
+	 *
+	 * @return void
 	 */
 	public function get_dot_org_data() {
 		global $pagenow;
@@ -323,6 +326,8 @@ class WP_Plugin_Dependencies {
 	 * Actually make modifications to plugin row of plugin dependencies.
 	 *
 	 * @param string $plugin_file Plugin file.
+	 *
+	 * @return void
 	 */
 	public function modify_dependency_plugin_row( $plugin_file ) {
 		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
@@ -632,7 +637,7 @@ class WP_Plugin_Dependencies {
 		if ( empty( $this->plugin_dirnames )
 			|| ( ! empty( $this->plugin_dirnames ) && $this->plugin_dirnames_cache !== $this->plugins )
 		) {
-			$this->plugin_dirnames             = array();
+			$this->plugin_dirnames       = array();
 			$this->plugin_dirnames_cache = $this->plugins;
 
 			foreach ( array_keys( $this->plugins ) as $plugin ) {
@@ -750,6 +755,7 @@ class WP_Plugin_Dependencies {
 	 * Hide plugin card action links for plugins with no API data.
 	 *
 	 * @global $pagenow Current page.
+	 *
 	 * @return void
 	 */
 	public function hide_action_links() {
