@@ -419,7 +419,7 @@ class WP_Plugin_Dependencies {
 					$details_links[ $name ] = $name;
 					continue;
 				}
-				
+
 				$details_links[ $name ] = sprintf(
 					'<a href="%s" class="thickbox open-plugin-details-modal" aria-label="%s" data-title="%s">%s</a>',
 					esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $plugin_data['slug'] . '&TB_iframe=true&width=600&height=550' ) ),
@@ -465,12 +465,12 @@ class WP_Plugin_Dependencies {
 	 * @return array Plugin action links after checking for unmet dependencies.
 	 */
 	public function cannot_activate_unmet_dependencies( $actions, $plugin_file ) {
-		$dependencies          = $this->get_dependency_filepaths();
-		$plugin_dependencies   = $this->plugins[ $plugin_file ]['RequiresPlugins'];
+		$dependencies        = $this->get_dependency_filepaths();
+		$plugin_dependencies = $this->plugins[ $plugin_file ]['RequiresPlugins'];
 		// $circular_dependencies = $this->get_circular_dependencies();
-		
+
 		// if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
-		// 	return $actions;
+		// return $actions;
 		// }
 
 		if ( ! isset( $actions['activate'] ) ) {
