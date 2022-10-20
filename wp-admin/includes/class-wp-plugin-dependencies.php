@@ -101,7 +101,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
 	 *
-	 * @return stdClass
+	 * @return array
 	 */
 	private function parse_plugin_headers() {
 		global $wp_filesystem;
