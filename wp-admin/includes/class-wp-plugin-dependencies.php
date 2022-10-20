@@ -484,7 +484,6 @@ class WP_Plugin_Dependencies {
 	 * @return string
 	 */
 	public function plugin_install_description( $description, $plugin ) {
-		$required = null;
 		if ( in_array( $plugin['slug'], array_keys( $this->plugin_data ), true ) ) {
 			$dependents  = $this->get_dependency_sources( $plugin );
 			$required    = '<strong>' . __( 'Required by:' ) . '</strong> ' . $dependents;
