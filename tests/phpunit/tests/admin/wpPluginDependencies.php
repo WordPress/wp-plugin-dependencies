@@ -498,4 +498,50 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 		);
 	}
+
+	/**
+	 * Tests that the plugin directory name cache is updated when
+	 * it does not match the list of current plugins.
+	 *
+	 * @covers WP_Plugin_Dependencies::get_dependency_filepaths
+	 */
+	public function test_get_dependency_filepaths_with_unmatched_dirnames_and_dirnames_cache() {
+		$dependencies              = new WP_Plugin_Dependencies();
+		$get_filepaths             = $this->make_method_accessible( $dependencies, 'get_dependency_filepaths' );
+		$dependency_slugs          = $this->make_prop_accessible( $dependencies, 'slugs' );
+		$dependency_plugins        = $this->make_prop_accessible( $dependencies, 'plugins' );
+		$dependency_dirnames       = $this->make_prop_accessible( $dependencies, 'plugin_dirnames' );
+		$dependency_dirnames_cache = $this->make_prop_accessible( $dependencies, 'plugin_dirnames_cache' );
+
+		$dependency_dirnames_cache->setValue(
+			$dependencies,
+			array(
+				'plugin1/plugin1.php',
+				'plugin2/plugin2.php',
+			)
+		);
+
+		// An additional plugin has been added during runtime.
+		$dependency_slugs->setValue( $dependencies, array( 'plugin1', 'plugin2', 'plugin3' ) );
+		$dependency_plugins->setValue(
+			$dependencies,
+			// This is flipped as paths are stored in the keys.
+			array(
+				'plugin1/plugin1.php' => '',
+				'plugin2/plugin2.php' => '',
+				'plugin3/plugin3.php' => ''
+			)
+		);
+
+		$expected = array(
+			'plugin1' => 'plugin1/plugin1.php',
+			'plugin2' => 'plugin2/plugin2.php',
+			'plugin3' => 'plugin3/plugin3.php',
+		);
+
+		// The cache no longer matches the stored directory names and should be refreshed.
+		$dependency_dirnames->setValue( $dependencies, $expected );
+
+		$this->assertSame( $expected, $get_filepaths->invoke( $dependencies ) );
+	}
 }
