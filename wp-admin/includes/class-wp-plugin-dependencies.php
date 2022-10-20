@@ -383,7 +383,7 @@ class WP_Plugin_Dependencies {
 	public function modify_plugin_row_elements_requires( $plugin_file ) {
 		$names = $this->get_requires_plugins_names( $plugin_file );
 		if ( ! empty( $names ) ) {
-			$names = $this->get_view_details_link( $plugin_file, $names );
+			$names = $this->get_view_details_links( $plugin_file, $names );
 			print '<script>';
 			print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . wp_kses_post( $names ) . '");';
 			print '</script>';
@@ -396,9 +396,9 @@ class WP_Plugin_Dependencies {
 	 * @param string $plugin_file Plugin file name.
 	 * @param string $names       Names of required plugins.
 	 *
-	 * @return string
+	 * @return string 'View details' like links for required plugins.
 	 */
-	private function get_view_details_link( $plugin_file, $names ) {
+	private function get_view_details_links( $plugin_file, $names ) {
 		$details_links = array();
 		$names_arr     = explode( ', ', $names );
 		$dependencies  = $this->requires_plugins[ $plugin_file ]['RequiresPlugins'];
@@ -407,20 +407,22 @@ class WP_Plugin_Dependencies {
 		foreach ( $dependencies as $dependency ) {
 			$plugin_data = $this->plugin_data[ $dependency ];
 			foreach ( $names_arr as $name ) {
-				if ( $name === $plugin_data['name'] ) {
-					if ( empty( $plugin_data['version'] ) ) {
-						$details_links[ $name ] = $name;
-					} else {
-						$details_links[ $name ] = sprintf(
-							"<a href='%s' class='thickbox open-plugin-details-modal' aria-label='%s' data-title='%s'>%s</a>",
-							network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $plugin_data['slug'] . '&TB_iframe=true&width=600&height=550' ),
-							/* translators: %s: Plugin name. */
-							sprintf( __( 'More information about %s' ), $name ),
-							$name,
-							$name
-						);
-					}
+				if ( $name !== $plugin_data['name'] ) {
+					continue;
 				}
+
+				if ( empty( $plugin_data['version'] ) ) {
+					$details_links[ $name ] = $name;
+					continue;
+				}
+				
+				$details_links[ $name ] = sprintf(
+					'<a href="%s" class="thickbox open-plugin-details-modal" aria-label="%s" data-title="%s">%s</a>',
+					esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $plugin_data['slug'] . '&TB_iframe=true&width=600&height=550' ) ),
+					/* translators: %s: Plugin name. */
+					sprintf( __( 'More information about %s' ), esc_attr( $name ) ),
+					$name
+				);
 			}
 		}
 
