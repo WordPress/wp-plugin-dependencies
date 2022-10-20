@@ -584,8 +584,7 @@ class WP_Plugin_Dependencies {
 	 * @return array
 	 */
 	private function get_circular_dependencies() {
-		$circular_dependencies          = array();
-		$circular_dependencies['names'] = array();
+		$circular_dependencies = array( 'names' => array() );
 		foreach ( $this->requires_plugins as $file => $requires ) {
 			if ( in_array( dirname( $file ), $this->slugs, true )
 				&& in_array( $requires['RequiresPlugins'], $this->slugs, true )
