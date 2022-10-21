@@ -2,6 +2,7 @@
 * notification of circular dependencies
 * add info text under Dependencies tab, I found a hook 🙌
 * display admin notices on specific pages
+* added some code improvements, thanks Colin
 
 #### 1.6.2 / 2022-10-18
 * composer update better checking in `afragen/add-plugin-dependency-api`
