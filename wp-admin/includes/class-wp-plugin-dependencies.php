@@ -800,6 +800,7 @@ class WP_Plugin_Dependencies {
 
 		if ( str_contains( $data, '.php' ) ) {
 			$requires = $this->plugins[ $data ]['RequiresPlugins'];
+			sort( $requires );
 		}
 		foreach ( $requires as $require ) {
 			if ( isset( $this->plugin_data[ $require ] ) ) {
