@@ -468,17 +468,13 @@ class WP_Plugin_Dependencies {
 	public function cannot_activate_unmet_dependencies( $actions, $plugin_file ) {
 		$dependencies        = $this->get_dependency_filepaths();
 		$plugin_dependencies = $this->plugins[ $plugin_file ]['RequiresPlugins'];
-		// $circular_dependencies = $this->get_circular_dependencies();
-		// if ( in_array( $plugin_file, $circular_dependencies, true ) ) {
-		// return $actions;
-		// }
 
 		if ( ! isset( $actions['activate'] ) ) {
 			return $actions;
 		}
 
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
-			if ( ! isset( $dependencies[ $plugin_dependency ] ) || is_plugin_active( $dependencies[ $plugin_dependency ] ) ) {
+			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
 				$actions['activate']     = __( 'Cannot Activate' );
 				$actions['dependencies'] = sprintf(
 					/* translators: 1: Opening link tag to the Dependencies tab, 2: Closing link tag. */
