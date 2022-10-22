@@ -396,6 +396,72 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
+	 * Modify plugin install card for unmet dependencies
+	 *
+	 * @param array $action_links Plugin install card action links.
+	 * @param array $plugin       Plugin data.
+	 *
+	 * @return array
+	 */
+	public function modify_plugin_install_action_links( $action_links, $plugin ) {
+		$dependencies = $this->get_dependency_filepaths();
+		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
+			return $action_links;
+		}
+		$file = $this->plugin_dirnames[ $plugin['slug'] ];
+		if ( ! isset( $this->requires_plugins[ $file ] ) ) {
+			return $action_links;
+		}
+		$requires     = $this->requires_plugins[ $file ]['RequiresPlugins'];
+		$requires_arr = explode( ',', $requires );
+		foreach ( $requires_arr as $req ) {
+			if ( ! $dependencies[ $req ] ) {
+				if ( str_contains( $action_links[0], 'activate-now' ) ) {
+					$action_links[0] = str_replace( 'Activate', 'Cannot Activate', $action_links[0] );
+					$action_links[0] = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
+
+					$action_links[] = sprintf(
+						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
+						__( 'Dependencies' )
+					);
+					break;
+				}
+			}
+		}
+
+		return $action_links;
+	}
+
+	/**
+	 * Add 'Required by: ...' to plugin install dependencies view.
+	 *
+	 * @param string $description Short description of plugin.
+	 * @param array  $plugin Array of plugin data.
+	 *
+	 * @return string
+	 */
+	public function plugin_install_description( $description, $plugin ) {
+		$required = null;
+		if ( in_array( $plugin['slug'], array_keys( $this->plugin_data ), true ) ) {
+			$dependents  = $this->get_dependency_sources( $plugin );
+			$required    = '<strong>' . __( 'Required by:' ) . '</strong> ' . $dependents;
+			$description = $description . '<p>' . $required . '</p>';
+		}
+
+		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
+			return $description;
+		}
+		$file = $this->plugin_dirnames[ $plugin['slug'] ];
+		if ( in_array( $file, array_keys( $this->requires_plugins ), true ) ) {
+			$require_names = $this->get_requires_plugins_names( $file );
+			$requires      = '<strong>' . __( 'Requires:' ) . '</strong> ' . $require_names;
+			$description   = $description . '<p>' . $requires . '</p>';
+		}
+
+		return $description;
+	}
+
+	/**
 	 * Create 'View details' like links for required plugins.
 	 *
 	 * @param string $plugin_file Plugin file name.
@@ -503,35 +569,6 @@ class WP_Plugin_Dependencies {
 		print '<script>';
 		print 'jQuery(".inactive[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
 		print '</script>';
-	}
-
-	/**
-	 * Add 'Required by: ...' to plugin install dependencies view.
-	 *
-	 * @param string $description Short description of plugin.
-	 * @param array  $plugin Array of plugin data.
-	 *
-	 * @return string
-	 */
-	public function plugin_install_description( $description, $plugin ) {
-		$required = null;
-		if ( in_array( $plugin['slug'], array_keys( $this->plugin_data ), true ) ) {
-			$dependents  = $this->get_dependency_sources( $plugin );
-			$required    = '<strong>' . __( 'Required by:' ) . '</strong> ' . $dependents;
-			$description = $description . '<p>' . $required . '</p>';
-		}
-
-		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
-			return $description;
-		}
-		$file = $this->plugin_dirnames[ $plugin['slug'] ];
-		if ( in_array( $file, array_keys( $this->requires_plugins ), true ) ) {
-			$require_names = $this->get_requires_plugins_names( $file );
-			$requires      = '<strong>' . __( 'Requires:' ) . '</strong> ' . $require_names;
-			$description   = $description . '<p>' . $requires . '</p>';
-		}
-
-		return $description;
 	}
 
 	/**
@@ -784,43 +821,6 @@ class WP_Plugin_Dependencies {
 			$hide_selectors = implode( ', ', $hide_selectors );
 			printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
 		}
-	}
-
-	/**
-	 * Modify plugin install card for unmet dependencies
-	 *
-	 * @param array $action_links Plugin install card action links.
-	 * @param array $plugin       Plugin data.
-	 *
-	 * @return array
-	 */
-	public function modify_plugin_install_action_links( $action_links, $plugin ) {
-		$dependencies = $this->get_dependency_filepaths();
-		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
-			return $action_links;
-		}
-		$file = $this->plugin_dirnames[ $plugin['slug'] ];
-		if ( ! isset( $this->requires_plugins[ $file ] ) ) {
-			return $action_links;
-		}
-		$requires     = $this->requires_plugins[ $file ]['RequiresPlugins'];
-		$requires_arr = explode( ',', $requires );
-		foreach ( $requires_arr as $req ) {
-			if ( ! $dependencies[ $req ] ) {
-				if ( str_contains( $action_links[0], 'activate-now' ) ) {
-					$action_links[0] = str_replace( 'Activate', 'Cannot Activate', $action_links[0] );
-					$action_links[0] = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-
-					$action_links[] = sprintf(
-						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
-						__( 'Dependencies' )
-					);
-					break;
-				}
-			}
-		}
-
-		return $action_links;
 	}
 
 	/**
