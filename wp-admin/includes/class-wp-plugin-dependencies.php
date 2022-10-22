@@ -736,7 +736,7 @@ class WP_Plugin_Dependencies {
 		);
 
 		if ( $include_warning ) {
-			$link .= '&nbsp;<span class="missing-dependencies">!</span>';
+			$link .= '<span class="missing-dependencies">!</span>';
 		}
 
 		return $link;
