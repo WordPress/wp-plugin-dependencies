@@ -83,6 +83,8 @@ class WP_Plugin_Dependencies {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
+			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
+
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ), 15 );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
@@ -787,6 +789,43 @@ class WP_Plugin_Dependencies {
 			$hide_selectors = implode( ', ', $hide_selectors );
 			printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
 		}
+	}
+
+	/**
+	 * Modify plugin install card for unmet dependencies
+	 *
+	 * @param array $action_links Plugin install card action links.
+	 * @param array $plugin       Plugin data.
+	 *
+	 * @return array
+	 */
+	public function modify_plugin_install_action_links( $action_links, $plugin ) {
+		$dependencies = $this->get_dependency_filepaths();
+		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
+			return $action_links;
+		}
+		$file = $this->plugin_dirnames[ $plugin['slug'] ];
+		if ( ! isset( $this->requires_plugins[ $file ] ) ) {
+			return $action_links;
+		}
+		$requires     = $this->requires_plugins[ $file ]['RequiresPlugins'];
+		$requires_arr = explode( ',', $requires );
+		foreach ( $requires_arr as $req ) {
+			if ( ! $dependencies[ $req ] ) {
+				if ( str_contains( $action_links[0], 'activate-now' ) ) {
+					$action_links[0] = str_replace( 'Activate', 'Cannot Activate', $action_links[0] );
+					$action_links[0] = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
+
+					$action_links[] = sprintf(
+						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
+						__( 'Dependencies' )
+					);
+					break;
+				}
+			}
+		}
+
+		return $action_links;
 	}
 
 	/**
