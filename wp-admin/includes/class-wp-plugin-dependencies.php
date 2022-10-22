@@ -415,7 +415,7 @@ class WP_Plugin_Dependencies {
 		$requires     = $this->requires_plugins[ $file ]['RequiresPlugins'];
 		$requires_arr = explode( ',', $requires );
 		foreach ( $requires_arr as $req ) {
-			if ( ! $dependencies[ $req ] ) {
+			if ( ! $dependencies[ $req ] || is_plugin_inactive( $dependencies[ $req ] ) ) {
 				if ( str_contains( $action_links[0], 'activate-now' ) ) {
 					$action_links[0] = str_replace( 'Activate', 'Cannot Activate', $action_links[0] );
 					$action_links[0] = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
