@@ -519,6 +519,16 @@ class WP_Plugin_Dependencies {
 			$description = $description . '<p>' . $required . '</p>';
 		}
 
+		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
+			return $description;
+		}
+		$file = $this->plugin_dirnames[ $plugin['slug'] ];
+		if ( in_array( $file, array_keys( $this->requires_plugins ), true ) ) {
+			$require_names = $this->get_requires_plugins_names( $file );
+			$requires      = '<strong>' . __( 'Requires:' ) . '</strong> ' . $require_names;
+			$description   = $description . '<p>' . $requires . '</p>';
+		}
+
 		return $description;
 	}
 
