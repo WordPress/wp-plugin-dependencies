@@ -31,6 +31,10 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 
 There are several single file plugins that may be used for testing in `test-plugins/`.
 
+## Pull Requests
+
+PRs should be made against the `develop` branch.
+
 ## Screenshots
 
 1. Plugin is a Dependency and Plugin needing Dependencies
