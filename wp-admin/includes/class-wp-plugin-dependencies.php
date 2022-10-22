@@ -422,7 +422,7 @@ class WP_Plugin_Dependencies {
 					$action_links[]  = sprintf(
 						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
 						__( 'Dependencies' )
-					);
+					) . '&nbsp;<span class="missing-dependencies">!</span>';
 					break;
 				}
 			}
@@ -546,7 +546,7 @@ class WP_Plugin_Dependencies {
 				$actions['dependencies'] = sprintf(
 					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
 					__( 'Dependencies' )
-				);
+				) . '&nbsp;<span class="missing-dependencies">!</span>';
 
 				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
 				break;
