@@ -5,6 +5,7 @@
 * added some code improvements, thanks Colin
 * add `Requires:` data to plugin card
 * modify plugin card action links if dependency not met
+* improve visibility of `Dependencies` link
 
 #### 1.6.2 / 2022-10-18
 * composer update better checking in `afragen/add-plugin-dependency-api`

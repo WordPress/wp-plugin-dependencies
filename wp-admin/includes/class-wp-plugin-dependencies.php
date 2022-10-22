@@ -419,10 +419,7 @@ class WP_Plugin_Dependencies {
 				if ( str_contains( $action_links[0], 'activate-now' ) ) {
 					$action_links[0] = str_replace( 'Activate', 'Cannot Activate', $action_links[0] );
 					$action_links[0] = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-					$action_links[]  = sprintf(
-						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
-						__( 'Dependencies' )
-					) . '&nbsp;<span class="missing-dependencies">!</span>';
+					$action_links[]  = $this->get_dependency_link( true );
 					break;
 				}
 			}
@@ -543,10 +540,7 @@ class WP_Plugin_Dependencies {
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
 			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
 				$actions['activate']     = __( 'Cannot Activate' );
-				$actions['dependencies'] = sprintf(
-					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
-					__( 'Dependencies' )
-				) . '&nbsp;<span class="missing-dependencies">!</span>';
+				$actions['dependencies'] = $this->get_dependency_link( true );
 
 				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
 				break;
@@ -595,12 +589,11 @@ class WP_Plugin_Dependencies {
 				$deactivated_plugins = implode( ', ', $deactivated_plugins );
 				printf(
 					'<div class="notice-error notice is-dismissible"><p>'
-					/* translators: 1: plugin names, 2: opening tag and link to Dependencies install page, 3: closing tag */
-					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$sDependencies%3$s install page.' )
+					/* translators: 1: plugin names, 2: link to Dependencies install page */
+					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$s install page.' )
 					. '</p></div>',
 					'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
-					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
-					'</a>'
+					wp_kses_post( $this->get_dependency_link() )
 				);
 			} else {
 				// More dependencies to install.
@@ -615,9 +608,9 @@ class WP_Plugin_Dependencies {
 					$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
 					if ( 'plugin-install.php' !== $pagenow || 'dependencies' !== $tab ) {
 						$message_html .= ' ' . sprintf(
-							/* translators: 1: opening tag and link to Dependencies install page, 2:closing tag */
-							__( 'Go to the %1$sDependencies%2$s install page.' ),
-							'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
+							/* translators: 1: link to Dependencies install page */
+							__( 'Go to the %s install page.' ),
+							wp_kses_post( $this->get_dependency_link() ),
 							'</a>'
 						);
 					}
@@ -729,6 +722,25 @@ class WP_Plugin_Dependencies {
 		return $sources;
 	}
 
+	/**
+	 * Get Dependencies link.
+	 *
+	 * @param bool $include_warning Include the warning <span>.
+	 *
+	 * @return string
+	 */
+	private function get_dependency_link( $include_warning = false ) {
+		$link = sprintf(
+			'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
+			__( 'Dependencies' )
+		);
+
+		if ( $include_warning ) {
+			$link .= '&nbsp;<span class="missing-dependencies">!</span>';
+		}
+
+		return $link;
+	}
 	/**
 	 * Get array of plugin requirement filepaths.
 	 *
