@@ -419,8 +419,7 @@ class WP_Plugin_Dependencies {
 				if ( str_contains( $action_links[0], 'activate-now' ) ) {
 					$action_links[0] = str_replace( 'Activate', 'Cannot Activate', $action_links[0] );
 					$action_links[0] = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-
-					$action_links[] = sprintf(
+					$action_links[]  = sprintf(
 						'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
 						__( 'Dependencies' )
 					);
@@ -545,11 +544,10 @@ class WP_Plugin_Dependencies {
 			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
 				$actions['activate']     = __( 'Cannot Activate' );
 				$actions['dependencies'] = sprintf(
-					/* translators: 1: Opening link tag to the Dependencies tab, 2: Closing link tag. */
-					__( '%1$sDependencies%2$s' ),
-					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>',
-					'</a>'
+					'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . '>%s</a>',
+					__( 'Dependencies' )
 				);
+
 				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
 				break;
 			}
