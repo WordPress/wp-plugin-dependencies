@@ -429,7 +429,7 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Add 'Required by: ...' to plugin install dependencies view.
+	 * Add 'Required by: ...' and 'Requires: ...' to plugin install cards.
 	 *
 	 * @param string $description Short description of plugin.
 	 * @param array  $plugin Array of plugin data.
