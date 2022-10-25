@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.7.0 / 2022-10-25
 * notification of circular dependencies
 * add info text under Dependencies tab, I found a hook 🙌
 * display admin notices on specific pages
