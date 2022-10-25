@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart
- * Version: 1.6.2
+ * Version: 1.6.2.12
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -76,9 +76,20 @@ class Init {
 
 		add_filter( 'install_plugins_tabs', array( $this, 'add_install_tab' ), 10, 1 );
 		add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
-		add_action( 'install_plugins_dependencies', 'display_plugins_table' );
 
+		add_action( 'install_plugins_dependencies', 'display_plugins_table' );
 		add_action( 'admin_init', array( 'WP_Plugin_Dependencies', 'init' ) );
+		add_action(
+			'install_plugins_table_header',
+			function() {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
+				if ( 'dependencies' === $tab ) {
+					echo '<p>' . esc_html__( 'These suggestions are based on dependencies required by installed plugins.' ) . '</p>';
+				}
+			}
+		);
+		add_action( 'admin_enqueue_scripts', array( $this, 'add_css' ) );
 	}
 
 	/**
@@ -110,6 +121,22 @@ class Init {
 		);
 
 		return $args;
+	}
+
+	/**
+	 * Enqueues CSS in the administration panel.
+	 *
+	 * For PR need to add to wp-admin/css/admin-menu.css around line 430, #adminmenu .menu-counter.
+	 *
+	 * @return void
+	 */
+	public function add_css() {
+		wp_enqueue_style(
+			'wp-plugin-dependencies-style',
+			plugin_dir_url( __FILE__ ) . 'css/style.css',
+			array(),
+			get_plugin_data( __FILE__ )['Version']
+		);
 	}
 }
 

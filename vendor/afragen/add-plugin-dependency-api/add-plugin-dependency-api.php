@@ -41,13 +41,14 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 		 * @return void|\WP_Error
 		 */
 		public function plugins_api_result( $response, $action, $args ) {
+			$rest_endpoints = [];
 			if ( is_wp_error( $response ) ) {
 				/**
 				 * Filter the REST enpoints used for lookup of plugins API data.
 				 *
 				 * @param array
 				 */
-				$rest_endpoints = apply_filters( 'plugin_dependency_endpoints', [] );
+				$rest_endpoints = apply_filters( 'plugin_dependency_endpoints', $rest_endpoints );
 
 				foreach ( $rest_endpoints as $endpoint ) {
 					// Allow endpoint to return JSON file but ensure returning for correct slug.

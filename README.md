@@ -28,6 +28,10 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 
 There are several single file plugins that may be used for testing in `test-plugins/`.
 
+## Pull Requests
+
+PRs should be made against the `develop` branch.
+
 ## Phase 1 - Architecture & Design Discussion
 
 Discussion of architecture and design elements and features. This will be done via [issues](https://github.com/WordPress/wp-plugin-dependencies/issues).
