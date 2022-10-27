@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart
- * Version: 1.7.0
+ * Version: 1.7.1
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -89,7 +89,6 @@ class Init {
 				}
 			}
 		);
-		add_action( 'admin_enqueue_scripts', array( $this, 'add_css' ) );
 	}
 
 	/**
@@ -121,22 +120,6 @@ class Init {
 		);
 
 		return $args;
-	}
-
-	/**
-	 * Enqueues CSS in the administration panel.
-	 *
-	 * For PR need to add to wp-admin/css/admin-menu.css around line 430, #adminmenu .menu-counter.
-	 *
-	 * @return void
-	 */
-	public function add_css() {
-		wp_enqueue_style(
-			'wp-plugin-dependencies-style',
-			plugin_dir_url( __FILE__ ) . 'css/style.css',
-			array(),
-			get_plugin_data( __FILE__ )['Version']
-		);
 	}
 }
 

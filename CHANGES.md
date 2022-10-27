@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 1.7.1
+* remove "improved visibility" of `Dependencies` link
+
 #### 1.7.0 / 2022-10-25
 * notification of circular dependencies
 * add info text under Dependencies tab, I found a hook 🙌
