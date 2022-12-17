@@ -1,6 +1,6 @@
 [unreleased]
 
-#### 1.7.1
+#### 1.7.1 / 2022-10-27
 * remove "improved visibility" of `Dependencies` link
 
 #### 1.7.0 / 2022-10-25
