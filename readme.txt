@@ -6,7 +6,7 @@ License: MIT
 Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
-Tested up to: 6.1
+Tested up to: 6.2
 Stable tag: 1.7.1
 
 ## Description
