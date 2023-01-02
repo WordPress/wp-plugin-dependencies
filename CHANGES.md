@@ -1,4 +1,5 @@
 [unreleased]
+* add unresolvable circular dependency example
 
 #### 1.7.1 / 2022-10-27
 * remove "improved visibility" of `Dependencies` link
