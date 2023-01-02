@@ -6,8 +6,8 @@ License: MIT
 Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
-Tested up to: 6.1
-Stable tag: 1.7.1
+Tested up to: 6.2
+Stable tag: 1.7.2
 
 ## Description
 
@@ -43,7 +43,11 @@ PRs should be made against the `develop` branch.
 
 ## Changelog
 
-#### 1.7.1
+#### 1.7.2 / 2023-01-02
+* add unresolvable circular dependency example
+* update for PHP standards
+
+#### 1.7.1 / 2022-10-27
 * remove "improved visibility" of `Dependencies` link
 
 #### 1.7.0 / 2022-10-25
