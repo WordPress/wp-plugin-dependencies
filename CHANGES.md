@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 1.7.3 / 2023-01-30
+* composer update using Composer 2.5.0 to avoid bug
+
 #### 1.7.2 / 2023-01-02
 * add unresolvable circular dependency example
 * update for PHP standards
