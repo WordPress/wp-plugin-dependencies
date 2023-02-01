@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.2
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 
 ## Description
 
@@ -42,6 +42,9 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.7.3 / 2023-01-30
+* composer update using Composer 2.5.0 to avoid bug
 
 #### 1.7.2 / 2023-01-02
 * add unresolvable circular dependency example
