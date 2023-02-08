@@ -48,7 +48,7 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 				 *
 				 * @param array
 				 */
-				$rest_endpoints = apply_filters( 'plugin_dependency_endpoints', $rest_endpoints );
+				$rest_endpoints = array_merge( $rest_endpoints, apply_filters( 'plugin_dependency_endpoints', $rest_endpoints ) );
 
 				foreach ( $rest_endpoints as $endpoint ) {
 					// Allow endpoint to return JSON file but ensure returning for correct slug.

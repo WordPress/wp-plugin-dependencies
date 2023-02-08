@@ -1,7 +1,7 @@
 {
   "name": "afragen/add-plugin-dependency-api",
   "description": "Library that helps WordPress plugin dependency management.",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "type": "library",
   "license": "MIT",
   "authors": [
