@@ -1,5 +1,6 @@
 [unreleased]
 * cleanup docblocks
+* initialize during class loading
 
 #### 1.7.4 / 2023-02-08
 * composer update
