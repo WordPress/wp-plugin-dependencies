@@ -1,4 +1,5 @@
 [unreleased]
+* cleanup docblocks
 
 #### 1.7.4 / 2023-02-08
 * composer update
