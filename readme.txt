@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.2
-Stable tag: 1.7.4
+Stable tag: 1.7.5
 
 ## Description
 
@@ -42,6 +42,10 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.7.5 / 2023-02-09
+* cleanup docblocks
+* initialize during class loading
 
 #### 1.7.4 / 2023-02-08
 * composer update

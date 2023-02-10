@@ -1,5 +1,9 @@
 [unreleased]
 
+#### 1.7.5 / 2023-02-09
+* cleanup docblocks
+* initialize during class loading
+
 #### 1.7.4 / 2023-02-08
 * composer update
 

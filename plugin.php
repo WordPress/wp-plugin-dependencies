@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart
- * Version: 1.7.4
+ * Version: 1.7.5
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Deactivate plugin when committed to core.
-if ( version_compare( get_bloginfo( 'version' ), '6.2-RC1', '>=' ) ) {
+if ( version_compare( get_bloginfo( 'version' ), '6.3-alpha-99999', '>=' ) ) {
 	deactivate_plugins( __FILE__ );
 }
 
@@ -78,7 +78,6 @@ class Init {
 		add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
 
 		add_action( 'install_plugins_dependencies', 'display_plugins_table' );
-		add_action( 'admin_init', array( 'WP_Plugin_Dependencies', 'init' ) );
 		add_action(
 			'install_plugins_table_header',
 			function() {
