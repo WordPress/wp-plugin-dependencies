@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.7.5 / 2023-02-09
 * cleanup docblocks
 * initialize during class loading
 
