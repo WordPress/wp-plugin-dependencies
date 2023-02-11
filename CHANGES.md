@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 1.7.6 / 2023-02-11
+* update `Name` header of test plugins so they can't be mistaken for core plugin after AJAX Install
+
 #### 1.7.5 / 2023-02-09
 * cleanup docblocks
 * initialize during class loading
