@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.2
-Stable tag: 1.7.6
+Stable tag: 1.7.7
 
 ## Description
 
@@ -42,6 +42,9 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.7.7 / 2023-02-11
+* add a11y that I (@afragen) clearly forgot, it's a start
 
 #### 1.7.6 / 2023-02-11
 * update `Name` header of test plugins so they can't be mistaken for core plugin after AJAX Install
