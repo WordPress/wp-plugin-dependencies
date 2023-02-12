@@ -2,6 +2,7 @@
 
 #### 1.7.7 / 2023-02-11
 * add a11y that I (@afragen) clearly forgot, it's a start
+* fix circular dependency test plugins to have containing folder, dependencies must have a containing folder
 
 #### 1.7.6 / 2023-02-11
 * update `Name` header of test plugins so they can't be mistaken for core plugin after AJAX Install
