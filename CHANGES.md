@@ -1,5 +1,5 @@
 [unreleased]
-* add aria-label to links
+* add a11y that I (@afragen) clearly forgot
 
 #### 1.7.6 / 2023-02-11
 * update `Name` header of test plugins so they can't be mistaken for core plugin after AJAX Install
