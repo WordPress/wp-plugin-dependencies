@@ -1,4 +1,5 @@
 [unreleased]
+* composer update
 
 #### 1.7.7 / 2023-02-11
 * add a11y that I (@afragen) clearly forgot, it's a start

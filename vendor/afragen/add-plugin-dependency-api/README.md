@@ -8,7 +8,7 @@
 * Donate link: <https://thefragens.com/git-updater-donate>
 * License: MIT
 
-Composer library for adding a plugin dependency response based upon use with Git Updater/Git Updater PRO
+Composer library for adding a plugin dependency response based upon use with Git Updater v12 or greater.
 
 ## Description
 
@@ -30,12 +30,11 @@ A query arg of the plugin slug, `?slug=my-plugin-dependency`, will be passed to 
 
 ```php
 // Add the sites with REST enpoints that return plugins_api() data when passed `slug` query arg.
+// You can also return URL to a JSON file containing the appropriate data.
 add_filter(
 	'plugin_dependency_endpoints',
 	function () {
-		return [
-			'https://git-updater.com/wp-json/git-updater/v1/plugins-api/',
-		];
+		return [ 'https://git-updater.com/wp-json/git-updater/v1/plugins-api/' ];
 	}
 );
 ```
