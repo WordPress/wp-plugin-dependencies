@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.2
-Stable tag: 1.7.7
+Stable tag: 1.7.8
 
 ## Description
 
@@ -17,7 +17,7 @@ Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin ins
 
 Please open issues at [WordPress/wp-plugin-dependencies issues](https://github.com/WordPress/wp-plugin-dependencies/issues)
 
-My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #1724](https://github.com/WordPress/wordpress-develop/pull/1724)
+My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #3032](https://github.com/WordPress/wordpress-develop/pull/3032)
 
 * Parses the **Requires Plugins** header that defines plugin dependencies using a comma separated list of wp.org slugs. To test, you will need to add the header and content to a plugin.
 * Adds a new view/tab to plugins install page ( **Plugins > Add New** ) titled **Dependencies** that contains plugin cards for all plugin dependencies.
@@ -28,6 +28,8 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 * Displays a single admin notice with link to **Plugins > Add New > Dependencies** if not all plugin dependencies have been installed.
 * Ensures that plugins with unmet dependencies cannot be activated.
 * If the dependency API data is not available a generic plugin card will be displayed in the Dependencies tab.
+* Circular dependencies cannot be activated and an admin notice noting the circular dependencies is displayed.
+* Ensures that plugins with unmet dependencies cannot be activated.
 
 There are several single file plugins that may be used for testing in `test-plugins/`.
 
@@ -42,6 +44,9 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.7.8 / 2023-03-03
+* composer update
 
 #### 1.7.7 / 2023-02-11
 * add a11y that I (@afragen) clearly forgot, it's a start

@@ -65,8 +65,8 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 					// Convert response to associative array.
 					$response = json_decode( wp_remote_retrieve_body( $response ), true );
 					if ( null === $response || isset( $response['error'] ) || isset( $response['code'] ) ) {
-						$message  = isset( $response['error'] ) ? $response['error'] : null;
-						$response = new \WP_Error( 'error', 'Error retrieving plugin data.', $message );
+						$message  = isset( $response['error'] ) ? $response['error'] : '';
+						$response = new WP_Error( 'error', 'Error retrieving plugin data.', $message );
 					}
 					if ( ! is_wp_error( $response ) ) {
 						break;
@@ -111,11 +111,12 @@ if ( ! class_exists( 'Plugin_Dependency_API' ) ) {
 			$from = untrailingslashit( $result['destination'] );
 			$to   = trailingslashit( $result['local_destination'] ) . $hook_extra['slug'];
 
-			if ( $from !== $to ) {
-				// TODO: use move_dir().
-				if ( ! rename( $from, $to ) ) {
+			if ( trailingslashit( strtolower( $from ) ) !== trailingslashit( strtolower( $to ) ) ) {
+				if ( function_exists( 'move_dir' ) ) {
+					$true = move_dir( $from, $to, true );
+				} elseif ( ! rename( $from, $to ) ) {
 					$wp_filesystem->mkdir( $to );
-					copy_dir( $from, $to, [ basename( $to ) ] );
+					$true = copy_dir( $from, $to, [ basename( $to ) ] );
 					$wp_filesystem->delete( $from, true );
 				}
 			}

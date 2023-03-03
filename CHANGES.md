@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 1.7.8 / 2023-03-03
+* composer update
+
 #### 1.7.7 / 2023-02-11
 * add a11y that I (@afragen) clearly forgot, it's a start
 * fix circular dependency test plugins to have containing folder, dependencies must have a containing folder
