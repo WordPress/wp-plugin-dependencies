@@ -13,7 +13,7 @@ Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin ins
 
 [Make post for Plugin Dependencies Feature Project](https://make.wordpress.org/core/2022/02/24/feature-project-plugin-dependencies/)
 
-My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #1724](https://github.com/WordPress/wordpress-develop/pull/1724)
+My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #3032](https://github.com/WordPress/wordpress-develop/pull/3032)
 
 * Parses the **Requires Plugins** header that defines plugin dependencies using a comma separated list of wp.org slugs.
 * Displays a single admin notice with link to **Plugins > Add New > Dependencies** if not all plugin dependencies have been installed.
@@ -23,7 +23,7 @@ My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature p
 * Plugin dependencies can be deactivated or deleted if the requiring plugin is not active.
 * Messaging in the plugin row description is inserted; as is data noting which plugins require the dependency.
 * If the dependency API data is not available a generic plugin card will be displayed in the Dependencies tab.
-
+* Circular dependencies cannot be activated and an admin notice noting the circular dependencies is displayed.
 * Ensures that plugins with unmet dependencies cannot be activated.
 
 There are several single file plugins that may be used for testing in `test-plugins/`.
