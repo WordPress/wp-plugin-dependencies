@@ -12,7 +12,7 @@
  * PHP version check and exit.
  */
 if ( ! defined( 'WPINC' ) ) {
-	die;
+	return;
 }
 
 if ( ! class_exists( 'Plugin_Dependency_API' ) ) {

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<ruleset name="WordPress-Core-Plugins">
+    <description>Keep long array syntax.</description>
+
+    <!-- Show progress and sniff codes in all reports -->
+    <arg value="ps"/>
+
+    <!-- Exclude these -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+
+    <rule ref="WordPress-Core">
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+    </rule>
+    <rule ref="WordPress">
+        <!-- <exclude name="WordPress.Files.FileName" /> -->
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
+        <exclude name="WordPress.NamingConventions.ValidVariableName" />
+        <exclude name="WordPress.WP.I18n.NonSingularStringLiteralText" />
+        <exclude name="WordPress.PHP.NoSilencedErrors.Discouraged" />
+        <exclude name="WordPress.PHP.DisallowShortTernary.Found" />
+    </rule>
+
+    <!-- Enforce space before closing parenthesis -->
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose">
+        <severity>5</severity>
+    </rule>
+
+    <rule ref="Generic.Arrays.DisallowShortArraySyntax" />
+    <!-- Use only long arrays -->
+    <rule ref="Generic.Arrays">
+        <exclude name="Generic.Arrays.DisallowLongArraySyntax.Found" />
+    </rule>
+</ruleset>
