@@ -1,4 +1,6 @@
 [unreleased]
+* update action link to `Install/Activate Dependencies`
+* fix for multisite plugin card
 
 #### 1.7.8 / 2023-03-03
 * composer update
