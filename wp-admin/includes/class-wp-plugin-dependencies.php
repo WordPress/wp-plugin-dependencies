@@ -378,72 +378,6 @@ class WP_Plugin_Dependencies {
 		print '<script>';
 		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . wp_kses_post( $links ) . '");';
 		print '</script>';
-
-		$this->modify_plugin_row_requires_warning( $plugin_file );
-	}
-
-	/**
-	 * Print after plugin row message for requiring Dependencies.
-	 *
-	 * @param string $plugin_file Plugin file name.
-	 *
-	 * @return void
-	 */
-	private function modify_plugin_row_requires_warning( $plugin_file ) {
-		$requires        = $this->plugins[ $plugin_file ]['RequiresPlugins'];
-		$installed_slugs = array_map( 'dirname', array_keys( $this->plugins ) );
-		$intersect       = array_intersect( $requires, $installed_slugs );
-		asort( $requires );
-		asort( $intersect );
-		if ( $requires === $intersect ) {
-			$this->modify_plugin_row_inactive_dependency_warning( $plugin_file );
-			return;
-		}
-
-		$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
-		printf(
-			'<tr class="plugin-update-tr">' .
-			'<td colspan="%s" class="plugin-update colspanchange">' .
-			'<div class="notice inline notice-warning notice-alt"><p>',
-			esc_attr( $wp_list_table->get_column_count() )
-		);
-		$message_html  = __( 'This plugin requires one or more dependencies.' );
-		$message_html .= ' ' . sprintf(
-			/* translators: 1: link to Dependencies install page */
-			__( 'Go to the %s install page.' ),
-			wp_kses_post( $this->get_dependency_link() ),
-			'</a>'
-		);
-		$message_html .= '</p></div></td></tr>';
-		print wp_kses_post( $message_html );
-	}
-
-	/**
-	 * Print after plugin row message for inactive dependencies.
-	 *
-	 * @param string $plugin_file Plugin file name.
-	 *
-	 * @return void
-	 */
-	private function modify_plugin_row_inactive_dependency_warning( $plugin_file ) {
-		$dependencies        = $this->get_dependency_filepaths();
-		$plugin_dependencies = $this->plugins[ $plugin_file ]['RequiresPlugins'];
-
-		foreach ( $plugin_dependencies as $plugin_dependency ) {
-			if ( is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
-				$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
-				printf(
-					'<tr class="plugin-update-tr">' .
-					'<td colspan="%s" class="plugin-update colspanchange">' .
-					'<div class="notice inline notice-warning notice-alt"><p>',
-					esc_attr( $wp_list_table->get_column_count() )
-				);
-				$message_html  = __( 'This plugin has one or more inactive dependencies.' );
-				$message_html .= '</p></div></td></tr>';
-				print wp_kses_post( $message_html );
-			}
-		}
-
 	}
 
 	/**
@@ -470,7 +404,7 @@ class WP_Plugin_Dependencies {
 					$action_links[0]  = str_replace( __( 'Activate' ), _x( 'Cannot Activate', 'plugin' ), $action_links[0] );
 					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to circular dependency' ) . '</span>';
 					$action_links[0]  = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-					$action_links[]   = $this->get_dependency_link( true );
+					$action_links[]   = $this->get_dependency_link();
 					break;
 				}
 			}
@@ -586,9 +520,17 @@ class WP_Plugin_Dependencies {
 
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
 			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
-				$actions['activate']     = _x( 'Cannot Activate', 'plugin' );
-				$actions['activate']    .= '<span class="screen-reader-text">' . __( 'Cannot activate due to circular dependency' ) . '</span>';
-				$actions['dependencies'] = $this->get_dependency_link( true );
+				$activate     = _x( 'Cannot Activate', 'plugin' );
+				$activate    .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
+				$dependencies = $this->get_dependency_link();
+				unset( $actions['activate'] );
+				$actions = array_merge(
+					array(
+						'activate'     => $activate,
+						'dependencies' => $dependencies,
+					),
+					$actions
+				);
 
 				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
 				break;
@@ -640,7 +582,7 @@ class WP_Plugin_Dependencies {
 					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$s install page.' )
 					. '</p></div>',
 					'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
-					wp_kses_post( $this->get_dependency_link() )
+					wp_kses_post( $this->get_dependency_link( true ) )
 				);
 			} else {
 				// More dependencies to install.
@@ -657,7 +599,7 @@ class WP_Plugin_Dependencies {
 						$message_html .= ' ' . sprintf(
 							/* translators: 1: link to Dependencies install page */
 							__( 'Go to the %s install page.' ),
-							wp_kses_post( $this->get_dependency_link() ),
+							wp_kses_post( $this->get_dependency_link( true ) ),
 							'</a>'
 						);
 					}
@@ -772,13 +714,14 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Get Dependencies link.
 	 *
-	 * @param bool $include_warning Include the warning <span>.
+	 * @param bool $notice Usage in admin notice.
 	 * @return string
 	 */
-	private function get_dependency_link( $include_warning = false ) {
-		$link = sprintf(
+	private function get_dependency_link( $notice = false ) {
+		$link_text = $notice ? __( 'Dependencies' ) : __( 'Install/Activate Dependencies' );
+		$link      = sprintf(
 			'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . ' aria-label="' . __( 'Go to Dependencies tab of Add Plugins page.' ) . '">%s</a>',
-			__( 'Dependencies' )
+			$link_text
 		);
 
 		return $link;
