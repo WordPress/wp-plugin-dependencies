@@ -401,6 +401,7 @@ class WP_Plugin_Dependencies {
 		foreach ( $requires_arr as $req ) {
 			if ( ! $dependencies[ $req ] || is_plugin_inactive( $dependencies[ $req ] ) ) {
 				if ( str_contains( $action_links[0], 'activate-now' ) ) {
+					$action_links[0]  = str_replace( __( 'Network Activate' ), __( 'Activate' ), $action_links[0] );
 					$action_links[0]  = str_replace( __( 'Activate' ), _x( 'Cannot Activate', 'plugin' ), $action_links[0] );
 					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 					$action_links[0]  = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
