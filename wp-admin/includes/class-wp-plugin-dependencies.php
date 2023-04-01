@@ -401,10 +401,11 @@ class WP_Plugin_Dependencies {
 		foreach ( $requires_arr as $req ) {
 			if ( ! $dependencies[ $req ] || is_plugin_inactive( $dependencies[ $req ] ) ) {
 				if ( str_contains( $action_links[0], 'activate-now' ) ) {
+					$action_links[0]  = str_replace( __( 'Network Activate' ), __( 'Activate' ), $action_links[0] );
 					$action_links[0]  = str_replace( __( 'Activate' ), _x( 'Cannot Activate', 'plugin' ), $action_links[0] );
-					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to circular dependency' ) . '</span>';
+					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 					$action_links[0]  = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-					$action_links[]   = $this->get_dependency_link( true );
+					$action_links[]   = $this->get_dependency_link();
 					break;
 				}
 			}
@@ -520,9 +521,17 @@ class WP_Plugin_Dependencies {
 
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
 			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
-				$actions['activate']     = _x( 'Cannot Activate', 'plugin' );
-				$actions['activate']    .= '<span class="screen-reader-text">' . __( 'Cannot activate due to circular dependency' ) . '</span>';
-				$actions['dependencies'] = $this->get_dependency_link( true );
+				$activate     = _x( 'Cannot Activate', 'plugin' );
+				$activate    .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
+				$dependencies = $this->get_dependency_link();
+				unset( $actions['activate'] );
+				$actions = array_merge(
+					array(
+						'activate'     => $activate,
+						'dependencies' => $dependencies,
+					),
+					$actions
+				);
 
 				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
 				break;
@@ -706,10 +715,9 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Get Dependencies link.
 	 *
-	 * @param bool $include_warning Include the warning <span>.
 	 * @return string
 	 */
-	private function get_dependency_link( $include_warning = false ) {
+	private function get_dependency_link() {
 		$link = sprintf(
 			'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . ' aria-label="' . __( 'Go to Dependencies tab of Add Plugins page.' ) . '">%s</a>',
 			__( 'Dependencies' )
