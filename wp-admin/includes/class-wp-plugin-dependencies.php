@@ -583,7 +583,7 @@ class WP_Plugin_Dependencies {
 					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$s install page.' )
 					. '</p></div>',
 					'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
-					wp_kses_post( $this->get_dependency_link() )
+					wp_kses_post( $this->get_dependency_link( true ) )
 				);
 			} else {
 				// More dependencies to install.
@@ -600,7 +600,7 @@ class WP_Plugin_Dependencies {
 						$message_html .= ' ' . sprintf(
 							/* translators: 1: link to Dependencies install page */
 							__( 'Go to the %s install page.' ),
-							wp_kses_post( $this->get_dependency_link() ),
+							wp_kses_post( $this->get_dependency_link( true ) ),
 							'</a>'
 						);
 					}
@@ -715,12 +715,14 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Get Dependencies link.
 	 *
+	 * @param bool $notice Usage in admin notice.
 	 * @return string
 	 */
-	private function get_dependency_link() {
-		$link = sprintf(
+	private function get_dependency_link( $notice = false ) {
+		$link_text = $notice ? __( 'Dependencies' ) : __( 'Install/Activate Dependencies' );
+		$link      = sprintf(
 			'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . ' aria-label="' . __( 'Go to Dependencies tab of Add Plugins page.' ) . '">%s</a>',
-			__( 'Dependencies' )
+			$link_text
 		);
 
 		return $link;
