@@ -719,7 +719,7 @@ class WP_Plugin_Dependencies {
 	 * @return string
 	 */
 	private function get_dependency_link( $notice = false ) {
-		$link_text = $notice ? __( 'Dependencies' ) : __( 'Install/Activate Dependencies' );
+		$link_text = $notice ? __( 'Dependencies' ) : __( 'Manage Dependencies' );
 		$link      = sprintf(
 			'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . ' aria-label="' . __( 'Go to Dependencies tab of Add Plugins page.' ) . '">%s</a>',
 			$link_text

@@ -1,5 +1,5 @@
 [unreleased]
-* update action link to keep `Cannot Activate | Dependencies` together
+* update action link to keep `Cannot Activate | Manage Dependencies` together
 * fix for multisite plugin card
 
 #### 1.7.8 / 2023-03-03
