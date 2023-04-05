@@ -3,7 +3,7 @@
         'name' => 'wordpress/wp-plugin-dependencies',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => 'd1890a5e4fe36f0d97b62324c257e8aab4d35c41',
+        'reference' => '43e43514a054406225e833ae62a71faa73414013',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'wordpress/wp-plugin-dependencies' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => 'd1890a5e4fe36f0d97b62324c257e8aab4d35c41',
+            'reference' => '43e43514a054406225e833ae62a71faa73414013',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
