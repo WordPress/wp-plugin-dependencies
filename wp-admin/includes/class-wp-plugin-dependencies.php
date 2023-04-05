@@ -65,6 +65,13 @@ class WP_Plugin_Dependencies {
 	private $plugin_dirnames_cache = array();
 
 	/**
+	 * Holds $args from `plugins_api_result` hook.
+	 *
+	 * @var \stdClass
+	 */
+	private $args;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -876,6 +883,7 @@ class WP_Plugin_Dependencies {
 	 */
 	public function plugins_api_result_api( $response, $action, $args ) {
 		$rest_endpoints = $this->api_endpoint;
+		$this->args     = $args;
 		if ( is_wp_error( $response ) ) {
 			/**
 			 * Filter the REST enpoints used for lookup of plugins API data.
@@ -904,19 +912,25 @@ class WP_Plugin_Dependencies {
 			}
 
 			// Add slug to hook_extra.
-			add_filter(
-				'upgrader_package_options',
-				function ( $options ) use ( $args ) {
-					$options['hook_extra']['slug'] = $args->slug;
-
-					return $options;
-				},
-				10,
-				1
-			);
+			add_filter( 'upgrader_package_options', array( $this, 'upgrader_package_options' ), 10, 1 );
 		}
 
 		return (object) $response;
+	}
+
+
+	/**
+	 * Add slug to hook_extra.
+	 *
+	 * @see WP_Upgrader::run() for $options details.
+	 *
+	 * @return array
+	 */
+	public function upgrader_package_options( $options ) {
+		$options['hook_extra']['slug'] = $this->args->slug;
+		remove_filter( 'upgrader_package_options', array( $this, 'upgrader_package_options' ), 10 );
+
+		return $options;
 	}
 
 	/**
