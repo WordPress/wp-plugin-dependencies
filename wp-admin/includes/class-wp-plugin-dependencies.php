@@ -884,6 +884,7 @@ class WP_Plugin_Dependencies {
 	public function add_plugin_card_dependencies( $response, $action, $args ) {
 		$rest_endpoints = $this->api_endpoint;
 		$this->args     = $args;
+
 		if ( is_wp_error( $response ) ) {
 			/**
 			 * Filter the REST enpoints used for lookup of plugins API data.

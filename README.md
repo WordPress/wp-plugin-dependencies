@@ -16,6 +16,7 @@ Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin ins
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #3032](https://github.com/WordPress/wordpress-develop/pull/3032)
 
 * Parses the **Requires Plugins** header that defines plugin dependencies using a comma separated list of wp.org slugs.
+* Plugins not in dot org may use the format `<slug>|<URI>` in the **Requires Plugins** header. `URI` should return a JSON compatible with the `plugins_api()` response.
 * Displays a single admin notice with link to **Plugins > Add New > Dependencies** if not all plugin dependencies have been installed.
 * Adds a new view/tab to plugins install page ( **Plugins > Add New** ) titled **Dependencies** that contains plugin cards for all plugin dependencies.
 * This view also lists which plugins require which plugin dependencies in the plugin card, though that feature requires the filter below to function. 😅
