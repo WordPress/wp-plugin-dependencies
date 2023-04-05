@@ -1,6 +1,7 @@
 # Based on https://github.com/wp-cli/scaffold-command/blob/f9bad3dd7224d5684d950d31c486df70905e386f/templates/plugin-github.mustache
 # Thanks Josh https://github.com/Shelob9/wordpress-plugin/blob/main/.github/workflows/wordpress.yml
 # Thanks https://github.com/shivammathur
+# Thanks @desroj for idea to just use MySQL 8.0 with correct authentication method.
 name: WordPress Tests
 
 on:
@@ -27,12 +28,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup MySQL 5.7
-        if: matrix.php-versions < '7.4'
+      - name: Setup MySQL 8.0 with mysql_native_password
         uses: shogo82148/actions-setup-mysql@v1
         with:
-          mysql-version: "5.7"
-          my-cnf: bind_address=127.0.0.1
+          mysql-version: "8.0"
+          my-cnf: |
+            bind_address=127.0.0.1
+            default-authentication-plugin=mysql_native_password
           root-password: root
 
       - name: Setup PHP
@@ -47,10 +49,6 @@ jobs:
 
       - name: Composer install
         run: composer install --optimize-autoloader --prefer-dist
-
-      - name: Start MySQL 8
-        if: matrix.php-versions > '7.3'
-        run: sudo service mysql start
 
       - name: Install WP Tests
         run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
