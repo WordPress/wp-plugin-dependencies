@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.2
-Stable tag: 1.7.8
+Stable tag: 1.7.9
 
 ## Description
 
@@ -44,6 +44,10 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.7.9 / 2023-04-05
+* update action link to keep `Cannot Activate | Manage Dependencies` together
+* fix for multisite plugin card
 
 #### 1.7.8 / 2023-03-03
 * composer update
