@@ -1,5 +1,9 @@
 [unreleased]
 
+#### 1.7.9 / 2023-04-05
+* update action link to keep `Cannot Activate | Manage Dependencies` together
+* fix for multisite plugin card
+
 #### 1.7.8 / 2023-03-03
 * composer update
 

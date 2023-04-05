@@ -488,7 +488,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 					'plugin2' => 'plugin2/plugin2.php',
 				),
 			),
-			'two plugins that do not exist'                       => array(
+			'two plugins that do not exist'                => array(
 				'slugs'    => array( 'plugin1', 'plugin2' ),
 				'plugins'  => array( 'plugin3/plugin3.php', 'plugin4/plugin4.php' ),
 				'expected' => array(
@@ -529,7 +529,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			array(
 				'plugin1/plugin1.php' => '',
 				'plugin2/plugin2.php' => '',
-				'plugin3/plugin3.php' => ''
+				'plugin3/plugin3.php' => '',
 			)
 		);
 
