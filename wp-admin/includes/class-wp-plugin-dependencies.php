@@ -23,6 +23,13 @@ class WP_Plugin_Dependencies {
 	protected $plugins;
 
 	/**
+	 * Holds API portion of header, if present.
+	 *
+	 * @var array
+	 */
+	protected $api_endpoint = array();
+
+	/**
 	 * Holds an array of sanitized plugin dependency slugs.
 	 *
 	 * @var array
@@ -73,8 +80,10 @@ class WP_Plugin_Dependencies {
 	public function start() {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
+			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result_api' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
+			add_filter( 'upgrader_post_install', array( $this, 'upgrader_post_install' ), 10, 3 );
 
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ), 15 );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
@@ -148,6 +157,15 @@ class WP_Plugin_Dependencies {
 			$exploded        = explode( ',', $headers['RequiresPlugins'] );
 			foreach ( $exploded as $slug ) {
 				$slug = trim( $slug );
+
+				// Save endpoint if present.
+				if ( str_contains( $slug, '|' ) ) {
+					$exploded = explode( '|', $slug );
+					array_map( 'trim', $exploded );
+					$slug                 = $exploded[0];
+					$this->api_endpoint[] = $exploded[1];
+					$this->api_endpoint   = array_unique( $this->api_endpoint );
+				}
 
 				// Match to dot org slug format.
 				if ( preg_match( '/^[a-z0-9\-\p{Cyrillic}\p{Arabic}\p{Han}\p{S}]+$/mu', $slug ) ) {
@@ -845,6 +863,87 @@ class WP_Plugin_Dependencies {
 		}
 
 		return isset( $names ) ? $names : '';
+	}
+
+	/**
+	 * Filter `plugins_api_result` for adding plugin dependencies.
+	 *
+	 * @param \stdClass $response Response from `plugins_api()`.
+	 * @param string    $action   Action type.
+	 * @param \stdClass $args     Array of data from hook.
+	 *
+	 * @return void|\WP_Error
+	 */
+	public function plugins_api_result_api( $response, $action, $args ) {
+		$rest_endpoints = $this->api_endpoint;
+		if ( is_wp_error( $response ) ) {
+			/**
+			 * Filter the REST enpoints used for lookup of plugins API data.
+			 *
+			 * @param array
+			 */
+			$rest_endpoints = array_merge( $rest_endpoints, apply_filters( 'plugin_dependency_endpoints', $rest_endpoints ) );
+
+			foreach ( $rest_endpoints as $endpoint ) {
+				// Endpoint must contain correct slug  somewhere in URI.
+				if ( ! str_contains( $endpoint, $args->slug ) ) {
+					continue;
+				}
+
+				$response = wp_remote_get( $endpoint );
+
+				// Convert response to associative array.
+				$response = json_decode( wp_remote_retrieve_body( $response ), true );
+				if ( null === $response || isset( $response['error'] ) || isset( $response['code'] ) ) {
+					$message  = isset( $response['error'] ) ? $response['error'] : '';
+					$response = new WP_Error( 'error', 'Error retrieving plugin data.', $message );
+				}
+				if ( ! is_wp_error( $response ) ) {
+					break;
+				}
+			}
+
+			// Add slug to hook_extra.
+			add_filter(
+				'upgrader_package_options',
+				function ( $options ) use ( $args ) {
+					$options['hook_extra']['slug'] = $args->slug;
+
+					return $options;
+				},
+				10,
+				1
+			);
+		}
+
+		return (object) $response;
+	}
+
+	/**
+	 * Filter `upgrader_post_install` for plugin dependencies.
+	 *
+	 * For correct renaming of downloaded plugin directory,
+	 * some downloads may not be formatted correctly.
+	 *
+	 * @param bool  $true       Default is true.
+	 * @param array $hook_extra Array of data from hook.
+	 * @param array $result     Array of data for installation.
+	 *
+	 * @return bool
+	 */
+	public function upgrader_post_install( $true, $hook_extra, $result ) {
+		if ( ! isset( $hook_extra['slug'] ) ) {
+			return $true;
+		}
+
+		$from = untrailingslashit( $result['destination'] );
+		$to   = trailingslashit( $result['local_destination'] ) . $hook_extra['slug'];
+
+		if ( trailingslashit( strtolower( $from ) ) !== trailingslashit( strtolower( $to ) ) ) {
+			$true = move_dir( $from, $to, true );
+		}
+
+		return $true;
 	}
 }
 

@@ -3,22 +3,13 @@
         'name' => 'wordpress/wp-plugin-dependencies',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => 'd1890a5e4fe36f0d97b62324c257e8aab4d35c41',
+        'reference' => '04f513e0c11f159ac4dbd1439f614ef893b9e327',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
-        'afragen/add-plugin-dependency-api' => array(
-            'pretty_version' => '0.4.8',
-            'version' => '0.4.8.0',
-            'reference' => 'f88b8161528e7893a9de305077a52403a4c37e4d',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../afragen/add-plugin-dependency-api',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'dealerdirect/phpcodesniffer-composer-installer' => array(
             'pretty_version' => 'v0.7.2',
             'version' => '0.7.2.0',
@@ -40,7 +31,7 @@
         'wordpress/wp-plugin-dependencies' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => 'd1890a5e4fe36f0d97b62324c257e8aab4d35c41',
+            'reference' => '04f513e0c11f159ac4dbd1439f614ef893b9e327',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

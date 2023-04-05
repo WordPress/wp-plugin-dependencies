@@ -50,17 +50,6 @@ if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	);
 }
 
-// Add the sites with REST endpoints that return plugins_api() data when passed `slug` query arg.
-add_filter(
-	'plugin_dependency_endpoints',
-	function () {
-		return array(
-			'https://git-updater.com/wp-json/git-updater/v1/plugins-api/',
-			'https://pub.thefragens.com/gravityforms.json',
-		);
-	}
-);
-
 /**
  * Class Init
  */
