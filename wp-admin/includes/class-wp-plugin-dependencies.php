@@ -87,7 +87,7 @@ class WP_Plugin_Dependencies {
 	public function start() {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
-			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result_api' ), 10, 3 );
+			add_filter( 'plugins_api_result', array( $this, 'add_plugin_card_dependencies' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
 			add_filter( 'upgrader_post_install', array( $this, 'fix_plugin_containing_directory' ), 10, 3 );
@@ -881,7 +881,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return void|\WP_Error
 	 */
-	public function plugins_api_result_api( $response, $action, $args ) {
+	public function add_plugin_card_dependencies( $response, $action, $args ) {
 		$rest_endpoints = $this->api_endpoint;
 		$this->args     = $args;
 		if ( is_wp_error( $response ) ) {
@@ -893,7 +893,7 @@ class WP_Plugin_Dependencies {
 			$rest_endpoints = array_merge( $rest_endpoints, apply_filters( 'plugin_dependency_endpoints', $rest_endpoints ) );
 
 			foreach ( $rest_endpoints as $endpoint ) {
-				// Endpoint must contain correct slug  somewhere in URI.
+				// Endpoint must contain correct slug somewhere in URI.
 				if ( ! str_contains( $endpoint, $args->slug ) ) {
 					continue;
 				}
