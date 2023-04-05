@@ -34,6 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
 
 // Deactivate plugin when committed to core.
 if ( version_compare( get_bloginfo( 'version' ), '6.3-alpha-99999', '>=' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	deactivate_plugins( __FILE__ );
 }
 
@@ -41,7 +42,8 @@ if ( version_compare( get_bloginfo( 'version' ), '6.3-alpha-99999', '>=' ) ) {
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 } else {
-	\deactivate_plugins( __FILE__ );
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	deactivate_plugins( __FILE__ );
 
 	wp_die(
 		wp_kses_post(
