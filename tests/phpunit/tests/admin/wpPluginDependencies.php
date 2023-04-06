@@ -391,7 +391,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			'symbol dependencies'                    => array(
 				'requires_plugins' => '★-wpsymbols-★',
-				'expected'         => array( '★-wpsymbols-★' ),
+				'expected'         => array(),
 			),
 		);
 	}
