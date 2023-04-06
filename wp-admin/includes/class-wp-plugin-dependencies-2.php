@@ -25,7 +25,7 @@ class WP_Plugin_Dependencies_2 extends WP_Plugin_Dependencies {
 	/**
 	 * Holds $args from `plugins_api_result` hook.
 	 *
-	 * @var \stdClass
+	 * @var stdClass
 	 */
 	private $args;
 
@@ -65,11 +65,11 @@ class WP_Plugin_Dependencies_2 extends WP_Plugin_Dependencies {
 	/**
 	 * Filter `plugins_api_result` for adding plugin dependencies.
 	 *
-	 * @param \stdClass $response Response from `plugins_api()`.
+	 * @param stdClass $response Response from `plugins_api()`.
 	 * @param string    $action   Action type.
-	 * @param \stdClass $args     Array of data from hook.
+	 * @param stdClass $args     Array of data from hook.
 	 *
-	 * @return void|\WP_Error
+	 * @return void|WP_Error
 	 */
 	public function add_plugin_card_dependencies( $response, $action, $args ) {
 		$rest_endpoints = $this->api_endpoints;
