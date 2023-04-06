@@ -70,7 +70,7 @@ class WP_Plugin_Dependencies_2 {
 		}
 
 		return $slug;
-		}
+	}
 
 	/**
 	 * Filter `plugins_api_result` for adding plugin dependencies.

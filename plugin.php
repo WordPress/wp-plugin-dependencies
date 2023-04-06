@@ -52,20 +52,6 @@ if ( WP_PLUGIN_DEPENDENCIES2_COMMITTED ) {
 	deactivate_plugins( __FILE__ );
 }
 
-// Load the Composer autoloader.
-if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
-	require __DIR__ . '/vendor/autoload.php';
-} else {
-	require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	deactivate_plugins( __FILE__ );
-
-	wp_die(
-		wp_kses_post(
-			__( 'Plugin Dependencies is missing required composer dependencies.', 'wp-plugin-dependencies' )
-		)
-	);
-}
-
 /**
  * Class Init
  */
