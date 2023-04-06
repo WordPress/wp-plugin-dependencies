@@ -16,7 +16,7 @@
 class WP_Plugin_Dependencies_2 extends WP_Plugin_Dependencies {
 
 	/**
-	 * Holds API portion of header, if present.
+	 * Holds associative array of slug|endpoint, if present.
 	 *
 	 * @var array
 	 */
