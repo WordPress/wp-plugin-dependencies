@@ -544,4 +544,74 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 		$this->assertSame( $expected, $get_filepaths->invoke( $dependencies ) );
 	}
+
+	/**
+	 * Tests that dependency filepaths are retrieved correctly.
+	 *
+	 * @covers WP_Plugin_Dependencies_2::split_slug
+	 *
+	 * @dataProvider data_split_slug
+	 *
+	 * @param string $slug     A slug string.
+	 * @param array  $expected A string of expected slug results.
+	 */
+	public function test_split_slug( $slug, $expected ) {
+		$dependencies2   = new WP_Plugin_Dependencies_2();
+		$split_slug      = $this->make_method_accessible( $dependencies2, 'split_slug' );
+		$dependency_slug = $this->make_prop_accessible( $dependencies2, 'slug' );
+
+		$dependency_slug->setValue( $dependencies2, $slug );
+
+		$this->assertSame( $expected, $split_slug->invoke($dependencies2) );
+	}
+
+	/**
+	 * Data provider for test_split_slug().
+	 *
+	 * @return array
+	 */
+	public function data_split_slug() {
+		return array(
+			array(
+				'slug'     => 'slug|',
+				'expected' => 'slug|',
+			),
+			array(
+				'slug'     => '|endpoint',
+				'expected' => '|endpoint',
+			),
+			array(
+				'slug'     => 'slug||endpoint',
+				'expected' => 'slug||endpoint',
+			),
+			array(
+				'slug'     => '|slug||endpoint|',
+				'expected' => '|slug||endpoint|',
+			),
+			array(
+				'slug'     => 'slug|endpoint',
+				'expected' => 'slug',
+			),
+			array(
+				'slug'     => 'slug|endpoint|',
+				'expected' => 'slug|endpoint|',
+			),
+			array(
+				'slug'     => 'slug  |endpoint',
+				'expected' => 'slug',
+			),
+			array(
+				'slug'     => 'slug|     endpoint',
+				'expected' => 'slug',
+			),
+			array(
+				'slug'     => 'slug|endpoint|     ',
+				'expected' => 'slug|endpoint|',
+			),
+			array(
+				'slug'     => '     |slug|endpoint',
+				'expected' => '|slug|endpoint',
+			),
+		);
+	}
 }
