@@ -50,17 +50,27 @@ class WP_Plugin_Dependencies_2 {
 	 * @return string
 	 */
 	public function split_slug( $slug ) {
-		// Save endpoint if present.
-		if ( str_contains( $slug, '|' ) ) {
-			list($slug, $endpoint) = explode( '|', $slug );
-			$slug                  = trim( $slug );
-			if ( ! isset( $this->api_endpoints[ $slug ] ) ) {
-				$this->api_endpoints[ $slug ] = trim( $endpoint );
-			}
+		if ( ! str_contains( $slug, '|' ) || str_starts_with( $slug, '|' ) || str_ends_with( $slug, '|' ) ) {
+			return $slug;
+		}
+
+		$original_slug = $slug;
+
+		list( $slug, $endpoint ) = explode( '|', $slug );
+
+		$slug     = trim( $slug );
+		$endpoint = trim( $endpoint );
+
+		if ( '' === $slug || '' === $endpoint ) {
+			return $original_slug;
+		}
+
+		if ( ! isset( $api_endpoints[ $slug ] ) ) {
+			$api_endpoints[ $slug ] = $endpoint;
 		}
 
 		return $slug;
-	}
+		}
 
 	/**
 	 * Filter `plugins_api_result` for adding plugin dependencies.
