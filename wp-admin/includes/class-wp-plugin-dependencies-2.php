@@ -72,10 +72,12 @@ class WP_Plugin_Dependencies_2 extends WP_Plugin_Dependencies {
 	 * @return void|\WP_Error
 	 */
 	public function add_plugin_card_dependencies( $response, $action, $args ) {
-		$rest_endpoints = $this->api_endpoint;
+		$rest_endpoints = $this->api_endpoints;
 		$this->args     = $args;
 
-		if ( is_wp_error( $response ) ) {
+		if ( is_wp_error( $response )
+			|| ( property_exists( $args, 'slug' ) && array_key_exists( $args->slug, $this->api_endpoints ) )
+		) {
 			/**
 			 * Filter the REST enpoints used for lookup of plugins API data.
 			 *
