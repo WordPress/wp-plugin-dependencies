@@ -23,13 +23,6 @@ class WP_Plugin_Dependencies {
 	protected $plugins;
 
 	/**
-	 * Holds API portion of header, if present.
-	 *
-	 * @var array
-	 */
-	protected $api_endpoint = array();
-
-	/**
 	 * Holds an array of sanitized plugin dependency slugs.
 	 *
 	 * @var array
