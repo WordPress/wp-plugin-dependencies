@@ -38,53 +38,28 @@ class WP_Plugin_Dependencies_2 extends WP_Plugin_Dependencies {
 		if ( is_admin() && ! wp_doing_ajax() ) {
 			add_filter( 'plugins_api_result', array( $this, 'add_plugin_card_dependencies' ), 10, 3 );
 			add_filter( 'upgrader_post_install', array( $this, 'fix_plugin_containing_directory' ), 10, 3 );
+			add_filter( 'wp_plugin_dependencies_slug', array( $this, 'split_slug' ), 10, 1 );
 		}
 	}
 
 	/**
-	 * Sanitize headers.
+	 * Split slug into slug and endpoint.
 	 *
-	 * @param array $required_headers Array of required plugin headers.
-	 * @return array
+	 * @param string $slug Slug.
+	 *
+	 * @return string
 	 */
-	public function sanitize_required_headers( $required_headers ) {
-		$all_slugs = array();
-		foreach ( $required_headers as $key => $headers ) {
-			$sanitized_slugs = array();
-			$exploded        = explode( ',', $headers['RequiresPlugins'] );
-			foreach ( $exploded as $slug ) {
-				$slug = trim( $slug );
-
-				// Save endpoint if present.
-				if ( str_contains( $slug, '|' ) ) {
-					$exploded = explode( '|', $slug );
-					array_map( 'trim', $exploded );
-					$slug                 = $exploded[0];
-					$this->api_endpoint[] = $exploded[1];
-					$this->api_endpoint   = array_unique( $this->api_endpoint );
-				}
-
-				// Match to dot org slug format.
-				if ( preg_match( '/^[a-z0-9\-\p{Cyrillic}\p{Arabic}\p{Han}\p{S}]+$/mu', $slug ) ) {
-					$sanitized_slugs[] = $slug;
-				}
-			}
-			$sanitized_slugs = array_unique( $sanitized_slugs );
-
-			/**
-			 * Filter slugs to allow for slug switching between non-premium and premium plugins.
-			 *
-			 * @param array
-			 */
-			$sanitized_slugs = apply_filters( 'wp_plugin_dependencies_slugs', $sanitized_slugs );
-
-			$this->plugins[ $key ]['RequiresPlugins'] = $sanitized_slugs;
-			$all_slugs                                = array_merge( $all_slugs, $sanitized_slugs );
+	public function split_slug( $slug ) {
+		// Save endpoint if present.
+		if ( str_contains( $slug, '|' ) ) {
+			$exploded = explode( '|', $slug );
+			array_map( 'trim', $exploded );
+			$slug                         = $exploded[0];
+			$this->api_endpoints[ $slug ] = $exploded[1];
+			$this->api_endpoints          = array_unique( $this->api_endpoints );
 		}
-		$all_slugs = array_unique( $all_slugs );
-		sort( $all_slugs );
 
-		return $all_slugs;
+		return $slug;
 	}
 
 	/**
