@@ -8,12 +8,19 @@
  */
 
 /**
- * Core class for installing plugin dependencies.
+ * Child class for installing plugin dependencies.
  *
- * It is designed to add plugin dependencies as designated in the
- * `Requires Plugins` header to a new view in the plugins install page.
+ * It is designed to add plugin dependencies as designated
+ * to a new view in the plugins install page.
  */
 class WP_Plugin_Dependencies_2 extends WP_Plugin_Dependencies {
+
+	/**
+	 * Holds API portion of header, if present.
+	 *
+	 * @var array
+	 */
+	protected $api_endpoints = array();
 
 	/**
 	 * Holds $args from `plugins_api_result` hook.
