@@ -363,7 +363,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			'a dependency with an underscore'        => array(
 				'requires_plugins' => 'hello_dolly',
-				'expected'         => array(),
+				'expected'         => array( 'hello_dolly' ),
 			),
 			'a dependency with a space'              => array(
 				'requires_plugins' => 'hello dolly',
