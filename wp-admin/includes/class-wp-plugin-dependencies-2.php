@@ -66,7 +66,7 @@ class WP_Plugin_Dependencies_2 extends WP_Plugin_Dependencies {
 	 * Filter `plugins_api_result` for adding plugin dependencies.
 	 *
 	 * @param stdClass $response Response from `plugins_api()`.
-	 * @param string    $action   Action type.
+	 * @param string   $action   Action type.
 	 * @param stdClass $args     Array of data from hook.
 	 *
 	 * @return void|WP_Error
