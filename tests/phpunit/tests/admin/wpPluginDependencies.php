@@ -558,9 +558,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function test_split_slug( $slug, $expected ) {
 		$dependencies2   = new WP_Plugin_Dependencies_2();
 		$split_slug      = $this->make_method_accessible( $dependencies2, 'split_slug' );
-		//$dependency_slug = $this->make_prop_accessible( $dependencies2, 'slug' );
 
-		//$dependencies2->setValue( $dependencies2, $slug );
 		$actual = $split_slug->invoke($dependencies2, $slug );
 		$this->assertSame( $expected, $actual );
 	}
