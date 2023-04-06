@@ -13,7 +13,7 @@
  * It is designed to add plugin dependencies as designated
  * to a new view in the plugins install page.
  */
-class WP_Plugin_Dependencies_2 extends WP_Plugin_Dependencies {
+class WP_Plugin_Dependencies_2 {
 
 	/**
 	 * Holds associative array of slug|endpoint, if present.
