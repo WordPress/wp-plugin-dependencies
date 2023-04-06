@@ -52,11 +52,11 @@ class WP_Plugin_Dependencies_2 {
 	public function split_slug( $slug ) {
 		// Save endpoint if present.
 		if ( str_contains( $slug, '|' ) ) {
-			$exploded = explode( '|', $slug );
-			array_map( 'trim', $exploded );
-			$slug                         = $exploded[0];
-			$this->api_endpoints[ $slug ] = $exploded[1];
-			$this->api_endpoints          = array_unique( $this->api_endpoints );
+			list($slug, $endpoint) = explode( '|', $slug );
+			$slug                  = trim( $slug );
+			if ( ! isset( $this->api_endpoints[ $slug ] ) ) {
+				$this->api_endpoints[ $slug ] = trim( $endpoint );
+			}
 		}
 
 		return $slug;
