@@ -62,6 +62,7 @@ class Init {
 	 */
 	public function __construct() {
 		require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
+		require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies-2.php';
 
 		add_filter( 'install_plugins_tabs', array( $this, 'add_install_tab' ), 10, 1 );
 		add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
