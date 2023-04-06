@@ -560,7 +560,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$split_slug      = $this->make_method_accessible( $dependencies2, 'split_slug' );
 		//$dependency_slug = $this->make_prop_accessible( $dependencies2, 'slug' );
 
-		//$dependency_slug->setValue( $dependencies2, $slug );
+		$dependencies2->setValue( $dependencies2, $slug );
 
 		$this->assertSame( $expected, $split_slug->invoke($dependencies2) );
 	}
