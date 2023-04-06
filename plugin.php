@@ -32,8 +32,22 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-// Deactivate plugin when committed to core.
+// TODO: update with correct version.
 if ( version_compare( get_bloginfo( 'version' ), '6.3-alpha-99999', '>=' ) ) {
+	define( 'WP_PLUGIN_DEPENDENCIES1_COMMITTED', true );
+} else {
+	define( 'WP_PLUGIN_DEPENDENCIES1_COMMITTED', false );
+}
+
+// TODO: update with correct version.
+if ( version_compare( get_bloginfo( 'version' ), '6.3-beta-1', '>=' ) ) {
+	define( 'WP_PLUGIN_DEPENDENCIES2_COMMITTED', true );
+} else {
+	define( 'WP_PLUGIN_DEPENDENCIES2_COMMITTED', false );
+}
+
+// Deactivate plugin when committed to core.
+if ( WP_PLUGIN_DEPENDENCIES2_COMMITTED ) {
 	deactivate_plugins( __FILE__ );
 }
 
@@ -41,7 +55,7 @@ if ( version_compare( get_bloginfo( 'version' ), '6.3-alpha-99999', '>=' ) ) {
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	require __DIR__ . '/vendor/autoload.php';
 } else {
-	\deactivate_plugins( __FILE__ );
+	deactivate_plugins( __FILE__ );
 
 	wp_die(
 		wp_kses_post(
@@ -61,23 +75,26 @@ class Init {
 	 * @return void
 	 */
 	public function __construct() {
-		require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
-		require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies-2.php';
+		if ( ! WP_PLUGIN_DEPENDENCIES1_COMMITTED ) {
+			require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
 
-		add_filter( 'install_plugins_tabs', array( $this, 'add_install_tab' ), 10, 1 );
-		add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
+			add_filter( 'install_plugins_tabs', array( $this, 'add_install_tab' ), 10, 1 );
+			add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
 
-		add_action( 'install_plugins_dependencies', 'display_plugins_table' );
-		add_action(
-			'install_plugins_table_header',
-			function() {
-				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
-				if ( 'dependencies' === $tab ) {
-					echo '<p>' . esc_html__( 'These suggestions are based on dependencies required by installed plugins.' ) . '</p>';
+			add_action( 'install_plugins_dependencies', 'display_plugins_table' );
+			add_action(
+				'install_plugins_table_header',
+				function() {
+                    // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
+					if ( 'dependencies' === $tab ) {
+						echo '<p>' . esc_html__( 'These suggestions are based on dependencies required by installed plugins.' ) . '</p>';
+					}
 				}
-			}
-		);
+			);
+		}
+
+		require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies-2.php';
 	}
 
 	/**
