@@ -4,57 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f7d49ad879858c2b055a48c2ffc5ca2",
-    "packages": [
-        {
-            "name": "afragen/add-plugin-dependency-api",
-            "version": "0.4.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/afragen/add-plugin-dependency-api.git",
-                "reference": "f88b8161528e7893a9de305077a52403a4c37e4d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/afragen/add-plugin-dependency-api/zipball/f88b8161528e7893a9de305077a52403a4c37e4d",
-                "reference": "f88b8161528e7893a9de305077a52403a4c37e4d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "add-plugin-dependency-api.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Andy Fragen",
-                    "email": "andy@thefragens.com",
-                    "homepage": "https://thefragens.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Library that helps WordPress plugin dependency management.",
-            "support": {
-                "issues": "https://github.com/afragen/add-plugin-dependency-api/issues",
-                "source": "https://github.com/afragen/add-plugin-dependency-api"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/afragen",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-03-18T20:03:48+00:00"
-        }
-    ],
+    "content-hash": "e3d0e86b6c57880e64432f5d09feba4b",
+    "packages": [],
     "packages-dev": [
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",

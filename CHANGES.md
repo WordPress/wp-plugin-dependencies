@@ -1,4 +1,6 @@
 [unreleased]
+* update to work natively with `<slug>|<URI>` format in `Requires Plugins` header
+* split PD and PDv2 into different classes
 
 #### 1.7.9 / 2023-04-05
 * update action link to keep `Cannot Activate | Manage Dependencies` together

@@ -20,7 +20,7 @@ Please open issues at [WordPress/wp-plugin-dependencies issues](https://github.c
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #3032](https://github.com/WordPress/wordpress-develop/pull/3032)
 
 * Parses the **Requires Plugins** header that defines plugin dependencies using a comma separated list of wp.org slugs. To test, you will need to add the header and content to a plugin.
-* Adds a new view/tab to plugins install page ( **Plugins > Add New** ) titled **Dependencies** that contains plugin cards for all plugin dependencies.
+* Plugins not in dot org may use the format `<slug>|<URI>` in the **Requires Plugins** header. `URI` should return a JSON compatible with the `plugins_api()` response.* Adds a new view/tab to plugins install page ( **Plugins > Add New** ) titled **Dependencies** that contains plugin cards for all plugin dependencies.
 * This view also lists which plugins require which plugin dependencies in the plugin card. 😅
 * In the plugins page, a dependent plugin is unable to be deleted or deactivated if the requiring plugin is active.
 * Plugin dependencies can be deactivated or deleted if the requiring plugin is not active.
