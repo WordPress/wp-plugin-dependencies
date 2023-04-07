@@ -604,11 +604,11 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			'pipe_in_middle_pipe_spaces_at_end'   => array(
 				'slug'     => 'slug|endpoint|     ',
-				'expected' => 'slug',
+				'expected' => 'slug|endpoint|',
 			),
 			'spaces_pipe_at_front_pipe_in_middle' => array(
 				'slug'     => '     |slug|endpoint',
-				'expected' => '     |slug|endpoint',
+				'expected' => '|slug|endpoint',
 			),
 		);
 	}
