@@ -65,8 +65,8 @@ class WP_Plugin_Dependencies_2 {
 			return $original_slug;
 		}
 
-		if ( ! isset( $api_endpoints[ $slug ] ) ) {
-			$api_endpoints[ $slug ] = $endpoint;
+		if ( ! isset( $this->api_endpoints[ $slug ] ) ) {
+			$this->api_endpoints[ $slug ] = $endpoint;
 		}
 
 		return $slug;
