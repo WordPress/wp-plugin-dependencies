@@ -556,10 +556,10 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @param array  $expected A string of expected slug results.
 	 */
 	public function test_split_slug( $slug, $expected ) {
-		$dependencies2   = new WP_Plugin_Dependencies_2();
-		$split_slug      = $this->make_method_accessible( $dependencies2, 'split_slug' );
+		$dependencies2 = new WP_Plugin_Dependencies_2();
+		$split_slug    = $this->make_method_accessible( $dependencies2, 'split_slug' );
 
-		$actual = $split_slug->invoke($dependencies2, trim( $slug ) );
+		$actual = $split_slug->invoke( $dependencies2, trim( $slug ) );
 		$this->assertSame( $expected, $actual );
 	}
 
