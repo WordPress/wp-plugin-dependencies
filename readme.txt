@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.2
-Stable tag: 1.7.9
+Stable tag: 1.8.0
 
 ## Description
 
@@ -44,6 +44,11 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.8.0 / 2023-04-07
+* update to work natively with `<slug>|<URI>` format in `Requires Plugins` header
+* split PD and PDv2 into different classes
+* add more tests
 
 #### 1.7.9 / 2023-04-05
 * update action link to keep `Cannot Activate | Manage Dependencies` together

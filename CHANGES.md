@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.8.0 / 2023-04-07
 * update to work natively with `<slug>|<URI>` format in `Requires Plugins` header
 * split PD and PDv2 into different classes
 * add more tests
