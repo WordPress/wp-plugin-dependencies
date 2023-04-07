@@ -363,7 +363,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			'a dependency with an underscore'        => array(
 				'requires_plugins' => 'hello_dolly',
-				'expected'         => array(),
+				'expected'         => array( 'hello_dolly' ),
 			),
 			'a dependency with a space'              => array(
 				'requires_plugins' => 'hello dolly',
@@ -391,7 +391,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			'symbol dependencies'                    => array(
 				'requires_plugins' => '★-wpsymbols-★',
-				'expected'         => array( '★-wpsymbols-★' ),
+				'expected'         => array(),
 			),
 		);
 	}
@@ -543,5 +543,73 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$dependency_dirnames->setValue( $dependencies, $expected );
 
 		$this->assertSame( $expected, $get_filepaths->invoke( $dependencies ) );
+	}
+
+	/**
+	 * Tests that dependency filepaths are retrieved correctly.
+	 *
+	 * @covers WP_Plugin_Dependencies_2::split_slug
+	 *
+	 * @dataProvider data_split_slug
+	 *
+	 * @param string $slug     A slug string.
+	 * @param array  $expected A string of expected slug results.
+	 */
+	public function test_split_slug( $slug, $expected ) {
+		$dependencies2 = new WP_Plugin_Dependencies_2();
+		$split_slug    = $this->make_method_accessible( $dependencies2, 'split_slug' );
+
+		$actual = $split_slug->invoke( $dependencies2, trim( $slug ) );
+		$this->assertSame( $expected, $actual );
+	}
+
+	/**
+	 * Data provider for test_split_slug().
+	 *
+	 * @return array
+	 */
+	public function data_split_slug() {
+		return array(
+			'no_spaces_pipe_at_end'               => array(
+				'slug'     => 'slug|',
+				'expected' => 'slug|',
+			),
+			'no_spaces_pipe_at_front'             => array(
+				'slug'     => '|endpoint',
+				'expected' => '|endpoint',
+			),
+			'double_pipe_in_middle'               => array(
+				'slug'     => 'slug||endpoint',
+				'expected' => 'slug||endpoint',
+			),
+			'pipes_front_middle_end'              => array(
+				'slug'     => '|slug||endpoint|',
+				'expected' => '|slug||endpoint|',
+			),
+			'single_pipe_in_middle'               => array(
+				'slug'     => 'slug|endpoint',
+				'expected' => 'slug',
+			),
+			'single_pipe_in_middle_pipe_at_end'   => array(
+				'slug'     => 'slug|endpoint|',
+				'expected' => 'slug|endpoint|',
+			),
+			'spaces_and_pipe_in_middle'           => array(
+				'slug'     => 'slug  |endpoint',
+				'expected' => 'slug',
+			),
+			'pipe_and_spaces_in_middle'           => array(
+				'slug'     => 'slug|     endpoint',
+				'expected' => 'slug',
+			),
+			'pipe_in_middle_pipe_spaces_at_end'   => array(
+				'slug'     => 'slug|endpoint|     ',
+				'expected' => 'slug|endpoint|',
+			),
+			'spaces_pipe_at_front_pipe_in_middle' => array(
+				'slug'     => '     |slug|endpoint',
+				'expected' => '|slug|endpoint',
+			),
+		);
 	}
 }

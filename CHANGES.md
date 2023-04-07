@@ -1,5 +1,10 @@
 [unreleased]
 
+#### 1.8.0 / 2023-04-07
+* update to work natively with `<slug>|<URI>` format in `Requires Plugins` header
+* split PD and PDv2 into different classes
+* add more tests
+
 #### 1.7.9 / 2023-04-05
 * update action link to keep `Cannot Activate | Manage Dependencies` together
 * fix for multisite plugin card
