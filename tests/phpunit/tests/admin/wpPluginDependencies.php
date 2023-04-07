@@ -570,43 +570,43 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 */
 	public function data_split_slug() {
 		return array(
-			array(
+			'no_spaces_pipe_at_end'               => array(
 				'slug'     => 'slug|',
 				'expected' => 'slug|',
 			),
-			array(
+			'no_spaces_pipe_at_front'             => array(
 				'slug'     => '|endpoint',
 				'expected' => '|endpoint',
 			),
-			array(
+			'double_pipe_in_middle'               => array(
 				'slug'     => 'slug||endpoint',
 				'expected' => 'slug||endpoint',
 			),
-			array(
+			'pipes_front_middle_end'              => array(
 				'slug'     => '|slug||endpoint|',
 				'expected' => '|slug||endpoint|',
 			),
-			array(
+			'single_pipe_in_middle'               => array(
 				'slug'     => 'slug|endpoint',
 				'expected' => 'slug',
 			),
-			array(
+			'single_pipe_in_middle_pipe_at_end'   => array(
 				'slug'     => 'slug|endpoint|',
 				'expected' => 'slug|endpoint|',
 			),
-			array(
+			'spaces_and_pipe_in_middle'           => array(
 				'slug'     => 'slug  |endpoint',
 				'expected' => 'slug',
 			),
-			array(
+			'pipe_and_spaces_in_middle'           => array(
 				'slug'     => 'slug|     endpoint',
 				'expected' => 'slug',
 			),
-			array(
+			'pipe_in_middle_pipe_spaces_at_end'   => array(
 				'slug'     => 'slug|endpoint|     ',
 				'expected' => 'slug',
 			),
-			array(
+			'spaces_pipe_at_front_pipe_in_middle' => array(
 				'slug'     => '     |slug|endpoint',
 				'expected' => '     |slug|endpoint',
 			),
