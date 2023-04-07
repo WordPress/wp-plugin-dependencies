@@ -592,7 +592,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			array(
 				'slug'     => 'slug|endpoint|',
-				'expected' => 'slug',
+				'expected' => 'slug|endpoint|',
 			),
 			array(
 				'slug'     => 'slug  |endpoint',
@@ -608,7 +608,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			array(
 				'slug'     => '     |slug|endpoint',
-				'expected' => '|slug|endpoint',
+				'expected' => '     |slug|endpoint',
 			),
 		);
 	}
