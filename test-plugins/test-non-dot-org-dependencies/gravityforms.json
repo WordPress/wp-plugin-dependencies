@@ -17,6 +17,7 @@
     "requires_php": "5.6",
     "sections": {
         "description": "Easily create web forms and manage form entries within the WordPress admin.",
+        "installation": "<p>Go to <a href='https://gravityforms.com'>GravityForms.com</a> to purchase and download the plugin.</p>",
         "changelog": "<h3>2.6.6 | 2022-08-23<\/h3><ul><li>Fixed an issue where the a form can have multiple submit buttons if markup is changed with the <code>gform_field_container</code> filter.<\/li> <li>Updated the Zapier icon to reflect their new branding.<\/li><\/ul>"
     },
     "short_description": "Easily create web forms and manage form entries within the WordPress admin....",
