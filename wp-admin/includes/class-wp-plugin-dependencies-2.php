@@ -85,6 +85,12 @@ class WP_Plugin_Dependencies_2 {
 		$rest_endpoints = $this->api_endpoints;
 		$this->args     = $args;
 
+		// TODO: no need for Reflection in when in core, use $this->parse_plugin_headers.
+		$wp_plugin_dependencies = new WP_Plugin_Dependencies();
+		$parse_headers          = new ReflectionMethod( $wp_plugin_dependencies, 'parse_plugin_headers' );
+		$parse_headers->setAccessible( true );
+		$plugin_headers = $parse_headers->invoke( $wp_plugin_dependencies );
+
 		if ( is_wp_error( $response )
 			|| ( property_exists( $args, 'slug' ) && array_key_exists( $args->slug, $this->api_endpoints ) )
 		) {
@@ -101,6 +107,15 @@ class WP_Plugin_Dependencies_2 {
 					continue;
 				}
 
+				// Get local JSON endpoint.
+				if ( str_ends_with( $endpoint, 'json' ) ) {
+					foreach ( $plugin_headers as $plugin_file => $requires ) {
+						if ( str_contains( $requires['RequiresPlugins'], $endpoint ) ) {
+							$endpoint = plugin_dir_url( $plugin_file ) . $endpoint;
+							break;
+						}
+					}
+				}
 				$response = wp_remote_get( $endpoint );
 
 				// Convert response to associative array.
@@ -167,10 +182,10 @@ class WP_Plugin_Dependencies_2 {
 				$true = move_dir( $from, $to, true );
 			} elseif ( ! rename( $from, $to ) ) {
 				$wp_filesystem->mkdir( $to );
-				$true = copy_dir( $from, $to, [ basename( $to ) ] );
+				$true = copy_dir( $from, $to, array( basename( $to ) ) );
 				$wp_filesystem->delete( $from, true );
 			}
-	}
+		}
 
 		return $true;
 	}
