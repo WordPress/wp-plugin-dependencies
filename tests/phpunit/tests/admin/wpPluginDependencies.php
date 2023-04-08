@@ -546,16 +546,16 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Tests that dependency filepaths are retrieved correctly.
+	 * Tests that dependency slugs are returned correctly.
 	 *
 	 * @covers WP_Plugin_Dependencies_2::split_slug
 	 *
-	 * @dataProvider data_split_slug
+	 * @dataProvider data_split_slug_should_return_correct_slug
 	 *
 	 * @param string $slug     A slug string.
 	 * @param array  $expected A string of expected slug results.
 	 */
-	public function test_split_slug( $slug, $expected ) {
+	public function test_split_slug_should_return_correct_slug( $slug, $expected ) {
 		$dependencies2 = new WP_Plugin_Dependencies_2();
 		$split_slug    = $this->make_method_accessible( $dependencies2, 'split_slug' );
 
@@ -564,11 +564,11 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Data provider for test_split_slug().
+	 * Data provider.
 	 *
-	 * @return array
+	 * @return array[]
 	 */
-	public function data_split_slug() {
+	public function data_split_slug_should_return_correct_slug() {
 		return array(
 			'no_spaces_pipe_at_end'               => array(
 				'slug'     => 'slug|',
