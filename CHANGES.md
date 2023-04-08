@@ -1,5 +1,6 @@
 [unreleased]
 * ensure WP 6.0 compatibility with `move_dir()`
+* update test plugins
 
 #### 1.8.0 / 2023-04-07
 * update to work natively with `<slug>|<URI>` format in `Requires Plugins` header
