@@ -143,6 +143,8 @@ class WP_Plugin_Dependencies_2 {
 	 * For correct renaming of downloaded plugin directory,
 	 * some downloads may not be formatted correctly.
 	 *
+	 * @global WP_Filesystem_Base $wp_filesystem WordPress filesystem subclass.
+	 *
 	 * @param bool  $true       Default is true.
 	 * @param array $hook_extra Array of data from hook.
 	 * @param array $result     Array of data for installation.
@@ -150,6 +152,8 @@ class WP_Plugin_Dependencies_2 {
 	 * @return bool
 	 */
 	public function fix_plugin_containing_directory( $true, $hook_extra, $result ) {
+		global $wp_filesystem;
+
 		if ( ! isset( $hook_extra['slug'] ) ) {
 			return $true;
 		}
@@ -158,8 +162,15 @@ class WP_Plugin_Dependencies_2 {
 		$to   = trailingslashit( $result['local_destination'] ) . $hook_extra['slug'];
 
 		if ( trailingslashit( strtolower( $from ) ) !== trailingslashit( strtolower( $to ) ) ) {
-			$true = move_dir( $from, $to, true );
-		}
+			// TODO: remove function_exists for commit.
+			if ( function_exists( 'move_dir' ) ) {
+				$true = move_dir( $from, $to, true );
+			} elseif ( ! rename( $from, $to ) ) {
+				$wp_filesystem->mkdir( $to );
+				$true = copy_dir( $from, $to, [ basename( $to ) ] );
+				$wp_filesystem->delete( $from, true );
+			}
+	}
 
 		return $true;
 	}
