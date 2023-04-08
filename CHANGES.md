@@ -2,6 +2,7 @@
 * ensure WP 6.0 compatibility with `move_dir()`
 * use JSON in plugin root for non-dot org dependencies _acceptable_ for dot org 🤞
 * update test plugins
+* run hooks during AJAX in case you really want an Install to happen
 
 #### 1.8.0 / 2023-04-07
 * update to work natively with `<slug>|<URI>` format in `Requires Plugins` header

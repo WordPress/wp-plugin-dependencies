@@ -35,7 +35,7 @@ class WP_Plugin_Dependencies_2 {
 	 * @return void
 	 */
 	public function start() {
-		if ( is_admin() && ! wp_doing_ajax() ) {
+		if ( is_admin() ) {
 			add_filter( 'plugins_api_result', array( $this, 'add_plugin_card_dependencies' ), 10, 3 );
 			add_filter( 'upgrader_post_install', array( $this, 'fix_plugin_containing_directory' ), 10, 3 );
 			add_filter( 'wp_plugin_dependencies_slug', array( $this, 'split_slug' ), 10, 1 );
