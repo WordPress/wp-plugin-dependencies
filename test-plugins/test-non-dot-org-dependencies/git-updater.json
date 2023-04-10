@@ -26,11 +26,11 @@
     "branch": "develop",
     "download_link": "",
     "banners": {
-        "low": "http:\/\/lightning.test\/wp-content\/plugins\/git-updater\/assets\/banner-772x250.png",
-        "high": "http:\/\/lightning.test\/wp-content\/plugins\/git-updater\/assets\/banner-1544x500.png"
+        "low": "http:\/\/git-updater.com\/wp-content\/plugins\/git-updater\/assets\/banner-772x250.png",
+        "high": "http:\/\/git-updater.com\/wp-content\/plugins\/git-updater\/assets\/banner-1544x500.png"
     },
     "icons": {
-        "svg": "http:\/\/lightning.test\/wp-content\/plugins\/git-updater\/assets\/icon.svg",
+        "svg": "http:\/\/git-updater.com\/wp-content\/plugins\/git-updater\/assets\/icon.svg",
         "default": "https:\/\/s.w.org\/plugins\/geopattern-icon\/git-updater.svg"
     },
     "last_updated": "2023-04-07T23:37:21Z",
