@@ -71,7 +71,7 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function start() {
-		if ( is_admin() && ! wp_doing_ajax() ) {
+		if ( is_admin() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
@@ -158,7 +158,7 @@ class WP_Plugin_Dependencies {
 				$slug = apply_filters( 'wp_plugin_dependencies_slug', $slug );
 
 				// Match to dot org slug format.
-				if ( preg_match( '/^[a-z0-9_\-\p{Cyrillic}\p{Arabic}\p{Han}]+$/mu', $slug ) ) {
+				if ( preg_match( '/^[a-z0-9]+(-[a-z0-9]+)*$/mu', $slug ) ) {
 					$sanitized_slugs[] = $slug;
 				}
 			}
@@ -777,7 +777,7 @@ class WP_Plugin_Dependencies {
 				'tested'            => '',
 				'requires_php'      => '',
 				'sections'          => array( 'description' => '' ),
-				'short_description' => __( 'This required plugin does not support plugin dependencies. Please contact the plugin’s developer and ask them to add dependencies support.' ),
+				'short_description' => __( 'You will need to manually install this dependency. Please contact the plugin’s developer and ask them to add plugin dependencies support and for information on how to install the this dependency.' ),
 				'download_link'     => '',
 				'banners'           => array(),
 				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$args['slug']}.svg" ),

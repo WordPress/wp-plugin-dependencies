@@ -1,13 +1,13 @@
 # Plugin Dependencies
 
-Contributors: afragen, costdev
+Contributors: afragen, costdev, pbiron
 Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 License: MIT
 Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.2
-Stable tag: 1.8.0
+Stable tag: 1.9.0
 
 ## Description
 
@@ -20,9 +20,10 @@ Please open issues at [WordPress/wp-plugin-dependencies issues](https://github.c
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #3032](https://github.com/WordPress/wordpress-develop/pull/3032)
 
 * Parses the **Requires Plugins** header that defines plugin dependencies using a comma separated list of wp.org slugs. To test, you will need to add the header and content to a plugin.
-* Plugins not in dot org may use the format `<slug>|<URI>` in the **Requires Plugins** header. `URI` should return a JSON compatible with the `plugins_api()` response.
+* Plugins not in dot org may use the format `<slug>|<URI>` in the **Requires Plugins** header. `URI` should return a JSON compatible with the `plugins_api()` response or be a JSON file at the plugin root, `<slug>|<slug>.json`.
+* For a plugin in dot org, the JSON response value of `download_link` must be empty.
 * Adds a new view/tab to plugins install page ( **Plugins > Add New** ) titled **Dependencies** that contains plugin cards for all plugin dependencies.
-* This view also lists which plugins require which plugin dependencies in the plugin card. 😅
+* This view also lists which plugins require which plugin dependencies in the plugin card.
 * In the plugins page, a dependent plugin is unable to be deleted or deactivated if the requiring plugin is active.
 * Plugin dependencies can be deactivated or deleted if the requiring plugin is not active.
 * Messaging in the plugin row description is inserted; as is data noting which plugins require the dependency.
@@ -45,6 +46,13 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.9.0 / 2023-04-10
+* ensure WP 6.0 compatibility with `move_dir()`
+* use JSON in plugin root for non-dot org dependencies _acceptable_ for dot org 🤞
+* update test plugins
+* run hooks during AJAX in case you really want an Install to happen
+* update regex to strictly follow plugin repository slug format with tests
 
 #### 1.8.0 / 2023-04-07
 * update to work natively with `<slug>|<URI>` format in `Requires Plugins` header

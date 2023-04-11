@@ -1,5 +1,12 @@
 [unreleased]
 
+#### 1.9.0 / 2023-04-10
+* ensure WP 6.0 compatibility with `move_dir()`
+* use JSON in plugin root for non-dot org dependencies _acceptable_ for dot org 🤞
+* update test plugins
+* run hooks during AJAX in case you really want an Install to happen
+* update regex to strictly follow plugin repository slug format with tests
+
 #### 1.8.0 / 2023-04-07
 * update to work natively with `<slug>|<URI>` format in `Requires Plugins` header
 * split PD and PDv2 into different classes

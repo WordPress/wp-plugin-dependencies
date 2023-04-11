@@ -363,7 +363,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			'a dependency with an underscore'        => array(
 				'requires_plugins' => 'hello_dolly',
-				'expected'         => array( 'hello_dolly' ),
+				'expected'         => array(),
 			),
 			'a dependency with a space'              => array(
 				'requires_plugins' => 'hello dolly',
@@ -377,17 +377,37 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 				'requires_plugins' => '"hello-dolly, woocommerce"',
 				'expected'         => array(),
 			),
+			'a dependency with multiple dashes'      => array(
+				'requires_plugins' => 'this-is-a-valid-slug',
+				'expected'         => array( 'this-is-a-valid-slug' ),
+			),
+			'a dependency with trailing dash'        => array(
+				'requires_plugins' => 'ending-dash-',
+				'expected'         => array(),
+			),
+			'a dependency with leading dash'         => array(
+				'requires_plugins' => '-slug',
+				'expected'         => array(),
+			),
+			'a dependency with double dashes'        => array(
+				'requires_plugins' => 'abc--123',
+				'expected'         => array(),
+			),
+			'a dependency starting with numbers'     => array(
+				'requires_plugins' => '123slug',
+				'expected'         => array( '123slug' ),
+			),
 			'cyrillic dependencies'                  => array(
 				'requires_plugins' => 'я-делюсь',
-				'expected'         => array( 'я-делюсь' ),
+				'expected'         => array(),
 			),
 			'arabic dependencies'                    => array(
 				'requires_plugins' => 'لينوكس-ويكى',
-				'expected'         => array( 'لينوكس-ويكى' ),
+				'expected'         => array(),
 			),
 			'chinese dependencies'                   => array(
 				'requires_plugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress',
-				'expected'         => array( '唐诗宋词chinese-poem', '社交登录', '腾讯微博一键登录', '豆瓣秀-for-wordpress' ),
+				'expected'         => array(),
 			),
 			'symbol dependencies'                    => array(
 				'requires_plugins' => '★-wpsymbols-★',
@@ -546,69 +566,122 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Tests that dependency filepaths are retrieved correctly.
+	 * Tests that dependency slugs are returned correctly.
 	 *
 	 * @covers WP_Plugin_Dependencies_2::split_slug
 	 *
-	 * @dataProvider data_split_slug
+	 * @dataProvider data_split_slug_should_return_correct_slug
 	 *
 	 * @param string $slug     A slug string.
 	 * @param array  $expected A string of expected slug results.
 	 */
-	public function test_split_slug( $slug, $expected ) {
+	public function test_split_slug_should_return_correct_slug( $slug, $expected ) {
 		$dependencies2 = new WP_Plugin_Dependencies_2();
 		$split_slug    = $this->make_method_accessible( $dependencies2, 'split_slug' );
 
+		// The slug is trimmed before being passed to the 'wp_plugin_dependencies_slug' filter.
 		$actual = $split_slug->invoke( $dependencies2, trim( $slug ) );
 		$this->assertSame( $expected, $actual );
 	}
 
 	/**
-	 * Data provider for test_split_slug().
+	 * Data provider.
 	 *
-	 * @return array
+	 * @return array[]
 	 */
-	public function data_split_slug() {
+	public function data_split_slug_should_return_correct_slug() {
 		return array(
-			'no_spaces_pipe_at_end'               => array(
-				'slug'     => 'slug|',
-				'expected' => 'slug|',
-			),
-			'no_spaces_pipe_at_front'             => array(
+			'no slug, an endpoint, and one pipe at the start' => array(
 				'slug'     => '|endpoint',
 				'expected' => '|endpoint',
 			),
-			'double_pipe_in_middle'               => array(
-				'slug'     => 'slug||endpoint',
-				'expected' => 'slug||endpoint',
+			'no slug, an endpoint, and two pipes at the start' => array(
+				'slug'     => '||endpoint',
+				'expected' => '||endpoint',
 			),
-			'pipes_front_middle_end'              => array(
-				'slug'     => '|slug||endpoint|',
-				'expected' => '|slug||endpoint|',
-			),
-			'single_pipe_in_middle'               => array(
+			'a slug, an endpoint, and one pipe in the middle' => array(
 				'slug'     => 'slug|endpoint',
 				'expected' => 'slug',
 			),
-			'single_pipe_in_middle_pipe_at_end'   => array(
+			'a slug, an endpoint, and two pipes in the middle' => array(
+				'slug'     => 'slug||endpoint',
+				'expected' => 'slug||endpoint',
+			),
+			'a slug, no endpoint, and one pipe at the end' => array(
+				'slug'     => 'slug|',
+				'expected' => 'slug|',
+			),
+			'a slug, no endpoint, and two pipes at the end' => array(
+				'slug'     => 'slug||',
+				'expected' => 'slug||',
+			),
+			'a slug, no endpoint, and one pipe at the start and end' => array(
+				'slug'     => '|slug|',
+				'expected' => '|slug|',
+			),
+			'a slug, no endpoint, and two pipes at the start and end' => array(
+				'slug'     => '||slug||',
+				'expected' => '||slug||',
+			),
+			'a slug, an endpoint, and two pipes in the middle' => array(
+				'slug'     => 'slug||endpoint',
+				'expected' => 'slug||endpoint',
+			),
+			'a slug, an endpoint, and one pipe at the start, in the middle, and at the end' => array(
+				'slug'     => '|slug|endpoint|',
+				'expected' => '|slug|endpoint|',
+			),
+			'a slug, an endpoint, and one pipe at the start and end, and two pipes in the middle' => array(
+				'slug'     => '|slug||endpoint|',
+				'expected' => '|slug||endpoint|',
+			),
+			'a slug, an endpoint, and two pipes at the start and end, and one pipe in the middle' => array(
+				'slug'     => '||slug|endpoint||',
+				'expected' => '||slug|endpoint||',
+			),
+			'a slug, an endpoint, and two pipes at the start and end, and two pipes in the middle' => array(
+				'slug'     => '||slug||endpoint||',
+				'expected' => '||slug||endpoint||',
+			),
+			'a slug, an endpoint, and one pipe at the start and in the middle' => array(
+				'slug'     => '|slug|endpoint',
+				'expected' => '|slug|endpoint',
+			),
+			'a slug, an endpoint, and one pipe in the middle and at the end' => array(
 				'slug'     => 'slug|endpoint|',
 				'expected' => 'slug|endpoint|',
 			),
-			'spaces_and_pipe_in_middle'           => array(
+			'a slug, an endpoint, and two spaces and a pipe at the start, and a pipe in the middle' => array(
+				'slug'     => '  |slug|endpoint',
+				'expected' => '|slug|endpoint',
+			),
+			'a slug, an endpoint, and two spaces before a pipe in the middle' => array(
 				'slug'     => 'slug  |endpoint',
 				'expected' => 'slug',
 			),
-			'pipe_and_spaces_in_middle'           => array(
-				'slug'     => 'slug|     endpoint',
+			'a slug, an endpoint, and two spaces after a pipe in the middle' => array(
+				'slug'     => 'slug|  endpoint',
 				'expected' => 'slug',
 			),
-			'pipe_in_middle_pipe_spaces_at_end'   => array(
-				'slug'     => 'slug|endpoint|     ',
+			'a slug, an endpoint, and a pipe in the middle, a pipe at the end, and two spaces at the end' => array(
+				'slug'     => 'slug|endpoint|  ',
 				'expected' => 'slug|endpoint|',
 			),
-			'spaces_pipe_at_front_pipe_in_middle' => array(
+			'a slug, an endpoint, and spaces pipe at front pipe in middle' => array(
 				'slug'     => '     |slug|endpoint',
 				'expected' => '|slug|endpoint',
+			),
+			'no slug, no endpoint, and one pipe'           => array(
+				'slug'     => '|',
+				'expected' => '|',
+			),
+			'no slug, no endpoint, and two pipes'          => array(
+				'slug'     => '||',
+				'expected' => '||',
+			),
+			'an empty slug'                                => array(
+				'slug'     => '',
+				'expected' => '',
 			),
 		);
 	}

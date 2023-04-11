@@ -12,8 +12,8 @@
  * Plugin Name: Plugin Dependencies
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
- * Author: Andy Fragen, Colin Stewart
- * Version: 1.8.0
+ * Author: Andy Fragen, Colin Stewart, Paul Biron
+ * Version: 1.9.0
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -73,7 +73,7 @@ class Init {
 			add_action(
 				'install_plugins_table_header',
 				function() {
-                    // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
 					if ( 'dependencies' === $tab ) {
 						echo '<p>' . esc_html__( 'These suggestions are based on dependencies required by installed plugins.' ) . '</p>';
