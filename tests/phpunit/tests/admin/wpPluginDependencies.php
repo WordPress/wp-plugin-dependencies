@@ -363,7 +363,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			),
 			'a dependency with an underscore'        => array(
 				'requires_plugins' => 'hello_dolly',
-				'expected'         => array( 'hello_dolly' ),
+				'expected'         => array(),
 			),
 			'a dependency with a space'              => array(
 				'requires_plugins' => 'hello dolly',
@@ -377,17 +377,29 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 				'requires_plugins' => '"hello-dolly, woocommerce"',
 				'expected'         => array(),
 			),
+			'a dependency with multiple dashes'      => array(
+				'requires_plugins' => 'this-is-a-valid-slug',
+				'expected'         => array( 'this-is-a-valid-slug' ),
+			),
+			'a dependency with trailing dash'        => array(
+				'requires_plugins' => 'ending-dash-',
+				'expected'         => array(),
+			),
+			'a dependency with leading dash'         => array(
+				'requires_plugins' => '-slug',
+				'expected'         => array(),
+			),
 			'cyrillic dependencies'                  => array(
 				'requires_plugins' => 'я-делюсь',
-				'expected'         => array( 'я-делюсь' ),
+				'expected'         => array(),
 			),
 			'arabic dependencies'                    => array(
 				'requires_plugins' => 'لينوكس-ويكى',
-				'expected'         => array( 'لينوكس-ويكى' ),
+				'expected'         => array(),
 			),
 			'chinese dependencies'                   => array(
 				'requires_plugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress',
-				'expected'         => array( '唐诗宋词chinese-poem', '社交登录', '腾讯微博一键登录', '豆瓣秀-for-wordpress' ),
+				'expected'         => array(),
 			),
 			'symbol dependencies'                    => array(
 				'requires_plugins' => '★-wpsymbols-★',
@@ -651,15 +663,15 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 				'slug'     => '     |slug|endpoint',
 				'expected' => '|slug|endpoint',
 			),
-			'no slug, no endpoint, and one pipe' => array(
+			'no slug, no endpoint, and one pipe'           => array(
 				'slug'     => '|',
 				'expected' => '|',
 			),
-			'no slug, no endpoint, and two pipes' => array(
+			'no slug, no endpoint, and two pipes'          => array(
 				'slug'     => '||',
 				'expected' => '||',
 			),
-			'an empty slug' => array(
+			'an empty slug'                                => array(
 				'slug'     => '',
 				'expected' => '',
 			),
