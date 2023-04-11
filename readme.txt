@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.2
-Stable tag: 1.8.0
+Stable tag: 1.9.0
 
 ## Description
 
@@ -46,6 +46,13 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.9.0 / 2023-04-10
+* ensure WP 6.0 compatibility with `move_dir()`
+* use JSON in plugin root for non-dot org dependencies _acceptable_ for dot org 🤞
+* update test plugins
+* run hooks during AJAX in case you really want an Install to happen
+* update regex to strictly follow plugin repository slug format with tests
 
 #### 1.8.0 / 2023-04-07
 * update to work natively with `<slug>|<URI>` format in `Requires Plugins` header
