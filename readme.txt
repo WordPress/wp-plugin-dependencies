@@ -1,6 +1,6 @@
 # Plugin Dependencies
 
-Contributors: afragen, costdev
+Contributors: afragen, costdev, pbiron
 Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 License: MIT
 Network: true
