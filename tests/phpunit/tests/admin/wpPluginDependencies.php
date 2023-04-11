@@ -389,6 +389,10 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 				'requires_plugins' => '-slug',
 				'expected'         => array(),
 			),
+			'a dependency with double dashes'        => array(
+				'requires_plugins' => 'abc--123',
+				'expected'         => array(),
+			),
 			'a dependency starting with numbers'     => array(
 				'requires_plugins' => '123slug',
 				'expected'         => array( '123slug' ),
