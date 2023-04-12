@@ -80,7 +80,6 @@ class WP_Plugin_Dependencies {
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ), 15 );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
-			add_action( 'in_admin_header', array( $this, 'hide_action_links' ) );
 
 			$required_headers = $this->parse_plugin_headers();
 			$this->slugs      = $this->sanitize_required_headers( $required_headers );
@@ -818,32 +817,6 @@ class WP_Plugin_Dependencies {
 		}
 
 		return $response;
-	}
-
-	/**
-	 * Hide plugin card action links for plugins with no API data.
-	 *
-	 * @global $pagenow Current page.
-	 *
-	 * @return void
-	 */
-	public function hide_action_links() {
-		global $pagenow;
-
-		if ( 'plugin-install.php' !== $pagenow ) {
-			return;
-		}
-
-		$hide_selectors = array();
-		foreach ( $this->plugin_data as $plugin_data ) {
-			if ( empty( $plugin_data['version'] ) ) {
-				$hide_selectors[] = sprintf( '.plugin-card-%1$s .action-links, .plugin-card-%1$s .plugin-card-bottom', $plugin_data['slug'] );
-			}
-		}
-		if ( ! empty( $hide_selectors ) ) {
-			$hide_selectors = implode( ', ', $hide_selectors );
-			printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
-		}
 	}
 
 	/**
