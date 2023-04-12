@@ -73,6 +73,7 @@ class WP_Plugin_Dependencies {
 	public function start() {
 		if ( is_admin() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
+			add_filter( 'plugins_api_result', array( $this, 'empty_plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'empty_package_remove_install_button' ), 10, 2 );
@@ -228,6 +229,22 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
+	 * Get default empty API response for non-dot org plugin.
+	 *
+	 * @param stdClass $res    Object of results.
+	 * @param string   $action Variable for plugins_api().
+	 * @param stdClass $args   Object of plugins_api() args.
+	 * @return stdClass
+	 */
+	public function empty_plugins_api_result( $res, $action, $args ) {
+		if ( is_wp_error( $res ) ) {
+			$res = $this->get_empty_plugins_api_response( $res, (array) $args );
+		}
+
+		return $res;
+	}
+
+	/**
 	 * Get plugin data from WordPress API.
 	 * Store result in $this->plugin_data.
 	 *
@@ -270,9 +287,6 @@ class WP_Plugin_Dependencies {
 				),
 			);
 			$response = plugins_api( 'plugin_information', $args );
-
-			// If a proper slug is present but has incomplete plugin data, generic data will be returned.
-			$response = $this->get_empty_plugins_api_response( $response, $args );
 
 			if ( is_wp_error( $response ) ) {
 				continue;
@@ -803,10 +817,11 @@ class WP_Plugin_Dependencies {
 			|| ! property_exists( $response, 'slug' )
 			|| ! property_exists( $response, 'short_description' )
 		) {
-			$dependencies = $this->get_dependency_filepaths();
-			$file         = $dependencies[ $args['slug'] ];
-			$args['name'] = $file ? $this->plugins[ $file ]['Name'] : $args['slug'];
-			$response     = array(
+			$dependencies      = $this->get_dependency_filepaths();
+			$file              = $dependencies[ $args['slug'] ];
+			$args['name']      = $file ? $this->plugins[ $file ]['Name'] : $args['slug'];
+			$short_description = __( 'You will need to manually install this dependency. Please contact the plugin\'s developer and ask them to add plugin dependencies support and for information on how to install the this dependency.' );
+			$response          = array(
 				'name'              => $args['name'],
 				'slug'              => $args['slug'],
 				'version'           => '',
@@ -815,8 +830,11 @@ class WP_Plugin_Dependencies {
 				'requires'          => '',
 				'tested'            => '',
 				'requires_php'      => '',
-				'sections'          => array( 'description' => '' ),
-				'short_description' => __( 'You will need to manually install this dependency. Please contact the plugin\'s developer and ask them to add plugin dependencies support and for information on how to install the this dependency.' ),
+				'sections'          => array(
+					'description'  => $short_description,
+					'installation' => __( 'Ask the plugin developer where to download and install this plugin dependency.' ),
+				),
+				'short_description' => $short_description,
 				'download_link'     => '',
 				'banners'           => array(),
 				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$args['slug']}.svg" ),
@@ -825,7 +843,7 @@ class WP_Plugin_Dependencies {
 				'rating'            => 0,
 				'active_installs'   => 0,
 			);
-			$response     = (object) $response;
+			$response          = (object) $response;
 		}
 
 		return $response;
