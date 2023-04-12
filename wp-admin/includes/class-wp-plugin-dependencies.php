@@ -231,6 +231,8 @@ class WP_Plugin_Dependencies {
 	 * Get plugin data from WordPress API.
 	 * Store result in $this->plugin_data.
 	 *
+	 * @global $pagenow Current page.
+	 *
 	 * @return void
 	 */
 	public function get_dot_org_data() {
@@ -293,6 +295,8 @@ class WP_Plugin_Dependencies {
 
 	/**
 	 * Modify the plugin row.
+	 *
+	 * @global $pagenow Current page.
 	 *
 	 * @return void
 	 */
@@ -384,11 +388,15 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Modify plugin install card for unmet dependencies
 	 *
+	 * @global $pagenow Current page.
+	 *
 	 * @param array $action_links Plugin install card action links.
 	 * @param array $plugin       Plugin data.
 	 * @return array
 	 */
 	public function modify_plugin_install_action_links( $action_links, $plugin ) {
+		global $pagenow;
+
 		$dependencies = $this->get_dependency_filepaths();
 		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
 			return $action_links;
@@ -406,7 +414,9 @@ class WP_Plugin_Dependencies {
 					$action_links[0]  = str_replace( __( 'Activate' ), _x( 'Cannot Activate', 'plugin' ), $action_links[0] );
 					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 					$action_links[0]  = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-					$action_links[]   = $this->get_dependency_link();
+					if ( 'plugin-install' === $pagenow ) {
+						$action_links[] = $this->get_dependency_link();
+					}
 					break;
 				}
 			}
@@ -418,26 +428,26 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Make 'Install Now' but 'Cannot Install' for empty packages.
 	 *
+	 * @global $pagenow Current page.
+	 *
 	 * @param array $action_links Array of plugin install action links.
 	 * @param array $plugin       Array of plugin data.
 	 * @return array
 	 */
 	public function empty_package_remove_install_button( $action_links, $plugin ) {
-		$current_screen = get_current_screen();
+		global $pagenow;
 
 		if (
-			! $current_screen instanceof WP_Screen || 'plugin-install' !== $current_screen->id ||
-			! isset( $_GET['tab'] ) || 'dependencies' !== $_GET['tab'] ||
-			! empty( $plugin['download_link'] ) || ! str_contains( $action_links[0], 'install-now' )
+			'plugin-install' !== $pagenow
+			|| ! isset( $_GET['tab'] ) || 'dependencies' !== $_GET['tab'] // phpcs:ignore WordPress.Security.NonceVerification
+			|| ! empty( $plugin['download_link'] ) || ! str_contains( $action_links[0], 'install-now' )
 		) {
 			return $action_links;
 		}
-		if ( str_contains( $action_links[0], 'install-now' ) ) {
-			$action_links[0]  = str_replace( __( 'Network Install' ), __( 'Install' ), $action_links[0] );
-			$action_links[0]  = str_replace( __( 'Install Now' ), _x( 'Cannot Install', 'plugin' ), $action_links[0] );
-			$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot install due to empty package' ) . '</span>';
-			$action_links[0]  = str_replace( 'install-now', 'button-disabled', $action_links[0] );
-		}
+		$action_links[0]  = str_replace( __( 'Network Install' ), __( 'Install' ), $action_links[0] );
+		$action_links[0]  = str_replace( __( 'Install Now' ), _x( 'Cannot Install', 'plugin' ), $action_links[0] );
+		$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot install due to empty package' ) . '</span>';
+		$action_links[0]  = str_replace( 'install-now', 'button-disabled', $action_links[0] );
 
 		return $action_links;
 	}
@@ -583,6 +593,8 @@ class WP_Plugin_Dependencies {
 
 	/**
 	 * Display admin notice if dependencies not installed.
+	 *
+	 * @global $pagenow Current page.
 	 *
 	 * @return void
 	 */
