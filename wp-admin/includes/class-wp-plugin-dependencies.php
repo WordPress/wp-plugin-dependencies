@@ -425,7 +425,7 @@ class WP_Plugin_Dependencies {
 	 */
 	public function empty_package_remove_install_button( $action_links, $plugin ) {
 		$current_screen = get_current_screen();
-		
+
 		if (
 			! $current_screen instanceof WP_Screen || 'plugin-install' !== $current_screen->id ||
 			! isset( $_GET['tab'] ) || 'dependencies' !== $_GET['tab'] ||
@@ -439,6 +439,7 @@ class WP_Plugin_Dependencies {
 			$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot install due to empty package' ) . '</span>';
 			$action_links[0]  = str_replace( 'install-now', 'button-disabled', $action_links[0] );
 		}
+
 		return $action_links;
 	}
 
