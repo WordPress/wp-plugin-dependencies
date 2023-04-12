@@ -1,4 +1,5 @@
 [unreleased]
+* show `Cannot Install` button in Dependencies tab for dependencies with no package
 
 #### 1.9.0 / 2023-04-10
 * ensure WP 6.0 compatibility with `move_dir()`
