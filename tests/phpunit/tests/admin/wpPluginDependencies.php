@@ -576,9 +576,6 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @param array  $expected A string of expected slug results.
 	 */
 	public function test_split_slug_should_return_correct_slug( $slug, $expected ) {
-		if ( ! class_exists( 'WP_Plugin_Dependencies_2' ) ) {
-			$this->markTestSkipped( 'Waiting for Plugin Dependencies part 2' );
-		}
 		$dependencies2 = new WP_Plugin_Dependencies_2();
 		$split_slug    = $this->make_method_accessible( $dependencies2, 'split_slug' );
 
