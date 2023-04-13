@@ -428,7 +428,7 @@ class WP_Plugin_Dependencies {
 					$action_links[0]  = str_replace( __( 'Activate' ), _x( 'Cannot Activate', 'plugin' ), $action_links[0] );
 					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 					$action_links[0]  = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-					if ( 'plugin-install.php' === $pagenow ) {
+					if ( 'plugin-install.php' !== $pagenow ) {
 						$action_links[] = $this->get_dependency_link();
 					}
 					break;
