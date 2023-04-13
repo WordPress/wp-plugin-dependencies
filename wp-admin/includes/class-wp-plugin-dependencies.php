@@ -825,7 +825,7 @@ class WP_Plugin_Dependencies {
 				'name'              => $args['name'],
 				'slug'              => $args['slug'],
 				'version'           => '',
-				'author'            => '',
+				'author'            => __( 'Unknown' ),
 				'contributors'      => array(),
 				'requires'          => '',
 				'tested'            => '',
@@ -842,6 +842,7 @@ class WP_Plugin_Dependencies {
 				'num_ratings'       => 0,
 				'rating'            => 0,
 				'active_installs'   => 0,
+				'external'          => 'xxx',
 			);
 			$response          = (object) $response;
 		}
