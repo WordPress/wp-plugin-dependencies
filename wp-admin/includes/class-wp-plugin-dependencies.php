@@ -451,8 +451,7 @@ class WP_Plugin_Dependencies {
 	public function empty_package_remove_install_button( $action_links, $plugin ) {
 		global $pagenow;
 
-		if (
-			'plugin-install.php' !== $pagenow
+		if ( 'plugin-install.php' !== $pagenow
 			|| ! isset( $_GET['tab'] ) || 'dependencies' !== $_GET['tab'] // phpcs:ignore WordPress.Security.NonceVerification
 			|| ! empty( $plugin['download_link'] ) || ! str_contains( $action_links[0], 'install-now' )
 		) {
