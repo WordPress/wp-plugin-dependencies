@@ -840,10 +840,10 @@ class WP_Plugin_Dependencies {
 				'tested'            => '',
 				'requires_php'      => $args['RequiresPHP'],
 				'sections'          => array(
-					'description'  => $args['Description'] . '<br>' . $short_description,
+					'description'  => '<p>' . $args['Description'] . '</p>' . $short_description,
 					'installation' => __( 'Ask the plugin developer where to download and install this plugin dependency.' ),
 				),
-				'short_description' => $args['Description'] . '<br>' . $short_description,
+				'short_description' => '<p>' . $args['Description'] . '</p>' . $short_description,
 				'download_link'     => '',
 				'banners'           => array(),
 				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$slug}.svg" ),
