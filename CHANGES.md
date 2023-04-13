@@ -3,6 +3,7 @@
 * return of generic plugins_api() response to it's own hook, avoids having to hide items in plugin card
 * add more data to generic plugin card
 * update for WP-CLI
+* no need to start on hook
 
 #### 1.9.0 / 2023-04-10
 * ensure WP 6.0 compatibility with `move_dir()`
