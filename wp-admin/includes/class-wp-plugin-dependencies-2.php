@@ -191,4 +191,4 @@ class WP_Plugin_Dependencies_2 {
 	}
 }
 
-add_action( 'admin_init', array( new WP_Plugin_Dependencies_2(), 'start' ), 5 );
+( new WP_Plugin_Dependencies_2() )->start();

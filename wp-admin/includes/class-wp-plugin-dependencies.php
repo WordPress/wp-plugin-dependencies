@@ -73,19 +73,20 @@ class WP_Plugin_Dependencies {
 	public function start() {
 		if ( is_admin() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
+			add_filter( 'plugins_api_result', array( $this, 'empty_plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
+			add_filter( 'plugin_install_action_links', array( $this, 'empty_package_remove_install_button' ), 10, 2 );
 
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ), 15 );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
-			add_action( 'in_admin_header', array( $this, 'hide_action_links' ) );
-
-			$required_headers = $this->parse_plugin_headers();
-			$this->slugs      = $this->sanitize_required_headers( $required_headers );
-			$this->get_dot_org_data();
-			$this->deactivate_unmet_dependencies();
 		}
+
+		$required_headers = $this->parse_plugin_headers();
+		$this->slugs      = $this->sanitize_required_headers( $required_headers );
+		$this->get_dot_org_data();
+		$this->deactivate_unmet_dependencies();
 	}
 
 	/**
@@ -228,8 +229,26 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
+	 * Get default empty API response for non-dot org plugin.
+	 *
+	 * @param stdClass $res    Object of results.
+	 * @param string   $action Variable for plugins_api().
+	 * @param stdClass $args   Object of plugins_api() args.
+	 * @return stdClass
+	 */
+	public function empty_plugins_api_result( $res, $action, $args ) {
+		if ( is_wp_error( $res ) ) {
+			$res = $this->get_empty_plugins_api_response( $res, (array) $args );
+		}
+
+		return $res;
+	}
+
+	/**
 	 * Get plugin data from WordPress API.
 	 * Store result in $this->plugin_data.
+	 *
+	 * @global $pagenow Current page.
 	 *
 	 * @return void
 	 */
@@ -269,9 +288,6 @@ class WP_Plugin_Dependencies {
 			);
 			$response = plugins_api( 'plugin_information', $args );
 
-			// If a proper slug is present but has incomplete plugin data, generic data will be returned.
-			$response = $this->get_empty_plugins_api_response( $response, $args );
-
 			if ( is_wp_error( $response ) ) {
 				continue;
 			}
@@ -293,6 +309,8 @@ class WP_Plugin_Dependencies {
 
 	/**
 	 * Modify the plugin row.
+	 *
+	 * @global $pagenow Current page.
 	 *
 	 * @return void
 	 */
@@ -384,11 +402,15 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Modify plugin install card for unmet dependencies
 	 *
+	 * @global $pagenow Current page.
+	 *
 	 * @param array $action_links Plugin install card action links.
 	 * @param array $plugin       Plugin data.
 	 * @return array
 	 */
 	public function modify_plugin_install_action_links( $action_links, $plugin ) {
+		global $pagenow;
+
 		$dependencies = $this->get_dependency_filepaths();
 		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
 			return $action_links;
@@ -406,11 +428,39 @@ class WP_Plugin_Dependencies {
 					$action_links[0]  = str_replace( __( 'Activate' ), _x( 'Cannot Activate', 'plugin' ), $action_links[0] );
 					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 					$action_links[0]  = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-					$action_links[]   = $this->get_dependency_link();
+					if ( 'plugin-install.php' !== $pagenow ) {
+						$action_links[] = $this->get_dependency_link();
+					}
 					break;
 				}
 			}
 		}
+
+		return $action_links;
+	}
+
+	/**
+	 * Convert 'Install Now' into 'Cannot Install' for empty packages.
+	 *
+	 * @global $pagenow Current page.
+	 *
+	 * @param array $action_links Array of plugin install action links.
+	 * @param array $plugin       Array of plugin data.
+	 * @return array
+	 */
+	public function empty_package_remove_install_button( $action_links, $plugin ) {
+		global $pagenow;
+
+		if ( 'plugin-install.php' !== $pagenow
+			|| ! isset( $_GET['tab'] ) || 'dependencies' !== $_GET['tab'] // phpcs:ignore WordPress.Security.NonceVerification
+			|| ! empty( $plugin['download_link'] ) || ! str_contains( $action_links[0], 'install-now' )
+		) {
+			return $action_links;
+		}
+		$action_links[0]  = str_replace( __( 'Network Install' ), __( 'Install' ), $action_links[0] );
+		$action_links[0]  = str_replace( __( 'Install Now' ), _x( 'Cannot Install', 'plugin' ), $action_links[0] );
+		$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot install due to empty package' ) . '</span>';
+		$action_links[0]  = str_replace( 'install-now', 'button-disabled', $action_links[0] );
 
 		return $action_links;
 	}
@@ -557,6 +607,8 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Display admin notice if dependencies not installed.
 	 *
+	 * @global $pagenow Current page.
+	 *
 	 * @return void
 	 */
 	public function admin_notices() {
@@ -636,6 +688,7 @@ class WP_Plugin_Dependencies {
 		foreach ( $this->requires_plugins as $file => $requires ) {
 			if ( in_array( dirname( $file ), $this->slugs, true )
 				&& in_array( $requires['RequiresPlugins'], $this->slugs, true )
+				&& isset( $this->plugin_data[ $requires['RequiresPlugins'] ]['name'] ) // Needed for WP-CLI.
 			) {
 				$slug                                   = $requires['RequiresPlugins'];
 				$circular_dependencies[ $slug ]['file'] = $file;
@@ -760,62 +813,52 @@ class WP_Plugin_Dependencies {
 	 * @return stdClass
 	 */
 	private function get_empty_plugins_api_response( $response, $args ) {
+		$slug = $args['slug'];
+		$args = array(
+			'Name'        => $args['slug'],
+			'Version'     => '',
+			'Author'      => '',
+			'Description' => '',
+			'RequiresWP'  => '',
+			'RequiresPHP' => '',
+			'PluginURI'   => '',
+		);
 		if ( is_wp_error( $response ) || property_exists( $response, 'error' )
 			|| ! property_exists( $response, 'slug' )
 			|| ! property_exists( $response, 'short_description' )
 		) {
-			$dependencies = $this->get_dependency_filepaths();
-			$file         = $dependencies[ $args['slug'] ];
-			$args['name'] = $file ? $this->plugins[ $file ]['Name'] : $args['slug'];
-			$response     = array(
-				'name'              => $args['name'],
-				'slug'              => $args['slug'],
-				'version'           => '',
-				'author'            => '',
+			$dependencies      = $this->get_dependency_filepaths();
+			$file              = $dependencies[ $slug ];
+			$args              = $file ? $this->plugins[ $file ] : $args;
+			$short_description = __( 'You will need to manually install this dependency. Please contact the plugin\'s developer and ask them to add plugin dependencies support and for information on how to install the this dependency.' );
+			$response          = array(
+				'name'              => $args['Name'],
+				'slug'              => $slug,
+				'version'           => $args['Version'],
+				'author'            => $args['Author'],
 				'contributors'      => array(),
-				'requires'          => '',
+				'requires'          => $args['RequiresWP'],
 				'tested'            => '',
-				'requires_php'      => '',
-				'sections'          => array( 'description' => '' ),
-				'short_description' => __( 'You will need to manually install this dependency. Please contact the plugin’s developer and ask them to add plugin dependencies support and for information on how to install the this dependency.' ),
+				'requires_php'      => $args['RequiresPHP'],
+				'sections'          => array(
+					'description'  => '<p>' . $args['Description'] . '</p>' . $short_description,
+					'installation' => __( 'Ask the plugin developer where to download and install this plugin dependency.' ),
+				),
+				'short_description' => '<p>' . $args['Description'] . '</p>' . $short_description,
 				'download_link'     => '',
 				'banners'           => array(),
-				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$args['slug']}.svg" ),
+				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$slug}.svg" ),
 				'last_updated'      => '',
 				'num_ratings'       => 0,
 				'rating'            => 0,
 				'active_installs'   => 0,
+				'homepage'          => $args['PluginURI'],
+				'external'          => 'xxx',
 			);
-			$response     = (object) $response;
+			$response          = (object) $response;
 		}
 
 		return $response;
-	}
-
-	/**
-	 * Hide plugin card action links for plugins with no API data.
-	 *
-	 * @global $pagenow Current page.
-	 *
-	 * @return void
-	 */
-	public function hide_action_links() {
-		global $pagenow;
-
-		if ( 'plugin-install.php' !== $pagenow ) {
-			return;
-		}
-
-		$hide_selectors = array();
-		foreach ( $this->plugin_data as $plugin_data ) {
-			if ( empty( $plugin_data['version'] ) ) {
-				$hide_selectors[] = sprintf( '.plugin-card-%1$s .action-links, .plugin-card-%1$s .plugin-card-bottom', $plugin_data['slug'] );
-			}
-		}
-		if ( ! empty( $hide_selectors ) ) {
-			$hide_selectors = implode( ', ', $hide_selectors );
-			printf( '<style>%s { display: none; }</style>', esc_attr( $hide_selectors ) );
-		}
 	}
 
 	/**
@@ -849,4 +892,4 @@ class WP_Plugin_Dependencies {
 	}
 }
 
-add_action( 'admin_init', array( new WP_Plugin_Dependencies(), 'start' ) );
+( new WP_Plugin_Dependencies() )->start();
