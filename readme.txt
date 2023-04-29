@@ -6,8 +6,8 @@ License: MIT
 Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
-Tested up to: 6.2
-Stable tag: 1.9.0
+Tested up to: 6.3
+Stable tag: 1.10.0
 
 ## Description
 
@@ -46,6 +46,13 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.10.0 / 2023-04-29
+* show `Cannot Install` button in Dependencies tab for dependencies with no package
+* return of generic plugins_api() response to it's own hook, avoids having to hide items in plugin card
+* add more data to generic plugin card
+* update for WP-CLI
+* no need to start on hook
 
 #### 1.9.0 / 2023-04-10
 * ensure WP 6.0 compatibility with `move_dir()`

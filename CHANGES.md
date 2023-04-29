@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.10.0 / 2023-04-29
 * show `Cannot Install` button in Dependencies tab for dependencies with no package
 * return of generic plugins_api() response to it's own hook, avoids having to hide items in plugin card
 * add more data to generic plugin card
