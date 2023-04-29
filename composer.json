@@ -28,5 +28,10 @@
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
+  },
+  "scripts": {
+    "wpcs": [
+      "vendor/bin/phpcbf .; vendor/bin/phpcs ."
+    ]
   }
 }
