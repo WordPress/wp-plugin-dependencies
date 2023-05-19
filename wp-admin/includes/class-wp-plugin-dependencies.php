@@ -545,8 +545,6 @@ class WP_Plugin_Dependencies {
 			}
 		}
 
-		$this->plugin_data[ $response->slug ] = (array) $response;
-
 		$requires    = '<strong>' . __( 'Requires:' ) . '</strong> ' . implode( ', ', $require_names );
 		$description = $description . '<p>' . $requires . '</p>';
 
