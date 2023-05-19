@@ -545,11 +545,34 @@ class WP_Plugin_Dependencies {
 			}
 		}
 
-		$requires    = __( 'The following plugin dependencies must be installed and activated.' ) . '<br><br>';
-		$requires   .= '<strong>' . __( 'Requires:' ) . '</strong> ' . implode( ', ', $require_names );
+		$requires = '<strong>' . __( 'Required Plugins:' ) . '</strong><br>' . __( 'The following plugin dependencies must be installed and activated:' ) . '<br>';
+		foreach ( $require_names as $required ) {
+			$requires .= '<span style="display:list-item;margin-left:2em;">' . $required . '</span>';
+		}
 		$description = $description . '<p>' . $requires . '</p>';
 
-		return $description;
+		// Bad a11y but a temporary kludge.
+		$colins_style_fix = '<style>
+		.plugin-card-top .column-description {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+		}
+		.plugin-card-top .column-description p {
+			margin-top: 0;
+		}
+		.plugin-card-top .column-description .authors {
+			order: 1;
+		}
+		.plugin-card-top .column-description p:not(:first-child):not(.authors):not(:empty) {
+			order: 2;
+		}
+		.plugin-card-top .column-description p:empty {
+			display: none;
+		}
+		</style>';
+
+		return $colins_style_fix . $description;
 	}
 
 	/**
