@@ -1,4 +1,5 @@
 [unreleased]
+* add **Requires:** data to plugin cards of uninstalled plugins where repo plugins have `Requires Plugins` header set
 
 #### 1.10.0 / 2023-04-29
 * show `Cannot Install` button in Dependencies tab for dependencies with no package

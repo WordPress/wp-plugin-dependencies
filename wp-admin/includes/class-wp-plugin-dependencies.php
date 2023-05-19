@@ -74,7 +74,8 @@ class WP_Plugin_Dependencies {
 		if ( is_admin() ) {
 			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
 			add_filter( 'plugins_api_result', array( $this, 'empty_plugins_api_result' ), 10, 3 );
-			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description' ), 10, 2 );
+			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description_installed' ), 10, 2 );
+			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description_uninstalled' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'empty_package_remove_install_button' ), 10, 2 );
 
@@ -472,8 +473,8 @@ class WP_Plugin_Dependencies {
 	 * @param array  $plugin      Array of plugin data.
 	 * @return string
 	 */
-	public function plugin_install_description( $description, $plugin ) {
-		$required = null;
+	public function plugin_install_description_installed( $description, $plugin ) {
+		$required = '';
 		if ( in_array( $plugin['slug'], array_keys( $this->plugin_data ), true ) ) {
 			$dependents  = $this->get_dependency_sources( $plugin );
 			$required    = '<strong>' . __( 'Required by:' ) . '</strong> ' . $dependents;
@@ -483,12 +484,73 @@ class WP_Plugin_Dependencies {
 		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
 			return $description;
 		}
+
 		$file = $this->plugin_dirnames[ $plugin['slug'] ];
 		if ( in_array( $file, array_keys( $this->requires_plugins ), true ) ) {
 			$require_names = $this->get_requires_plugins_names( $file );
 			$requires      = '<strong>' . __( 'Requires:' ) . '</strong> ' . $require_names;
 			$description   = $description . '<p>' . $requires . '</p>';
 		}
+
+		return $description;
+	}
+
+	/**
+	 * Add 'Requires: ...' to plugin install cards when dependent plugin not installed.
+	 *
+	 * @param string $description Short description of plugin.
+	 * @param array  $plugin      Array of plugin data.
+	 * @return string
+	 */
+	public function plugin_install_description_uninstalled( $description, $plugin ) {
+		if ( str_contains( $description, 'Required by:' ) || str_contains( $description, 'Requires:' ) ) {
+			return $description;
+		}
+		if ( empty( $plugin['requires_plugins'] ) ) {
+			return $description;
+		}
+
+		$require_names = array();
+
+		$plugin['requires_plugins'][] = 'woocommerce';
+		$plugin['requires_plugins'][] = 'advance-custom-fields-pro';
+		foreach ( $plugin['requires_plugins'] as $slug ) {
+			$this->slugs[] = $slug;
+			if ( ! function_exists( 'plugins_api' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+			}
+			$args     = array(
+				'slug'   => $slug,
+				'fields' => array(
+					'short_description' => true,
+					'icons'             => true,
+				),
+			);
+			$response = plugins_api( 'plugin_information', $args );
+
+			if ( is_wp_error( $response ) ) {
+				continue;
+			}
+
+			$url = network_admin_url( 'plugin-install.php' );
+			$url = add_query_arg(
+				array(
+					'tab'    => 'plugin-information',
+					'plugin' => $slug,
+				),
+				$url
+			);
+			if ( property_exists( $response, 'name' ) && ! empty( $response->version ) ) {
+				$require_names[] = sprintf( '<a href="%1$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %2$s" data-title="%2$s">%2$s</a>', $url, $response->name );
+			} else {
+				$require_names[] = $slug;
+			}
+		}
+
+		$this->plugin_data[ $response->slug ] = (array) $response;
+
+		$requires    = '<strong>' . __( 'Requires:' ) . '</strong> ' . implode( ', ', $require_names );
+		$description = $description . '<p>' . $requires . '</p>';
 
 		return $description;
 	}
