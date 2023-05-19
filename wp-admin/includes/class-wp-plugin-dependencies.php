@@ -44,6 +44,13 @@ class WP_Plugin_Dependencies {
 	protected $requires_plugins;
 
 	/**
+	 * Holds plugin_api() responses.
+	 *
+	 * @var array
+	 */
+	protected $plugin_api_data;
+
+	/**
 	 * Holds plugin directory names to compare with cache.
 	 *
 	 * @var array
@@ -496,7 +503,7 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Add 'Requires: ...' to plugin install cards when dependent plugin not installed.
+	 * Add 'Require Plugins: ...' to plugin install cards when dependent plugin not installed.
 	 *
 	 * @param string $description Short description of plugin.
 	 * @param array  $plugin      Array of plugin data.
@@ -510,9 +517,13 @@ class WP_Plugin_Dependencies {
 			return $description;
 		}
 
-		$require_names = array();
-
+		$this->plugin_api_data = (array) get_site_transient( 'wp_plugin_dependencies_plugin_api_data' );
 		foreach ( $plugin['requires_plugins'] as $slug ) {
+			// Don't hit plugins API if data exists.
+			if ( array_key_exists( $slug, (array) $this->plugin_api_data ) ) {
+				continue;
+			}
+
 			$this->slugs[] = $slug;
 			if ( ! function_exists( 'plugins_api' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
@@ -530,16 +541,25 @@ class WP_Plugin_Dependencies {
 				continue;
 			}
 
-			$url = network_admin_url( 'plugin-install.php' );
-			$url = add_query_arg(
+			$this->plugin_api_data[ $response->slug ] = (array) $response;
+			ksort( $this->plugin_api_data );
+			unset( $this->plugin_api_data[0] );
+			set_site_transient( 'wp_plugin_dependencies_plugin_api_data', $this->plugin_api_data, WEEK_IN_SECONDS );
+		}
+
+		$require_names = array();
+		foreach ( $plugin['requires_plugins'] as $slug ) {
+			$plugin_data = $this->plugin_api_data[ $slug ];
+			$url         = network_admin_url( 'plugin-install.php' );
+			$url         = add_query_arg(
 				array(
 					'tab'    => 'plugin-information',
-					'plugin' => $slug,
+					'plugin' => $plugin_data['slug'],
 				),
 				$url
 			);
-			if ( property_exists( $response, 'name' ) && ! empty( $response->version ) ) {
-				$require_names[] = sprintf( '<a href="%1$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %2$s" data-title="%2$s">%2$s</a>', $url, $response->name );
+			if ( isset( $plugin_data['name'] ) && ! empty( $plugin_data['version'] ) ) {
+				$require_names[] = sprintf( '<a href="%1$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %2$s" data-title="%2$s">%2$s</a>', $url, $plugin_data['name'] );
 			} else {
 				$require_names[] = $slug;
 			}
