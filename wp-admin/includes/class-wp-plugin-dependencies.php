@@ -512,8 +512,6 @@ class WP_Plugin_Dependencies {
 
 		$require_names = array();
 
-		$plugin['requires_plugins'][] = 'woocommerce';
-		$plugin['requires_plugins'][] = 'advance-custom-fields-pro';
 		foreach ( $plugin['requires_plugins'] as $slug ) {
 			$this->slugs[] = $slug;
 			if ( ! function_exists( 'plugins_api' ) ) {
