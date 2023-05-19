@@ -545,7 +545,7 @@ class WP_Plugin_Dependencies {
 			}
 		}
 
-		$requires    = __( 'The following plugins must be installed and activated.' ) . '<br><br>';
+		$requires    = __( 'The following plugin dependencies must be installed and activated.' ) . '<br><br>';
 		$requires   .= '<strong>' . __( 'Requires:' ) . '</strong> ' . implode( ', ', $require_names );
 		$description = $description . '<p>' . $requires . '</p>';
 
