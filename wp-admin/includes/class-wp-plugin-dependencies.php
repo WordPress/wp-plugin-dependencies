@@ -558,27 +558,34 @@ class WP_Plugin_Dependencies {
 				),
 				$url
 			);
+
+			// Check if plugin dependency is installed and active.
+			$plugin_is_active = 'plugin-dependency-incompatible';
+			$active_plugins   = get_option( 'active_plugins' );
+			foreach ( $active_plugins as $plugin_file ) {
+				if ( str_contains( $plugin_file, '/' ) && explode( '/', $plugin_file )[0] === $slug ) {
+					$plugin_is_active = 'plugin-dependency-compatible';
+					break;
+				}
+			}
+
 			if ( isset( $plugin_data['name'] ) && ! empty( $plugin_data['version'] ) ) {
-				$require_names[] = sprintf( '<a href="%1$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %2$s" data-title="%2$s">%2$s - %3$s</a>', $url, $plugin_data['name'], __( 'More details' ) );
+				$require_names[] = sprintf(
+					'<a class="%1$s" href="%2$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %3$s" data-title="%3$s">%3$s &mdash; %4$s</a>',
+					esc_attr( $plugin_is_active ),
+					$url,
+					$plugin_data['name'],
+					__( 'More details' ),
+				);
 			} else {
 				$require_names[] = $slug;
-			}
-		}
-
-		// Check if plugin dependency is active.
-		$plugin_is_active = 'plugin-dependency-incompatible';
-		$active_plugins   = get_option( 'active_plugins' );
-		foreach ( $active_plugins as $plugin_file ) {
-			if ( str_contains( $plugin_file, '/' ) && explode( '/', $plugin_file )[0] === $slug ) {
-				$plugin_is_active = 'plugin-dependency-compatible';
-				break;
 			}
 		}
 
 		$requires = '<strong>' . __( 'Required Plugins:' ) . '</strong><br>' . __( 'The following plugin dependencies must be installed and activated:' ) . '<br>';
 
 		foreach ( $require_names as $required ) {
-			$requires .= "<span class='{$plugin_is_active}'>" . $required . '</span><br>';
+			$requires .= $required . '<br>';
 		}
 
 		$description = $description . '<p>' . $requires . '</p>';
@@ -602,18 +609,17 @@ class WP_Plugin_Dependencies {
 		.plugin-card-top .column-description p:empty {
 			display: none;
 		}
-
-		.plugin-card-top .column-description p span:before {
+		.plugin-card-top .column-description p a:before {
 			font: normal 20px/.5 dashicons;
 			position: relative;
 			top: 4px;
 			left: -2px;
 		}
-		.plugin-card-top .column-description p span.plugin-dependency-compatible:before {
+		.plugin-card-top .column-description p a.plugin-dependency-compatible:before {
 			content: "\f147";
 			color: #007017;
 		}
-		.plugin-card-top .column-description p span.plugin-dependency-incompatible:before {
+		.plugin-card-top .column-description p a.plugin-dependency-incompatible:before {
 			content: "\f158";
 			color: #d63638;
 		}
