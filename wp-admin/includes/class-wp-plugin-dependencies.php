@@ -44,7 +44,7 @@ class WP_Plugin_Dependencies {
 	protected $requires_plugins;
 
 	/**
-	 * Holds plugin_api() responses.
+	 * Holds 'plugin_api()' data for uninstalled plugin dependencies.
 	 *
 	 * @var array
 	 */
