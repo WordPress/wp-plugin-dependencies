@@ -559,16 +559,28 @@ class WP_Plugin_Dependencies {
 				$url
 			);
 			if ( isset( $plugin_data['name'] ) && ! empty( $plugin_data['version'] ) ) {
-				$require_names[] = sprintf( '<a href="%1$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %2$s" data-title="%2$s">%2$s</a>', $url, $plugin_data['name'] );
+				$require_names[] = sprintf( '<a href="%1$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %2$s" data-title="%2$s">%2$s - %3$s</a>', $url, $plugin_data['name'], __( 'More details' ) );
 			} else {
 				$require_names[] = $slug;
 			}
 		}
 
-		$requires = '<strong>' . __( 'Required Plugins:' ) . '</strong><br>' . __( 'The following plugin dependencies must be installed and activated:' ) . '<br>';
-		foreach ( $require_names as $required ) {
-			$requires .= '<span style="display:list-item;margin-left:2em;">' . $required . '</span>';
+		// Check if plugin dependency is active.
+		$plugin_is_active = 'plugin-dependency-incompatible';
+		$active_plugins   = get_option( 'active_plugins' );
+		foreach ( $active_plugins as $plugin_file ) {
+			if ( str_contains( $plugin_file, '/' ) && explode( '/', $plugin_file )[0] === $slug ) {
+				$plugin_is_active = 'plugin-dependency-compatible';
+				break;
+			}
 		}
+
+		$requires = '<strong>' . __( 'Required Plugins:' ) . '</strong><br>' . __( 'The following plugin dependencies must be installed and activated:' ) . '<br>';
+
+		foreach ( $require_names as $required ) {
+			$requires .= "<span class='{$plugin_is_active}'>" . $required . '</span><br>';
+		}
+
 		$description = $description . '<p>' . $requires . '</p>';
 
 		// Bad a11y but a temporary kludge.
@@ -589,6 +601,21 @@ class WP_Plugin_Dependencies {
 		}
 		.plugin-card-top .column-description p:empty {
 			display: none;
+		}
+
+		.plugin-card-top .column-description p span:before {
+			font: normal 20px/.5 dashicons;
+			position: relative;
+			top: 4px;
+			left: -2px;
+		}
+		.plugin-card-top .column-description p span.plugin-dependency-compatible:before {
+			content: "\f147";
+			color: #007017;
+		}
+		.plugin-card-top .column-description p span.plugin-dependency-incompatible:before {
+			content: "\f158";
+			color: #d63638;
 		}
 		</style>';
 
