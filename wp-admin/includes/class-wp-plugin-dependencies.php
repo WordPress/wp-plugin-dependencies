@@ -575,7 +575,7 @@ class WP_Plugin_Dependencies {
 					esc_attr( $plugin_is_active ),
 					$url,
 					$plugin_data['name'],
-					__( 'More details' ),
+					__( 'More details' )
 				);
 			} else {
 				$require_names[] = $slug;
