@@ -588,7 +588,7 @@ class WP_Plugin_Dependencies {
 			$requires .= $required . '<br>';
 		}
 
-		$description = $description . '<p>' . $requires . '</p>';
+		$description = $description . '<p class="plugin-requires">' . $requires . '</p>';
 
 		// Bad a11y but a temporary kludge.
 		$colins_style_fix = '<style>
@@ -622,6 +622,10 @@ class WP_Plugin_Dependencies {
 		.plugin-card-top .column-description p a.plugin-dependency-incompatible:before {
 			content: "\f158";
 			color: #d63638;
+		}
+		.plugin-card-top .column-description p.plugin-requires {
+			background-color: #e5f5fa;
+			padding: 5px;
 		}
 		</style>';
 
