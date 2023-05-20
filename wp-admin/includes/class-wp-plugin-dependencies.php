@@ -570,21 +570,21 @@ class WP_Plugin_Dependencies {
 			}
 
 			if ( isset( $plugin_data['name'] ) && ! empty( $plugin_data['version'] ) ) {
-				$require_names[] = sprintf(
+				$required_names[] = sprintf(
 					'<a class="%1$s" href="%2$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %3$s" data-title="%3$s">%3$s &mdash; %4$s</a>',
-					esc_attr( $plugin_is_active ),
+					$plugin_is_active,
 					$url,
 					$plugin_data['name'],
 					__( 'More details' )
 				);
 			} else {
-				$require_names[] = $slug;
+				$required_names[] = $slug;
 			}
 		}
 
 		$requires = '<strong>' . __( 'Required Plugins:' ) . '</strong><br>' . __( 'The following plugin dependencies must be installed and activated:' ) . '<br>';
 
-		foreach ( $require_names as $required ) {
+		foreach ( $required_names as $required ) {
 			$requires .= $required . '<br>';
 		}
 
