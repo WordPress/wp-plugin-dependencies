@@ -119,29 +119,31 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Tests that plugin headers are correctly parsed.
+	 * 
 	 * @dataProvider data_parse_plugin_headers
 	 *
 	 * @covers WP_Plugin_Dependencies::parse_plugin_headers
 	 *
-	 * @param array    $headers  Raw plugin headers.
-	 * @param stdClass $expected The expected parsed headers.
+	 * @param array    $plugins_data Raw plugins data.
+	 * @param stdClass $expected     The expected parsed headers.
 	 */
-	public function test_parse_plugin_headers( $headers, $expected ) {
+	public function test_parse_plugin_headers( $plugins_data, $expected ) {
 		$plugin_names = array();
 
-		foreach ( $headers as $plugin_name => $plugin ) {
+		foreach ( $plugins_data as $name => $data ) {
 			$plugin_data = array_map(
 				static function( $value, $header ) {
 					return $header . ': ' . $value;
 				},
-				$plugin,
-				array_keys( $plugin )
+				$data,
+				array_keys( $data )
 			);
 
 			$plugin_data = "<?php\n/*\n" . implode( "\n", $plugin_data ) . "\n*/\n";
 
 			$plugin_file = $this->create_plugin(
-				$plugin_name . '.php',
+				$name . '.php',
 				$plugin_data,
 				self::$plugins_dir
 			);
@@ -153,7 +155,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 		$dependencies = new WP_Plugin_Dependencies();
 		$plugins      = $this->make_prop_accessible( $dependencies, 'plugins' );
-		$plugins->setValue( $dependencies, $headers );
+		$plugins->setValue( $dependencies, $plugins_data );
 
 		$parse_plugin_headers = $this->make_method_accessible( $dependencies, 'parse_plugin_headers' );
 		$actual               = $parse_plugin_headers->invoke( $dependencies );
