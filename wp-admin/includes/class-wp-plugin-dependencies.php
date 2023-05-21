@@ -87,6 +87,7 @@ class WP_Plugin_Dependencies {
 			add_filter( 'plugin_install_action_links', array( $this, 'empty_package_remove_install_button' ), 10, 2 );
 
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ), 15 );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
 		}
@@ -95,6 +96,27 @@ class WP_Plugin_Dependencies {
 		$this->slugs      = $this->sanitize_required_headers( $required_headers );
 		$this->get_dot_org_data();
 		$this->deactivate_unmet_dependencies();
+	}
+
+	/**
+	 * Enqueues styles for plugin dependencies on the "Add New" plugins screen.
+	 *
+	 * @global string $wp_version The WordPress version string.
+	 * @global string $pagenow    The filename of the current screen.
+	 *
+	 * @return void
+	 */
+	public function enqueue_styles() {
+		global $wp_version, $pagenow;
+
+		if ( 'plugin-install.php' === $pagenow ) {
+			wp_enqueue_style(
+				'wp-plugin-dependencies',
+				plugins_url( 'wp-admin/css/wp-plugin-dependencies.css', 'wp-plugin-dependencies/plugin.php' ),
+				array(),
+				$wp_version
+			);
+		}
 	}
 
 	/**
@@ -605,92 +627,7 @@ class WP_Plugin_Dependencies {
 			}
 		}
 
-		$description = $description . '<div class="plugin-dependencies"><p class="plugin-dependencies-explainer-text">' . $requires . '</p></div>';
-
-		return $this->get_plugin_dependency_notice_styles() . $description;
-	}
-
-	/**
-	 * Gets the style tag for the plugin dependencies notice in plugin cards.
-	 *
-	 * Bad a11y but a temporary kludge.
-	 *
-	 * @return string The style tag.
-	 */
-	private function get_plugin_dependency_notice_styles() {
-		$styles = '<style>
-		.plugin-card .column-description {
-			display: flex;
-			flex-direction: column;
-			justify-content: flex-start;
-		}
-		.plugin-card .column-description > p {
-			margin-top: 0;
-		}
-		.plugin-card .column-description .authors {
-			order: 1;
-		}
-		.plugin-card .column-description .plugin-dependencies {
-			order: 2;
-		}
-		.plugin-card .column-description p:empty {
-			display: none;
-		}
-		/*.plugin-card .plugin-dependency-name:before {
-			font: normal 20px/.5 dashicons;
-			position: relative;
-			top: 4px;
-			left: -2px;
-		}
-		.plugin-card .plugin-dependencies .plugin-dependency-compatible:before {
-			content: "\f147";
-			color: #007017;
-		}
-		.plugin-card .plugin-dependencies .plugin-dependency-incompatible:before {
-			content: "\f158";
-			color: #d63638;
-		}*/
-		.plugin-card .desc {
-			margin-inline: 0;
-		}
-		.plugin-card .desc > p {
-			margin-left: 148px;
-			margin-right: 128px;
-		}
-		.plugin-card .plugin-dependencies {
-			background-color: #e5f5fa;
-			border-left: 3px solid #72aee6;
-			margin-bottom: .5em;
-			padding: 15px;
-		}
-		.plugin-card .plugin-dependencies-explainer-text {
-			margin-block: 0;
-		}
-		.plugin-card .plugin-dependency {
-			align-items: center;
-			display: flex;
-			flex-wrap: wrap;
-			margin-top: .5em;
-		}
-		.plugin-card .plugin-dependency:nth-child(2),
-		.plugin-card .plugin-dependency:last-child {
-			margin-top: 1em;
-		}
-		.plugin-card .plugin-dependency-name {
-			margin-right: 1em;
-			flex-basis: 50%;
-		}
-		.plugin-card .plugin-dependency .notice {
-			flex-basis: 100%;
-			margin-bottom: .5em;
-			margin-inline: 0;
-		}
-		.plugin-card .plugin-dependency .button {
-			margin-inline: auto 1em;
-		}
-		</style>';
-
-		return $styles;
+		return $description . '<div class="plugin-dependencies"><p class="plugin-dependencies-explainer-text">' . $requires . '</p></div>';
 	}
 
 	/**
