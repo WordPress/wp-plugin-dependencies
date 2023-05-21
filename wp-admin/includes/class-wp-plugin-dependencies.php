@@ -13,7 +13,7 @@
  * It is designed to add plugin dependencies as designated in the
  * `Requires Plugins` header to a new view in the plugins install page.
  */
-class WP_Plugin_Dependencies {
+final class WP_Plugin_Dependencies {
 
 	/**
 	 * Holds 'get_plugins()'.
