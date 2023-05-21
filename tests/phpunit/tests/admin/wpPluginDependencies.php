@@ -41,7 +41,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 */
 	private function create_plugin( $filename, $data = "<?php\n/*\nPlugin Name: Test\n*/", $dir_path = false ) {
 		if ( false === $filename ) {
-			$filename = __FUNCTION__ . '.php';
+			$filename = 'create_plugin.php';
 		}
 
 		if ( false === $dir_path ) {
