@@ -75,11 +75,11 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * Makes a class method accessible.
 	 *
 	 * @param object|string $obj_or_class The object or class.
-	 * @param string        $function     The class method.
+	 * @param string        $method     The class method.
 	 * @return ReflectionMethod The accessible method.
 	 */
-	private function make_method_accessible( $obj_or_class, $function ) {
-		$method = new ReflectionMethod( $obj_or_class, $function );
+	private function make_method_accessible( $obj_or_class, $method ) {
+		$method = new ReflectionMethod( $obj_or_class, $method );
 		$method->setAccessible( true );
 		return $method;
 	}
