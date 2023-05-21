@@ -7,26 +7,32 @@
  * @group admin
  * @group plugins
  */
-
 class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
+	/**
+	 * Stored the plugins directory.
+	 *
+	 * @var string
+	 */
 	protected static $plugin_dir;
 
+	/**
+	 * Sets up the plugins directory before any tests run.
+	 */
 	public static function wpSetUpBeforeClass() {
 		self::$plugin_dir = WP_PLUGIN_DIR . '/wp_plugin_dependencies_plugin';
 		@mkdir( self::$plugin_dir );
 	}
 
+	/**
+	 * Removes the plugins directory after all tests run.
+	 */
 	public static function wpTearDownAfterClass() {
 		array_map( 'unlink', array_filter( (array) glob( self::$plugin_dir . '/*' ) ) );
 		rmdir( self::$plugin_dir );
 	}
 
 	/**
-	 * Helper method.
-	 *
-	 * This creates a single-file plugin.
-	 *
-	 * @access private
+	 * Creates a single-file plugin.
 	 *
 	 * @param string $data     Optional. Data for the plugin file. Default is a dummy plugin header.
 	 * @param string $filename Optional. Filename for the plugin file. Default is a random string.
@@ -53,9 +59,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Helper method.
-	 *
-	 * This makes a class property accessible.
+	 * Makes a class property accessible.
 	 *
 	 * @param object|string $obj_or_class The object or class.
 	 * @param string        $prop         The property.
@@ -68,9 +72,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Helper method.
-	 *
-	 * Makes a class function accessible.
+	 * Makes a class method accessible.
 	 *
 	 * @param object|string $obj_or_class The object or class.
 	 * @param string        $function     The class method.
@@ -83,7 +85,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * @covers WP_Plugin_Dependencies::__construct()
+	 * @covers WP_Plugin_Dependencies::__construct
 	 */
 	public function test__construct() {
 		$dependencies     = new WP_Plugin_Dependencies();
@@ -118,8 +120,8 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @covers WP_Plugin_Dependencies::parse_plugin_headers
 	 *
-	 * @param array    $headers .
-	 * @param stdClass $expected     The expected parsed headers.
+	 * @param array    $headers  Raw plugin headers.
+	 * @param stdClass $expected The expected parsed headers.
 	 */
 	public function test_parse_plugin_headers( $headers, $expected ) {
 		$plugin_names = array();
@@ -174,9 +176,9 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Data Provider.
+	 * Data provider.
 	 *
-	 * @return array
+	 * @return array[]
 	 */
 	public function data_parse_plugin_headers() {
 		return array(
@@ -337,7 +339,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	/**
 	 * Data provider.
 	 *
-	 * @return array
+	 * @return array[]
 	 */
 	public function data_slug_sanitization() {
 		return array(
@@ -440,9 +442,9 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Data provider for test_get_dependency_filepaths().
+	 * Data provider.
 	 *
-	 * @return array
+	 * @return array[]
 	 */
 	public function data_get_dependency_filepaths() {
 		return array(
