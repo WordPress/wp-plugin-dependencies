@@ -21,13 +21,14 @@
  * @return string $button The markup for the dependency row button.
  */
 function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible_wp ) {
-	$button                   = '';
-	$status                   = install_plugin_install_status( $data );
-	$plugin_dependency_met    = true;
-	$data['requires_plugins'] = isset( $data['requires_plugins'] ) ? $data['requires_plugins'] : array();
+	$button                = '';
+	$data                  = (object) $data;
+	$status                = install_plugin_install_status( $data );
+	$requires_plugins      = isset( $data->requires_plugins ) ? $data->requires_plugins : array();
+	$plugin_dependency_met = true;
 
 	// Check if plugin dependency is installed and active.
-	foreach ( $data['requires_plugins'] as $dependency ) {
+	foreach ( $requires_plugins as $dependency ) {
 		$plugin_dependency_met = false;
 		$active_plugins        = get_option( 'active_plugins' );
 		foreach ( $active_plugins as $plugin_file ) {
@@ -40,7 +41,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 
 	sprintf(
 		'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
-		esc_attr( $data['slug'] ),
+		esc_attr( $data->slug ),
 		esc_url( $status['url'] ),
 		/* translators: %s: Plugin name and version. */
 		esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $name ) ),
@@ -55,7 +56,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 					if ( $compatible_php && $compatible_wp && $plugin_dependency_met ) {
 						$button = sprintf(
 							'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
-							esc_attr( $data['slug'] ),
+							esc_attr( $data->slug ),
 							esc_url( $status['url'] ),
 							/* translators: %s: Plugin name and version. */
 							esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $name ) ),
@@ -77,7 +78,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 						$button = sprintf(
 							'<a class="update-now button aria-button-if-js" data-plugin="%s" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
 							esc_attr( $status['file'] ),
-							esc_attr( $data['slug'] ),
+							esc_attr( $data->slug ),
 							esc_url( $status['url'] ),
 							/* translators: %s: Plugin name and version. */
 							esc_attr( sprintf( _x( 'Update %s now', 'plugin' ), $name ) ),
