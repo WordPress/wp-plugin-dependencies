@@ -105,15 +105,17 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Tests that `::get_plugins()` returns an array of plugin data.
+	 * 
 	 * @covers WP_Plugin_Dependencies::get_plugins
 	 */
-	public function test_get_plugins() {
+	public function test_get_plugins_should_return_an_array_of_plugin_data() {
 		$dependencies = new WP_Plugin_Dependencies();
 		$get_plugins  = $this->make_method_accessible( $dependencies, 'get_plugins' );
 		$actual       = $get_plugins->invoke( $dependencies );
 
-		$this->assertIsArray( $actual, 'Did not return an array' );
-		$this->assertNotEmpty( $actual, 'The plugins array is empty' );
+		$this->assertIsArray( $actual, 'Did not return an array.' );
+		$this->assertNotEmpty( $actual, 'The plugin data array is empty.' );
 	}
 
 	/**
