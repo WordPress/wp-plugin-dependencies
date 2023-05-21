@@ -326,6 +326,8 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Tests that slugs are correctly sanitized from the 'RequiresPlugins' header.
+	 * 
 	 * @dataProvider data_slug_sanitization
 	 *
 	 * @covers WP_Plugin_Dependencies::sanitize_required_headers
@@ -333,12 +335,12 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @param string $requires_plugins The unsanitized dependency slug(s).
 	 * @param array  $expected         The sanitized dependency slug(s).
 	 */
-	public function test_slug_sanitization( $requires_plugins, $expected ) {
+	public function test_slugs_are_correctly_sanitized_from_the_requiresplugins_header( $requires_plugins, $expected ) {
 		$dependencies = new WP_Plugin_Dependencies();
 		$sanitize     = $this->make_method_accessible( $dependencies, 'sanitize_required_headers' );
 		$headers      = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
 		$actual       = $sanitize->invoke( $dependencies, $headers );
-		$this->assertSameSetsWithIndex( $expected, $actual );
+		$this->assertSame( $expected, $actual );
 	}
 
 	/**
