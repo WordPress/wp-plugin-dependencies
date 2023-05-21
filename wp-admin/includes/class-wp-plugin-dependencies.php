@@ -547,7 +547,7 @@ class WP_Plugin_Dependencies {
 			set_site_transient( 'wp_plugin_dependencies_plugin_api_data', $this->plugin_api_data, WEEK_IN_SECONDS );
 		}
 
-		$require_names = array();
+		$required_names = array();
 		foreach ( $plugin['requires_plugins'] as $slug ) {
 			$plugin_data = $this->plugin_api_data[ $slug ];
 			$url         = network_admin_url( 'plugin-install.php' );
@@ -573,77 +573,247 @@ class WP_Plugin_Dependencies {
 			}
 
 			if ( isset( $plugin_data['name'] ) && ! empty( $plugin_data['version'] ) ) {
-				$required_names[] = sprintf(
-					'<a href="%1$s" class="%2$s thickbox open-plugin-details-modal" aria-label="More information about %3$s" data-title="%3$s">%3$s &mdash; %4$s</a>',
-					$url,
-					$plugin_is_active,
-					$plugin_data['name'],
+				$plugin_dependency_name = sprintf(
+					'<span class="plugin-dependency-name %1$s">%2$s</span>',
+					esc_attr( $plugin_is_active ),
+					esc_html( $plugin_data['name'] )
+				);
+
+				$more_details_link = sprintf(
+					'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="More information about %2$s" data-title="%2$s">%3$s</a>',
+					esc_url( $url ),
+					esc_attr( $plugin_data['name'] ),
 					__( 'More details' )
 				);
+
+				$button = $this->get_dependency_row_button( $slug, $plugin_data );
+
+				$required_names[] = '<div class="plugin-dependency plugin-card-' . esc_attr( $slug ) . '">' . $plugin_dependency_name . ' ' . $button . ' ' . $more_details_link . '</div>';
 			} else {
 				$required_names[] = $slug;
 			}
 		}
 
-		$requires = '<strong>' . __( 'Required Plugins:' ) . '</strong><br>' . __( 'The following plugin dependencies must be installed and activated:' ) . '<br>';
+		$requires  = '<strong>' . __( 'Additional plugins are required' ) . '</strong><br>';
+		$requires .= __( 'The following plugins must also be installed and activated. This plugin will be deactivated if any of the required plugins is deactivated or deleted.' ) . '<br>';
 
-		foreach ( $required_names as $required ) {
-			$requires .= $required . '<br>';
+		$required_names_count = count( $required_names );
+		for ( $i = 0; $i < $required_names_count; ++$i ) {
+			$requires .= $required_names[ $i ];
+			if ( $i !== $required_names_count ) {
+				$requires . '<br>';
+			}
 		}
 
-		$description = $description . '<p class="plugin-requires">' . $requires . '</p>';
+		$description = $description . '<div class="plugin-dependencies"><p class="plugin-dependencies-explainer-text">' . $requires . '</p></div>';
 
-		// Bad a11y but a temporary kludge.
-		$colins_style_fix = '<style>
-		.plugin-card-top .column-description {
+		return $this->get_plugin_dependency_notice_styles() . $description;
+	}
+
+	/**
+	 * Gets the style tag for the plugin dependencies notice in plugin cards.
+	 *
+	 * Bad a11y but a temporary kludge.
+	 *
+	 * @return string The style tag.
+	 */
+	private function get_plugin_dependency_notice_styles() {
+		$styles = '<style>
+		.plugin-card .column-description {
 			display: flex;
 			flex-direction: column;
 			justify-content: flex-start;
 		}
-		.plugin-card-top .column-description p {
+		.plugin-card .column-description > p {
 			margin-top: 0;
 		}
-		.plugin-card-top .column-description .authors {
+		.plugin-card .column-description .authors {
 			order: 1;
 		}
-		.plugin-card-top .column-description p:not(:first-child):not(.authors):not(:empty) {
+		.plugin-card .column-description .plugin-dependencies {
 			order: 2;
 		}
-		.plugin-card-top .column-description p:empty {
+		.plugin-card .column-description p:empty {
 			display: none;
 		}
-		.plugin-card-top .column-description p a:before {
+		/*.plugin-card .plugin-dependency-name:before {
 			font: normal 20px/.5 dashicons;
 			position: relative;
 			top: 4px;
 			left: -2px;
 		}
-		.plugin-card-top .column-description p a.plugin-dependency-compatible:before {
+		.plugin-card .plugin-dependencies .plugin-dependency-compatible:before {
 			content: "\f147";
 			color: #007017;
 		}
-		.plugin-card-top .column-description p a.plugin-dependency-incompatible:before {
+		.plugin-card .plugin-dependencies .plugin-dependency-incompatible:before {
 			content: "\f158";
 			color: #d63638;
-		}
-		.plugin-card-top .column-description p.plugin-requires {
-			background-color: #e5f5fa;
-			padding: 5px;
-		}
+		}*/
 		.plugin-card .desc {
 			margin-inline: 0;
 		}
-		.plugin-card .desc p:not(.plugin-requires) {
+		.plugin-card .desc > p {
 			margin-left: 148px;
 			margin-right: 128px;
 		}
-		.plugin-card .desc .plugin-requires {
+		.plugin-card .plugin-dependencies {
+			background-color: #e5f5fa;
 			border-left: 3px solid #72aee6;
-			padding: 15px !important;
+			margin-bottom: .5em;
+			padding: 15px;
+		}
+		.plugin-card .plugin-dependencies-explainer-text {
+			margin-block: 0;
+		}
+		.plugin-card .plugin-dependency {
+			align-items: center;
+			display: flex;
+			flex-wrap: wrap;
+			margin-top: .5em;
+		}
+		.plugin-card .plugin-dependency:nth-child(2),
+		.plugin-card .plugin-dependency:last-child {
+			margin-top: 1em;
+		}
+		.plugin-card .plugin-dependency-name {
+			margin-right: 1em;
+			flex-basis: 50%;
+		}
+		.plugin-card .plugin-dependency .notice {
+			flex-basis: 100%;
+			margin-bottom: .5em;
+			margin-inline: 0;
+		}
+		.plugin-card .plugin-dependency .button {
+			margin-inline: auto 1em;
 		}
 		</style>';
 
-		return $colins_style_fix . $description;
+		return $styles;
+	}
+
+	/**
+	 * Gets the markup for the dependency row button.
+	 *
+	 * @param string $slug        The plugin's slug.
+	 * @param array  $plugin_data Array of plugin data.
+	 *
+	 * @return string The markup for the dependency row button.
+	 */
+	private function get_dependency_row_button( $slug, $plugin_data ) {
+		$button = '';
+		$status = install_plugin_install_status( $plugin_data );
+
+		$requires_php = isset( $plugin_data['requires_php'] ) ? $plugin_data['requires_php'] : null;
+		$requires_wp  = isset( $plugin_data['requires'] ) ? $plugin_data['requires'] : null;
+
+		$compatible_php = is_php_version_compatible( $requires_php );
+		$compatible_wp  = is_wp_version_compatible( $requires_wp );
+
+		sprintf(
+			'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
+			esc_attr( $slug ),
+			esc_url( $status['url'] ),
+			/* translators: %s: Plugin name and version. */
+			esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $plugin_data['name'] ) ),
+			esc_attr( $plugin_data['name'] ),
+			__( 'Install Now' )
+		);
+		switch ( $status['status'] ) {
+			case 'install':
+				if ( $status['url'] ) {
+					if ( $compatible_php && $compatible_wp ) {
+						$button = sprintf(
+							'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
+							esc_attr( $slug ),
+							esc_url( $status['url'] ),
+							/* translators: %s: Plugin name and version. */
+							esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $plugin_data['name'] ) ),
+							esc_attr( $plugin_data['name'] ),
+							__( 'Install Now' )
+						);
+					} else {
+						$button = sprintf(
+							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
+							_x( 'Cannot Install', 'plugin' )
+						);
+					}
+				}
+				break;
+
+			case 'update_available':
+				if ( $status['url'] ) {
+					if ( $compatible_php && $compatible_wp ) {
+						$button = sprintf(
+							'<a class="update-now button aria-button-if-js" data-plugin="%s" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
+							esc_attr( $status['file'] ),
+							esc_attr( $slug ),
+							esc_url( $status['url'] ),
+							/* translators: %s: Plugin name and version. */
+							esc_attr( sprintf( _x( 'Update %s now', 'plugin' ), $plugin_data['name'] ) ),
+							esc_attr( $plugin_data['name'] ),
+							__( 'Update Now' )
+						);
+					} else {
+						$button = sprintf(
+							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
+							_x( 'Cannot Update', 'plugin' )
+						);
+					}
+				}
+				break;
+
+			case 'latest_installed':
+			case 'newer_installed':
+				if ( is_plugin_active( $status['file'] ) ) {
+					$button = sprintf(
+						'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
+						_x( 'Active', 'plugin' )
+					);
+				} elseif ( current_user_can( 'activate_plugin', $status['file'] ) ) {
+					if ( $compatible_php && $compatible_wp ) {
+						$button_text = __( 'Activate' );
+						/* translators: %s: Plugin name. */
+						$button_label = _x( 'Activate %s', 'plugin' );
+						$activate_url = add_query_arg(
+							array(
+								'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $status['file'] ),
+								'action'   => 'activate',
+								'plugin'   => $status['file'],
+							),
+							network_admin_url( 'plugins.php' )
+						);
+
+						if ( is_network_admin() ) {
+							$button_text = __( 'Network Activate' );
+							/* translators: %s: Plugin name. */
+							$button_label = _x( 'Network Activate %s', 'plugin' );
+							$activate_url = add_query_arg( array( 'networkwide' => 1 ), $activate_url );
+						}
+
+						$button = sprintf(
+							'<a href="%1$s" class="button button-primary activate-now" aria-label="%2$s">%3$s</a>',
+							esc_url( $activate_url ),
+							esc_attr( sprintf( $button_label, $plugin_data['name'] ) ),
+							$button_text
+						);
+					} else {
+						$button = sprintf(
+							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
+							_x( 'Cannot Activate', 'plugin' )
+						);
+					}
+				} else {
+					$button = sprintf(
+						'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
+						_x( 'Installed', 'plugin' )
+					);
+				}
+				break;
+		}
+
+		return $button;
 	}
 
 	/**
