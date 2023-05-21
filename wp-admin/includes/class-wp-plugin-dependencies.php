@@ -553,8 +553,11 @@ class WP_Plugin_Dependencies {
 			$url         = network_admin_url( 'plugin-install.php' );
 			$url         = add_query_arg(
 				array(
-					'tab'    => 'plugin-information',
-					'plugin' => $plugin_data['slug'],
+					'tab'       => 'plugin-information',
+					'plugin'    => $plugin_data['slug'],
+					'TB_iframe' => 'true',
+					'width'     => '600',
+					'height'    => '550',
 				),
 				$url
 			);
@@ -571,9 +574,9 @@ class WP_Plugin_Dependencies {
 
 			if ( isset( $plugin_data['name'] ) && ! empty( $plugin_data['version'] ) ) {
 				$required_names[] = sprintf(
-					'<a class="%1$s" href="%2$s&amp;TB_iframe=true&amp;width=600&amp;height=550" class="thickbox open-plugin-details-modal" aria-label="More information about %3$s" data-title="%3$s">%3$s &mdash; %4$s</a>',
-					$plugin_is_active,
+					'<a href="%1$s" class="%2$s thickbox open-plugin-details-modal" aria-label="More information about %3$s" data-title="%3$s">%3$s &mdash; %4$s</a>',
 					$url,
+					$plugin_is_active,
 					$plugin_data['name'],
 					__( 'More details' )
 				);
