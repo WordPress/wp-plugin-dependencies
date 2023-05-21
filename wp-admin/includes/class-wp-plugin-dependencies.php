@@ -630,6 +630,17 @@ class WP_Plugin_Dependencies {
 			background-color: #e5f5fa;
 			padding: 5px;
 		}
+		.plugin-card .desc {
+			margin-inline: 0;
+		}
+		.plugin-card .desc p:not(.plugin-requires) {
+			margin-left: 148px;
+			margin-right: 128px;
+		}
+		.plugin-card .desc .plugin-requires {
+			border-left: 3px solid #72aee6;
+			padding: 15px !important;
+		}
 		</style>';
 
 		return $colins_style_fix . $description;
