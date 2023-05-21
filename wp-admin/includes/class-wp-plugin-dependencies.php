@@ -608,7 +608,13 @@ class WP_Plugin_Dependencies {
 					__( 'More details' )
 				);
 
-				$button = $this->get_dependency_row_button( $slug, $plugin_data );
+				$requires_php = isset( $plugin_data['requires_php'] ) ? $plugin_data['requires_php'] : '';
+				$requires_wp  = isset( $plugin_data['requires'] ) ? $plugin_data['requires'] : '';
+
+				$compatible_php = is_php_version_compatible( $requires_php );
+				$compatible_wp  = is_wp_version_compatible( $requires_wp );
+
+				$button = wp_get_plugin_action_button( $plugin_data['name'], $plugin_data, $compatible_php, $compatible_wp );
 
 				$required_names[] = '<div class="plugin-dependency plugin-card-' . esc_attr( $slug ) . '">' . $plugin_dependency_name . ' ' . $button . ' ' . $more_details_link . '</div>';
 			} else {
@@ -628,129 +634,6 @@ class WP_Plugin_Dependencies {
 		}
 
 		return $description . '<div class="plugin-dependencies"><p class="plugin-dependencies-explainer-text">' . $requires . '</p></div>';
-	}
-
-	/**
-	 * Gets the markup for the dependency row button.
-	 *
-	 * @param string $slug        The plugin's slug.
-	 * @param array  $plugin_data Array of plugin data.
-	 *
-	 * @return string The markup for the dependency row button.
-	 */
-	private function get_dependency_row_button( $slug, $plugin_data ) {
-		$button = '';
-		$status = install_plugin_install_status( $plugin_data );
-
-		$requires_php = isset( $plugin_data['requires_php'] ) ? $plugin_data['requires_php'] : '';
-		$requires_wp  = isset( $plugin_data['requires'] ) ? $plugin_data['requires'] : '';
-
-		$compatible_php = is_php_version_compatible( $requires_php );
-		$compatible_wp  = is_wp_version_compatible( $requires_wp );
-
-		sprintf(
-			'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
-			esc_attr( $slug ),
-			esc_url( $status['url'] ),
-			/* translators: %s: Plugin name and version. */
-			esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $plugin_data['name'] ) ),
-			esc_attr( $plugin_data['name'] ),
-			__( 'Install Now' )
-		);
-		switch ( $status['status'] ) {
-			case 'install':
-				if ( $status['url'] ) {
-					if ( $compatible_php && $compatible_wp ) {
-						$button = sprintf(
-							'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
-							esc_attr( $slug ),
-							esc_url( $status['url'] ),
-							/* translators: %s: Plugin name and version. */
-							esc_attr( sprintf( _x( 'Install %s now', 'plugin' ), $plugin_data['name'] ) ),
-							esc_attr( $plugin_data['name'] ),
-							__( 'Install Now' )
-						);
-					} else {
-						$button = sprintf(
-							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
-							_x( 'Cannot Install', 'plugin' )
-						);
-					}
-				}
-				break;
-
-			case 'update_available':
-				if ( $status['url'] ) {
-					if ( $compatible_php && $compatible_wp ) {
-						$button = sprintf(
-							'<a class="update-now button aria-button-if-js" data-plugin="%s" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
-							esc_attr( $status['file'] ),
-							esc_attr( $slug ),
-							esc_url( $status['url'] ),
-							/* translators: %s: Plugin name and version. */
-							esc_attr( sprintf( _x( 'Update %s now', 'plugin' ), $plugin_data['name'] ) ),
-							esc_attr( $plugin_data['name'] ),
-							__( 'Update Now' )
-						);
-					} else {
-						$button = sprintf(
-							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
-							_x( 'Cannot Update', 'plugin' )
-						);
-					}
-				}
-				break;
-
-			case 'latest_installed':
-			case 'newer_installed':
-				if ( is_plugin_active( $status['file'] ) ) {
-					$button = sprintf(
-						'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
-						_x( 'Active', 'plugin' )
-					);
-				} elseif ( current_user_can( 'activate_plugin', $status['file'] ) ) {
-					if ( $compatible_php && $compatible_wp ) {
-						$button_text = __( 'Activate' );
-						/* translators: %s: Plugin name. */
-						$button_label = _x( 'Activate %s', 'plugin' );
-						$activate_url = add_query_arg(
-							array(
-								'_wpnonce' => wp_create_nonce( 'activate-plugin_' . $status['file'] ),
-								'action'   => 'activate',
-								'plugin'   => $status['file'],
-							),
-							network_admin_url( 'plugins.php' )
-						);
-
-						if ( is_network_admin() ) {
-							$button_text = __( 'Network Activate' );
-							/* translators: %s: Plugin name. */
-							$button_label = _x( 'Network Activate %s', 'plugin' );
-							$activate_url = add_query_arg( array( 'networkwide' => 1 ), $activate_url );
-						}
-
-						$button = sprintf(
-							'<a href="%1$s" class="button button-primary activate-now" aria-label="%2$s">%3$s</a>',
-							esc_url( $activate_url ),
-							esc_attr( sprintf( $button_label, $plugin_data['name'] ) ),
-							$button_text
-						);
-					} else {
-						$button = sprintf(
-							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
-							_x( 'Cannot Activate', 'plugin' )
-						);
-					}
-				} else {
-					$button = sprintf(
-						'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
-						_x( 'Installed', 'plugin' )
-					);
-				}
-				break;
-		}
-
-		return $button;
 	}
 
 	/**
