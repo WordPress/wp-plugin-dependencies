@@ -13,22 +13,22 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @var string
 	 */
-	protected static $plugin_dir;
+	protected static $plugins_dir;
 
 	/**
 	 * Sets up the plugins directory before any tests run.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$plugin_dir = WP_PLUGIN_DIR . '/wp_plugin_dependencies_plugin';
-		@mkdir( self::$plugin_dir );
+		self::$plugins_dir = WP_PLUGIN_DIR . '/wp_plugin_dependencies_plugin';
+		@mkdir( self::$plugins_dir );
 	}
 
 	/**
 	 * Removes the plugins directory after all tests run.
 	 */
 	public static function wpTearDownAfterClass() {
-		array_map( 'unlink', array_filter( (array) glob( self::$plugin_dir . '/*' ) ) );
-		rmdir( self::$plugin_dir );
+		array_map( 'unlink', array_filter( (array) glob( self::$plugins_dir . '/*' ) ) );
+		rmdir( self::$plugins_dir );
 	}
 
 	/**
@@ -140,7 +140,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 			$plugin_file = $this->create_plugin(
 				$plugin_name . '.php',
 				$plugin_data,
-				self::$plugin_dir
+				self::$plugins_dir
 			);
 
 			$plugin_names[] = $plugin_file[1];
@@ -156,7 +156,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$actual               = $parse_plugin_headers->invoke( $dependencies );
 
 		// Remove any non testing data, may be single file plugins in test environment.
-		$test_plugin = basename( self::$plugin_dir ) . '/' . $plugin_file[0];
+		$test_plugin = basename( self::$plugins_dir ) . '/' . $plugin_file[0];
 		$actual      = array_filter(
 			$actual,
 			function( $key ) use ( $test_plugin ) {
