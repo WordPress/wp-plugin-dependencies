@@ -13,10 +13,10 @@
 /**
  * Gets the markup for the plugin install action button.
  *
- * @param string       $name Plugin name.
- * @param array|object $data Plugin data.
+ * @param string       $name           Plugin name.
+ * @param array|object $data           Plugin data.
  * @param bool         $compatible_php PHP compatibility check.
- * @param bool         $compatible_wp WP compatibilty check.
+ * @param bool         $compatible_wp  WP compatibilty check.
  *
  * @return string $button The markup for the dependency row button.
  */
