@@ -20,7 +20,7 @@
  *
  * @return string $button The markup for the dependency row button.
  */
-function wp_get_plugin_action_button( string $name, array|object $data, bool $compatible_php, bool $compatible_wp ) {
+function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible_wp ) {
 	$button = '';
 	$status = install_plugin_install_status( $data );
 
