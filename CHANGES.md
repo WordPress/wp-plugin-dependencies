@@ -1,5 +1,11 @@
 [unreleased]
 
+#### 1.11.0 / 2023-05-21
+* add **Requires:** data to plugin cards of uninstalled plugins where repo plugins have `Requires Plugins` header set
+* add temporary style kludge to above
+* add caching to uninstalled plugin data
+* abstract code to create plugin install action buttons
+
 #### 1.10.0 / 2023-04-29
 * show `Cannot Install` button in Dependencies tab for dependencies with no package
 * return of generic plugins_api() response to it's own hook, avoids having to hide items in plugin card
