@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.3
-Stable tag: 1.10.0
+Stable tag: 1.11.0
 
 ## Description
 
@@ -46,6 +46,12 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.11.0 / 2023-05-21
+* add **Requires:** data to plugin cards of uninstalled plugins where repo plugins have `Requires Plugins` header set
+* add temporary style kludge to above
+* add caching to uninstalled plugin data
+* abstract code to create plugin install action buttons
 
 #### 1.10.0 / 2023-04-29
 * show `Cannot Install` button in Dependencies tab for dependencies with no package

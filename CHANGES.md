@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.11.0 / 2023-05-21
 * add **Requires:** data to plugin cards of uninstalled plugins where repo plugins have `Requires Plugins` header set
 * add temporary style kludge to above
 * add caching to uninstalled plugin data
