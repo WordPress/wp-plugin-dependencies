@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.12.0 / 2023-05-21
 * change plugin card button to 'Cannot Install' if dependencies not met
 * override `WP_Plugin_Install_List_Table::display_rows()` to use our refactored `wp_get_plugin_action_button()`
 

@@ -21,8 +21,8 @@
  *     @type string[] $requires_plugins An array of plugin dependency slugs.
  *     @type string   $version          The plugin's version string. Used when getting the install status.
  * }
- * @param bool        $compatible_php   The result of a PHP compatibility check.
- * @param bool        $compatible_wp    The result of a WP compatibility check.
+ * @param bool         $compatible_php   The result of a PHP compatibility check.
+ * @param bool         $compatible_wp    The result of a WP compatibility check.
  *
  * @return string $button The markup for the dependency row button.
  */
