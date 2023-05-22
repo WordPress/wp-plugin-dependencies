@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 1.12.0
+ * Version: 1.12.0.1
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -70,7 +70,7 @@ class Init {
 		require_once __DIR__ . '/wp-admin/includes/class-pd-install-list-table.php';
 		add_filter(
 			'wp_list_table_class_name',
-			function( $class_name ) {
+			static function( $class_name ) {
 				if ( 'WP_Plugin_Install_List_Table' === $class_name ) {
 					$class_name = __NAMESPACE__ . '\PD_Install_List_Table';
 				}
@@ -88,7 +88,7 @@ class Init {
 			add_action( 'install_plugins_dependencies', 'display_plugins_table' );
 			add_action(
 				'install_plugins_table_header',
-				function() {
+				static function() {
 					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
 					if ( 'dependencies' === $tab ) {
