@@ -601,10 +601,13 @@ final class WP_Plugin_Dependencies {
 					esc_html( $plugin_data['name'] )
 				);
 
+				$name_attr = esc_attr( $plugin_data['name'] );
 				$more_details_link = sprintf(
-					'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="More information about %2$s" data-title="%2$s">%3$s</a>',
+					'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%4$s</a>',
 					esc_url( $url ),
-					esc_attr( $plugin_data['name'] ),
+					/* translators: %s: Plugin name. */
+					sprintf( __( 'More information about %s' ), $name_attr ),
+					$name_attr,
 					__( 'More details' )
 				);
 
