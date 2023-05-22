@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.3
-Stable tag: 1.11.0
+Stable tag: 1.12.0
 
 ## Description
 
@@ -46,6 +46,10 @@ PRs should be made against the `develop` branch.
 2. Plugin Dependencies tab
 
 ## Changelog
+
+#### 1.12.0 / 2023-05-21
+* change plugin card button to 'Cannot Install' if dependencies not met
+* override `WP_Plugin_Install_List_Table::display_rows()` to use our refactored `wp_get_plugin_action_button()`
 
 #### 1.11.0 / 2023-05-21
 * add **Requires:** data to plugin cards of uninstalled plugins where repo plugins have `Requires Plugins` header set
