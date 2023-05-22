@@ -43,7 +43,8 @@ PRs should be made against the `develop` branch.
 
 1. Plugin is a Dependency and Plugin needing Dependencies
 2. Plugin with Dependencies
-2. Plugin Dependencies tab
+3. Plugin Dependencies tab
+4. Search page with dependencies
 
 ## Changelog
 
