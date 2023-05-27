@@ -398,7 +398,7 @@ final class WP_Plugin_Dependencies {
 		$sources            = $this->get_dependency_sources( $plugin_data );
 		$requires_filepaths = $this->get_requires_paths( $plugin_data );
 		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
+		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:', 'wp-plugin-dependencies' ) . '</strong> ' . esc_html( $sources ) . '");';
 		foreach ( $requires_filepaths as $filepath ) {
 			if ( is_plugin_active( $filepath ) ) {
 				print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
@@ -425,7 +425,7 @@ final class WP_Plugin_Dependencies {
 		$links = $this->get_view_details_links( $plugin_file, $names );
 
 		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . wp_kses_post( $links ) . '");';
+		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:', 'wp-plugin-dependencies' ) . '</strong> ' . wp_kses_post( $links ) . '");';
 		print '</script>';
 	}
 
@@ -454,9 +454,9 @@ final class WP_Plugin_Dependencies {
 		foreach ( $requires_arr as $req ) {
 			if ( ! $dependencies[ $req ] || is_plugin_inactive( $dependencies[ $req ] ) ) {
 				if ( str_contains( $action_links[0], 'activate-now' ) ) {
-					$action_links[0]  = str_replace( __( 'Network Activate' ), __( 'Activate' ), $action_links[0] );
-					$action_links[0]  = str_replace( __( 'Activate' ), _x( 'Cannot Activate', 'plugin' ), $action_links[0] );
-					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
+					$action_links[0]  = str_replace( __( 'Network Activate', 'wp-plugin-dependencies' ), __( 'Activate', 'wp-plugin-dependencies' ), $action_links[0] );
+					$action_links[0]  = str_replace( __( 'Activate', 'wp-plugin-dependencies' ), _x( 'Cannot Activate', 'plugin', 'wp-plugin-dependencies' ), $action_links[0] );
+					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency', 'wp-plugin-dependencies' ) . '</span>';
 					$action_links[0]  = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
 					if ( 'plugin-install.php' !== $pagenow ) {
 						$action_links[] = $this->get_dependency_link();
@@ -487,9 +487,9 @@ final class WP_Plugin_Dependencies {
 		) {
 			return $action_links;
 		}
-		$action_links[0]  = str_replace( __( 'Network Install' ), __( 'Install' ), $action_links[0] );
-		$action_links[0]  = str_replace( __( 'Install Now' ), _x( 'Cannot Install', 'plugin' ), $action_links[0] );
-		$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot install due to empty package' ) . '</span>';
+		$action_links[0]  = str_replace( __( 'Network Install', 'wp-plugin-dependencies' ), __( 'Install', 'wp-plugin-dependencies' ), $action_links[0] );
+		$action_links[0]  = str_replace( __( 'Install Now', 'wp-plugin-dependencies' ), _x( 'Cannot Install', 'plugin', 'wp-plugin-dependencies' ), $action_links[0] );
+		$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot install due to empty package', 'wp-plugin-dependencies' ) . '</span>';
 		$action_links[0]  = str_replace( 'install-now', 'button-disabled', $action_links[0] );
 
 		return $action_links;
@@ -506,7 +506,7 @@ final class WP_Plugin_Dependencies {
 		$required = '';
 		if ( in_array( $plugin['slug'], array_keys( $this->plugin_data ), true ) ) {
 			$dependents  = $this->get_dependency_sources( $plugin );
-			$required    = '<strong>' . __( 'Required by:' ) . '</strong> ' . $dependents;
+			$required    = '<strong>' . __( 'Required by:', 'wp-plugin-dependencies' ) . '</strong> ' . $dependents;
 			$description = $description . '<p>' . $required . '</p>';
 		}
 
@@ -517,7 +517,7 @@ final class WP_Plugin_Dependencies {
 		$file = $this->plugin_dirnames[ $plugin['slug'] ];
 		if ( in_array( $file, array_keys( $this->requires_plugins ), true ) ) {
 			$require_names = $this->get_requires_plugins_names( $file );
-			$requires      = '<strong>' . __( 'Requires:' ) . '</strong> ' . $require_names;
+			$requires      = '<strong>' . __( 'Requires:', 'wp-plugin-dependencies' ) . '</strong> ' . $require_names;
 			$description   = $description . '<p>' . $requires . '</p>';
 		}
 
@@ -668,7 +668,7 @@ final class WP_Plugin_Dependencies {
 					"<a href='%s' class='thickbox open-plugin-details-modal' aria-label='%s' data-title='%s'>%s</a>",
 					esc_url( network_admin_url( 'plugin-install.php?tab=plugin-information&plugin=' . $plugin_data['slug'] . '&TB_iframe=true&width=600&height=550' ) ),
 					/* translators: %s: Plugin name. */
-					sprintf( __( 'More information about %s' ), $name_attr ),
+					sprintf( __( 'More information about %s', 'wp-plugin-dependencies' ), $name_attr ),
 					$name_attr,
 					$name
 				);
@@ -717,8 +717,8 @@ final class WP_Plugin_Dependencies {
 
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
 			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
-				$activate     = _x( 'Cannot Activate', 'plugin' );
-				$activate    .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
+				$activate     = _x( 'Cannot Activate', 'plugin', 'wp-plugin-dependencies' );
+				$activate    .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency', 'wp-plugin-dependencies' ) . '</span>';
 				$dependencies = $this->get_dependency_link();
 				unset( $actions['activate'] );
 				$actions = array_merge(
@@ -778,7 +778,7 @@ final class WP_Plugin_Dependencies {
 				printf(
 					'<div class="notice-error notice is-dismissible"><p>'
 					/* translators: 1: plugin names, 2: link to Dependencies install page */
-					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$s install page.' )
+					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$s install page.', 'wp-plugin-dependencies' )
 					. '</p></div>',
 					'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
 					wp_kses_post( $this->get_dependency_link( true ) )
@@ -789,14 +789,14 @@ final class WP_Plugin_Dependencies {
 				$intersect       = array_intersect( $this->slugs, $installed_slugs );
 				asort( $intersect );
 				if ( $intersect !== $this->slugs ) {
-					$message_html = __( 'There are additional plugins that must be installed.' );
+					$message_html = __( 'There are additional plugins that must be installed.', 'wp-plugin-dependencies' );
 
 					// Display link (if not already on Dependencies install page).
 					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
 					if ( 'plugin-install.php' !== $pagenow || 'dependencies' !== $tab ) {
 						$message_html .= ' ' . sprintf(
-							/* translators: 1: link to Dependencies install page */
+							/* translators: link to Dependencies install page */
 							__( 'Go to the %s install page.' ),
 							wp_kses_post( $this->get_dependency_link( true ) ),
 							'</a>'
@@ -812,9 +812,12 @@ final class WP_Plugin_Dependencies {
 
 			$circular_dependencies = $this->get_circular_dependencies();
 			if ( ! empty( $circular_dependencies ) && count( $circular_dependencies ) > 1 ) {
-				/* translators: circular dependencies names */
-				$messages  = sprintf( __( 'You have circular dependencies with the following plugins: %s' ), implode( ', ', $circular_dependencies['names'] ) );
-				$messages .= '<br>' . __( 'Please contact the plugin developers and make them aware.' );
+				$messages  = sprintf(
+					/* translators: circular dependencies names */
+					__('You have circular dependencies with the following plugins: %s', 'wp-plugin-dependencies' ),
+					implode( ', ', $circular_dependencies['names'] )
+				);
+				$messages .= '<br>' . __( 'Please contact the plugin developers and make them aware.', 'wp-plugin-dependencies' );
 				printf(
 					'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
 					wp_kses_post( $messages )
@@ -918,9 +921,9 @@ final class WP_Plugin_Dependencies {
 	 * @return string
 	 */
 	private function get_dependency_link( $notice = false ) {
-		$link_text = $notice ? __( 'Dependencies' ) : __( 'Manage Dependencies' );
+		$link_text = $notice ? __( 'Dependencies', 'wp-plugin-dependencies' ) : __( 'Manage Dependencies', 'wp-plugin-dependencies' );
 		$link      = sprintf(
-			'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . ' aria-label="' . __( 'Go to Dependencies tab of Add Plugins page.' ) . '">%s</a>',
+			'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . ' aria-label="' . __( 'Go to Dependencies tab of Add Plugins page.', 'wp-plugin-dependencies' ) . '">%s</a>',
 			$link_text
 		);
 
@@ -975,7 +978,7 @@ final class WP_Plugin_Dependencies {
 			$dependencies      = $this->get_dependency_filepaths();
 			$file              = $dependencies[ $slug ];
 			$args              = $file ? $this->plugins[ $file ] : $args;
-			$short_description = __( 'You will need to manually install this dependency. Please contact the plugin\'s developer and ask them to add plugin dependencies support and for information on how to install the this dependency.' );
+			$short_description = __( 'You will need to manually install this dependency. Please contact the plugin\'s developer and ask them to add plugin dependencies support and for information on how to install the this dependency.', 'wp-plugin-dependencies' );
 			$response          = array(
 				'name'              => $args['Name'],
 				'slug'              => $slug,
@@ -987,7 +990,7 @@ final class WP_Plugin_Dependencies {
 				'requires_php'      => $args['RequiresPHP'],
 				'sections'          => array(
 					'description'  => '<p>' . $args['Description'] . '</p>' . $short_description,
-					'installation' => __( 'Ask the plugin developer where to download and install this plugin dependency.' ),
+					'installation' => __( 'Ask the plugin developer where to download and install this plugin dependency.', 'wp-plugin-dependencies' ),
 				),
 				'short_description' => '<p>' . $args['Description'] . '</p>' . $short_description,
 				'download_link'     => '',
