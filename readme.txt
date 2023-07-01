@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.3
-Stable tag: 1.12.0
+Stable tag: 1.12.1
 
 ## Description
 
@@ -47,6 +47,9 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 1.12.1 / 2023-07-01
+* extra life to 6.4-beta1
 
 #### 1.12.0 / 2023-05-21
 * change plugin card button to 'Cannot Install' if dependencies not met
