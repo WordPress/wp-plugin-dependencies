@@ -504,21 +504,37 @@ final class WP_Plugin_Dependencies {
 	 */
 	public function plugin_install_description_installed( $description, $plugin ) {
 		$required = '';
+		$requires = '';
 		if ( in_array( $plugin['slug'], array_keys( $this->plugin_data ), true ) ) {
-			$dependents  = $this->get_dependency_sources( $plugin );
-			$required    = '<strong>' . __( 'Required by:' ) . '</strong> ' . $dependents;
-			$description = $description . '<p>' . $required . '</p>';
+			$dependents = $this->get_dependency_sources( $plugin );
+			$required   = '<strong>' . __( 'Required by:' ) . '</strong> ' . $dependents;
+			if ( ! apply_filters( 'pd_simple_card', false ) ) {
+				$description = $description . '<p>' . $required . '</p>';
+			}
 		}
 
-		if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
-			return $description;
+		if ( ! apply_filters( 'pd_simple_card', false ) ) {
+			if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
+				return $description;
+			}
 		}
 
-		$file = $this->plugin_dirnames[ $plugin['slug'] ];
+		if ( ! apply_filters( 'pd_simple_card', false ) ) {
+			$file = $this->plugin_dirnames[ $plugin['slug'] ];
+		} else {
+			$file = isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ? $this->plugin_dirnames[ $plugin['slug'] ] : '';
+		}
+
 		if ( in_array( $file, array_keys( $this->requires_plugins ), true ) ) {
 			$require_names = $this->get_requires_plugins_names( $file );
 			$requires      = '<strong>' . __( 'Requires:' ) . '</strong> ' . $require_names;
-			$description   = $description . '<p>' . $requires . '</p>';
+			if ( ! apply_filters( 'pd_simple_card', false ) ) {
+				$description = $description . '<p>' . $requires . '</p>';
+			}
+		}
+
+		if ( apply_filters( 'pd_simple_card', false ) && ( ! empty( $required ) || ! empty( $requires ) ) ) {
+			$description = sprintf( $description . '<div class="plugin-dependencies"><p class="plugin-dependencies-explainer-text">%1$s%2$s</p></div>', $required = ! empty( $required ) ? $required . '<br>' : '', $requires );
 		}
 
 		return $description;
