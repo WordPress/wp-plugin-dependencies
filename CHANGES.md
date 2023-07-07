@@ -1,5 +1,6 @@
 [unreleased]
 * update version check
+* add filter switch to display simplified Add New plugin card
 
 #### 1.12.1 / 2023-07-01
 * extra life to 6.4-beta1

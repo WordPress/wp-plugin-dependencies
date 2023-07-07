@@ -601,14 +601,26 @@ final class WP_Plugin_Dependencies {
 					esc_html( $plugin_data['name'] )
 				);
 
-				$more_details_link = sprintf(
-					'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%4$s</a>',
-					esc_url( $url ),
-					/* translators: %s: Plugin name. */
-					esc_attr( sprintf( __( 'More information about %s' ), $plugin_data['name'] ) ),
-					esc_attr( $plugin_data['name'] ),
-					__( 'More details' )
-				);
+				if ( ! apply_filters( 'pd_simple_card', false ) ) {
+					$more_details_link = sprintf(
+						'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%4$s</a>',
+						esc_url( $url ),
+						/* translators: %s: Plugin name. */
+						esc_attr( sprintf( __( 'More information about %s' ), $plugin_data['name'] ) ),
+						esc_attr( $plugin_data['name'] ),
+						__( 'More details' )
+					);
+
+				} else {
+					$more_details_link = sprintf(
+						'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%3$s</a>',
+						esc_url( $url ),
+						/* translators: %s: Plugin name. */
+						esc_attr( sprintf( __( 'More information about %s' ), $plugin_data['name'] ) ),
+						esc_attr( $plugin_data['name'] )
+					);
+
+				}
 
 				$requires_php = isset( $plugin_data['requires_php'] ) ? $plugin_data['requires_php'] : '';
 				$requires_wp  = isset( $plugin_data['requires'] ) ? $plugin_data['requires'] : '';
@@ -618,14 +630,21 @@ final class WP_Plugin_Dependencies {
 
 				$button = wp_get_plugin_action_button( $plugin_data['name'], $plugin_data, $compatible_php, $compatible_wp );
 
-				$required_names[] = '<div class="plugin-dependency plugin-card-' . esc_attr( $slug ) . '">' . $plugin_dependency_name . ' ' . $button . ' ' . $more_details_link . '</div>';
+				if ( ! apply_filters( 'pd_simple_card', false ) ) {
+					$required_names[] = '<div class="plugin-dependency plugin-card-' . esc_attr( $slug ) . '">' . $plugin_dependency_name . ' ' . $button . ' ' . $more_details_link . '</div>';
+
+				} else {
+					$required_names[] = '<div class="plugin-dependency plugin-card-' . esc_attr( $slug ) . '">' . $more_details_link . '</div>';
+				}
 			} else {
 				$required_names[] = $slug;
 			}
 		}
 
-		$requires  = '<strong>' . __( 'Additional plugins are required' ) . '</strong><br>';
-		$requires .= __( 'The following plugins must also be installed and activated. This plugin will be deactivated if any of the required plugins is deactivated or deleted.' ) . '<br>';
+		$requires = '<strong>' . __( 'Additional plugins are required' ) . '</strong><br>';
+		if ( ! apply_filters( 'pd_simple_card', false ) ) {
+			$requires .= __( 'The following plugins must also be installed and activated. This plugin will be deactivated if any of the required plugins is deactivated or deleted.' ) . '<br>';
+		}
 
 		$required_names_count = count( $required_names );
 		for ( $i = 0; $i < $required_names_count; ++$i ) {

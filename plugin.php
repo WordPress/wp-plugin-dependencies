@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 1.12.1
+ * Version: 1.12.1.1
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -78,6 +78,9 @@ class Init {
 				return $class_name;
 			}
 		);
+
+		// Switch to simple plugin card.
+		add_filter( 'pd_simple_card', '__return_true' );
 
 		if ( ! WP_PLUGIN_DEPENDENCIES1_COMMITTED ) {
 			require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';

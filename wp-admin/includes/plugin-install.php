@@ -45,6 +45,10 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 		}
 	}
 
+	if ( apply_filters( 'pd_simple_card', false ) ) {
+		$plugin_dependency_met = true;
+	}
+
 	sprintf(
 		'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
 		esc_attr( $data->slug ),
