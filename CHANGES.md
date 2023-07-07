@@ -1,4 +1,5 @@
 [unreleased]
+* update version check
 
 #### 1.12.1 / 2023-07-01
 * extra life to 6.4-beta1

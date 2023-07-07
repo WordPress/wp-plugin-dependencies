@@ -40,7 +40,7 @@ if ( version_compare( get_bloginfo( 'version' ), '6.4-alpha-99999', '>=' ) ) {
 }
 
 // TODO: update with correct version.
-if ( version_compare( get_bloginfo( 'version' ), '6.4-beta-1', '>=' ) ) {
+if ( version_compare( get_bloginfo( 'version' ), '6.5-beta-1', '>=' ) ) {
 	define( 'WP_PLUGIN_DEPENDENCIES2_COMMITTED', true );
 } else {
 	define( 'WP_PLUGIN_DEPENDENCIES2_COMMITTED', false );
