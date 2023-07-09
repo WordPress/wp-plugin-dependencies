@@ -47,7 +47,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 				if ( $status['url'] ) {
 					if ( $compatible_php && $compatible_wp ) {
 						$button = sprintf(
-							'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s"data-name="%s">%s</a>',
+							'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
 							esc_attr( $data->slug ),
 							esc_url( $status['url'] ),
 							/* translators: %s: Plugin name and version. */
