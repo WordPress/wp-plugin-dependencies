@@ -493,7 +493,7 @@ final class WP_Plugin_Dependencies {
 		$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
 
 		if ( 'plugin-install.php' !== $pagenow
-			|| 'dependencies' !== $tab // phpcs:ignore WordPress.Security.NonceVerification
+			|| 'dependencies' !== $tab
 			|| ! empty( $plugin['download_link'] ) || ! str_contains( $action_links[0], 'install-now' )
 		) {
 			return $action_links;
@@ -765,9 +765,10 @@ final class WP_Plugin_Dependencies {
 
 		// Only display on specific pages.
 		if ( in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ), true ) ) {
-
-			// Plugin deactivated if dependencies not met.
-			// Transient on a 10 second timeout.
+			/*
+			 * Plugin deactivated if dependencies not met.
+			 * Transient on a 10 second timeout.
+			 */
 			$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins' );
 			if ( ! empty( $deactivate_requires ) ) {
 				foreach ( $deactivate_requires as $deactivated ) {
