@@ -1,7 +1,6 @@
 [unreleased]
 * update version check
 * simplify plugin card notice
-* always allow plugin installation
 
 #### 1.12.1 / 2023-07-01
 * extra life to 6.4-beta1
