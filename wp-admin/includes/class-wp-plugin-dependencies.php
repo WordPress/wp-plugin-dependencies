@@ -603,11 +603,11 @@ final class WP_Plugin_Dependencies {
 
 			if ( isset( $plugin_data['name'] ) && ! empty( $plugin_data['version'] ) ) {
 				$more_details_link[ $slug ] = sprintf(
-					'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%3$s</a>',
+					'<a href="%1$s" class="alignright thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%3$s</a>',
 					esc_url( $url ),
 					/* translators: %s: Plugin name. */
 					esc_attr( sprintf( __( 'More information about %s' ), $plugin_data['name'] ) ),
-					__( '(More details)' )
+					__( 'More details' )
 				);
 				$more_details_link[ $slug ] = esc_attr( $plugin_data['name'] ) . '&nbsp' . $more_details_link[ $slug ];
 			}
