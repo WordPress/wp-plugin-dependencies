@@ -65,6 +65,13 @@ final class WP_Plugin_Dependencies {
 	private $plugin_dirnames_cache = array();
 
 	/**
+	 * Holds data for plugin card.
+	 *
+	 * @var array
+	 */
+	private static $plugin_card_data = array();
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -83,6 +90,7 @@ final class WP_Plugin_Dependencies {
 			add_filter( 'plugins_api_result', array( $this, 'empty_plugins_api_result' ), 10, 3 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description_installed' ), 10, 2 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description_uninstalled' ), 10, 2 );
+			add_filter( 'plugin_install_description', array( $this, 'set_plugin_card_data' ), 10, 1 );
 			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'empty_package_remove_install_button' ), 10, 2 );
 
@@ -481,12 +489,16 @@ final class WP_Plugin_Dependencies {
 	public function empty_package_remove_install_button( $action_links, $plugin ) {
 		global $pagenow;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
+
 		if ( 'plugin-install.php' !== $pagenow
-			|| ! isset( $_GET['tab'] ) || 'dependencies' !== $_GET['tab'] // phpcs:ignore WordPress.Security.NonceVerification
+			|| 'dependencies' !== $tab
 			|| ! empty( $plugin['download_link'] ) || ! str_contains( $action_links[0], 'install-now' )
 		) {
 			return $action_links;
 		}
+
 		$action_links[0]  = str_replace( __( 'Network Install' ), __( 'Install' ), $action_links[0] );
 		$action_links[0]  = str_replace( __( 'Install Now' ), _x( 'Cannot Install', 'plugin' ), $action_links[0] );
 		$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot install due to empty package' ) . '</span>';
@@ -503,39 +515,32 @@ final class WP_Plugin_Dependencies {
 	 * @return string
 	 */
 	public function plugin_install_description_installed( $description, $plugin ) {
-		$required = '';
-		$requires = '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
+		if ( 'dependencies' !== $tab ) {
+			return $description;
+		}
+
+		$required = array();
+		$requires = array();
+		if ( ! isset( $plugin['requires_plugins'] ) ) {
+			$plugin['requires_plugins'] = array();
+		}
 		if ( in_array( $plugin['slug'], array_keys( $this->plugin_data ), true ) ) {
 			$dependents = $this->get_dependency_sources( $plugin );
-			$required   = '<strong>' . __( 'Required by:' ) . '</strong> ' . $dependents;
-			if ( ! apply_filters( 'pd_simple_card', false ) ) {
-				$description = $description . '<p>' . $required . '</p>';
+			$dependents = explode( ', ', $dependents );
+			$required[] = '<strong>' . __( 'Required by:' ) . '</strong>';
+			$required   = array_merge( $required, $dependents );
+		}
+
+		foreach ( (array) $plugin['requires_plugins']as $slug ) {
+			if ( isset( $this->plugin_data[ $slug ] ) ) {
+				$require_names = $this->plugin_data[ $slug ]['name'];
+				$requires[]    = $require_names;
 			}
 		}
 
-		if ( ! apply_filters( 'pd_simple_card', false ) ) {
-			if ( ! isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ) {
-				return $description;
-			}
-		}
-
-		if ( ! apply_filters( 'pd_simple_card', false ) ) {
-			$file = $this->plugin_dirnames[ $plugin['slug'] ];
-		} else {
-			$file = isset( $this->plugin_dirnames[ $plugin['slug'] ] ) ? $this->plugin_dirnames[ $plugin['slug'] ] : '';
-		}
-
-		if ( in_array( $file, array_keys( $this->requires_plugins ), true ) ) {
-			$require_names = $this->get_requires_plugins_names( $file );
-			$requires      = '<strong>' . __( 'Requires:' ) . '</strong> ' . $require_names;
-			if ( ! apply_filters( 'pd_simple_card', false ) ) {
-				$description = $description . '<p>' . $requires . '</p>';
-			}
-		}
-
-		if ( apply_filters( 'pd_simple_card', false ) && ( ! empty( $required ) || ! empty( $requires ) ) ) {
-			$description = sprintf( $description . '<div class="plugin-dependencies"><p class="plugin-dependencies-explainer-text">%1$s%2$s</p></div>', $required = ! empty( $required ) ? $required . '<br>' : '', $requires );
-		}
+		self::$plugin_card_data = array_merge( self::$plugin_card_data, $requires, $required );
 
 		return $description;
 	}
@@ -548,9 +553,6 @@ final class WP_Plugin_Dependencies {
 	 * @return string
 	 */
 	public function plugin_install_description_uninstalled( $description, $plugin ) {
-		if ( str_contains( $description, 'Required by:' ) || str_contains( $description, 'Requires:' ) ) {
-			return $description;
-		}
 		if ( empty( $plugin['requires_plugins'] ) ) {
 			return $description;
 		}
@@ -585,7 +587,6 @@ final class WP_Plugin_Dependencies {
 			set_site_transient( 'wp_plugin_dependencies_plugin_api_data', $this->plugin_api_data, WEEK_IN_SECONDS );
 		}
 
-		$required_names = array();
 		foreach ( $plugin['requires_plugins'] as $slug ) {
 			$plugin_data = $this->plugin_api_data[ $slug ];
 			$url         = network_admin_url( 'plugin-install.php' );
@@ -600,77 +601,42 @@ final class WP_Plugin_Dependencies {
 				$url
 			);
 
-			// Check if plugin dependency is installed and active.
-			$plugin_is_active = 'plugin-dependency-incompatible';
-			$active_plugins   = get_option( 'active_plugins' );
-			foreach ( $active_plugins as $plugin_file ) {
-				if ( str_contains( $plugin_file, '/' ) && explode( '/', $plugin_file )[0] === $slug ) {
-					$plugin_is_active = 'plugin-dependency-compatible';
-					break;
-				}
-			}
-
 			if ( isset( $plugin_data['name'] ) && ! empty( $plugin_data['version'] ) ) {
-				$plugin_dependency_name = sprintf(
-					'<span class="plugin-dependency-name %1$s">%2$s</span>',
-					esc_attr( $plugin_is_active ),
-					esc_html( $plugin_data['name'] )
+				$more_details_link[ $slug ] = sprintf(
+					'<a href="%1$s" class="alignright thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%3$s</a>',
+					esc_url( $url ),
+					/* translators: %s: Plugin name. */
+					esc_attr( sprintf( __( 'More information about %s' ), $plugin_data['name'] ) ),
+					__( 'More details' )
 				);
-
-				if ( ! apply_filters( 'pd_simple_card', false ) ) {
-					$more_details_link = sprintf(
-						'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%4$s</a>',
-						esc_url( $url ),
-						/* translators: %s: Plugin name. */
-						esc_attr( sprintf( __( 'More information about %s' ), $plugin_data['name'] ) ),
-						esc_attr( $plugin_data['name'] ),
-						__( 'More details' )
-					);
-
-				} else {
-					$more_details_link = sprintf(
-						'<a href="%1$s" class="thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%3$s</a>',
-						esc_url( $url ),
-						/* translators: %s: Plugin name. */
-						esc_attr( sprintf( __( 'More information about %s' ), $plugin_data['name'] ) ),
-						esc_attr( $plugin_data['name'] )
-					);
-
-				}
-
-				$requires_php = isset( $plugin_data['requires_php'] ) ? $plugin_data['requires_php'] : '';
-				$requires_wp  = isset( $plugin_data['requires'] ) ? $plugin_data['requires'] : '';
-
-				$compatible_php = is_php_version_compatible( $requires_php );
-				$compatible_wp  = is_wp_version_compatible( $requires_wp );
-
-				$button = wp_get_plugin_action_button( $plugin_data['name'], $plugin_data, $compatible_php, $compatible_wp );
-
-				if ( ! apply_filters( 'pd_simple_card', false ) ) {
-					$required_names[] = '<div class="plugin-dependency plugin-card-' . esc_attr( $slug ) . '">' . $plugin_dependency_name . ' ' . $button . ' ' . $more_details_link . '</div>';
-
-				} else {
-					$required_names[] = '<div class="plugin-dependency plugin-card-' . esc_attr( $slug ) . '">' . $more_details_link . '</div>';
-				}
-			} else {
-				$required_names[] = $slug;
+				$more_details_link[ $slug ] = esc_attr( $plugin_data['name'] ) . '&nbsp' . $more_details_link[ $slug ];
 			}
 		}
 
-		$requires = '<strong>' . __( 'Additional plugins are required' ) . '</strong><br>';
-		if ( ! apply_filters( 'pd_simple_card', false ) ) {
-			$requires .= __( 'The following plugins must also be installed and activated. This plugin will be deactivated if any of the required plugins is deactivated or deleted.' ) . '<br>';
+		$header = '<strong>' . __( 'Additional plugins are required' ) . '</strong>';
+		array_unshift( self::$plugin_card_data, $header );
+		self::$plugin_card_data = array_merge( self::$plugin_card_data, $more_details_link );
+
+		return $description;
+	}
+
+	/**
+	 * Display plugin card data.
+	 *
+	 * @param string $description Plugin card description.
+	 * @return string
+	 */
+	public function set_plugin_card_data( $description ) {
+		if ( ! empty( self::$plugin_card_data ) ) {
+			self::$plugin_card_data = array_filter( self::$plugin_card_data );
+			$data                   = implode( '<br>', self::$plugin_card_data );
+			$notice                 = '<div class="plugin-dependencies"><p class="plugin-dependencies-explainer-text">' . $data . '</p></div>';
+			$description            = $description . $notice;
 		}
 
-		$required_names_count = count( $required_names );
-		for ( $i = 0; $i < $required_names_count; ++$i ) {
-			$requires .= $required_names[ $i ];
-			if ( $i !== $required_names_count ) {
-				$requires . '<br>';
-			}
-		}
+		self::$plugin_card_data = array();
 
-		return $description . '<div class="plugin-dependencies"><p class="plugin-dependencies-explainer-text">' . $requires . '</p></div>';
+		return $description;
 	}
 
 	/**
@@ -801,9 +767,10 @@ final class WP_Plugin_Dependencies {
 
 		// Only display on specific pages.
 		if ( in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ), true ) ) {
-
-			// Plugin deactivated if dependencies not met.
-			// Transient on a 10 second timeout.
+			/*
+			 * Plugin deactivated if dependencies not met.
+			 * Transient on a 10 second timeout.
+			 */
 			$deactivate_requires = get_site_transient( 'wp_plugin_dependencies_deactivate_plugins' );
 			if ( ! empty( $deactivate_requires ) ) {
 				foreach ( $deactivate_requires as $deactivated ) {
