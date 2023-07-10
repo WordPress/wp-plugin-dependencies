@@ -607,8 +607,9 @@ final class WP_Plugin_Dependencies {
 					esc_url( $url ),
 					/* translators: %s: Plugin name. */
 					esc_attr( sprintf( __( 'More information about %s' ), $plugin_data['name'] ) ),
-					esc_attr( $plugin_data['name'] )
+					__( '(More details)' )
 				);
+				$more_details_link[ $slug ] = esc_attr( $plugin_data['name'] ) . '&nbsp' . $more_details_link[ $slug ];
 			}
 		}
 
