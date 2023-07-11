@@ -1,5 +1,9 @@
 [unreleased]
 
+#### 1.13.0 / 2023-07-10
+* update version check
+* simplify plugin card notice
+
 #### 1.12.1 / 2023-07-01
 * extra life to 6.4-beta1
 
