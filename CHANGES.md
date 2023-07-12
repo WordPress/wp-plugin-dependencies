@@ -1,4 +1,5 @@
 [unreleased]
+* update _More details_ link
 
 #### 1.13.0 / 2023-07-10
 * update version check
