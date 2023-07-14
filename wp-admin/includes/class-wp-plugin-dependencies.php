@@ -1105,13 +1105,20 @@ final class WP_Plugin_Dependencies {
 		}
 
 		if ( ! empty( $inactive_dependencies ) ) {
+			$inactive_dependency_names = array_map(
+				function( $dependency ) {
+					return $this->plugin_data[ $dependency ]['name'];
+				},
+				$inactive_dependencies
+			);
+
 			$status['errorCode']    = 'inactive_dependencies';
 			$status['errorMessage'] = sprintf(
-				/* translators: %s: A list of inactive dependency plugin slugs. */
+				/* translators: %s: A list of inactive dependency plugin names. */
 				__( 'The following plugins must be activated first: %s.' ),
-				implode( ', ', $inactive_dependencies )
+				implode( ', ', $inactive_dependency_names )
 			);
-			$status['errorData'] = $inactive_dependencies;
+			$status['errorData'] = array_combine( $inactive_dependencies, $inactive_dependency_names );
 
 			wp_send_json_error( $status );
 		}
