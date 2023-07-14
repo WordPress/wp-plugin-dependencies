@@ -318,7 +318,7 @@ final class WP_Plugin_Dependencies {
 	public function get_dot_org_data() {
 		global $pagenow;
 
-		if ( ! in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ), true ) ) {
+		if ( ! wp_doing_ajax() && ! in_array( $pagenow, array( 'plugin-install.php', 'plugins.php' ), true ) ) {
 			return;
 		}
 
