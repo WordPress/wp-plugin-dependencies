@@ -96,6 +96,7 @@ final class WP_Plugin_Dependencies {
 
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ), 15 );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
 		}
@@ -123,6 +124,28 @@ final class WP_Plugin_Dependencies {
 				plugins_url( 'wp-admin/css/wp-plugin-dependencies.css', 'wp-plugin-dependencies/plugin.php' ),
 				array(),
 				$wp_version
+			);
+		}
+	}
+
+	/**
+	 * Enqueues scripts for plugin dependencies on the "Add New" plugins screen.
+	 *
+	 * @global string $wp_version The WordPress version string.
+	 * @global string $pagenow    The filename of the current screen.
+	 *
+	 * @return void
+	 */
+	public function enqueue_scripts() {
+		global $wp_version, $pagenow;
+
+		if ( 'plugin-install.php' === $pagenow ) {
+			wp_enqueue_script(
+				'wp-plugin-dependencies-updates',
+				plugins_url( 'wp-admin/js/updates.js', 'wp-plugin-dependencies/plugin.php' ),
+				array( 'updates' ),
+				$wp_version,
+				true
 			);
 		}
 	}
