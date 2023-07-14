@@ -99,6 +99,8 @@ final class WP_Plugin_Dependencies {
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 			add_action( 'network_admin_notices', array( $this, 'admin_notices' ) );
+
+			add_action( 'wp_ajax_check_plugin_dependencies', array( $this, 'check_plugin_dependencies' ) );
 		}
 
 		$required_headers = $this->parse_plugin_headers();
@@ -1060,6 +1062,62 @@ final class WP_Plugin_Dependencies {
 		}
 
 		return isset( $names ) ? $names : '';
+	}
+
+	/**
+	 * Handles checking plugin dependencies after a plugin is installed via AJAX.
+	 */
+	public function check_plugin_dependencies() {
+		check_ajax_referer( 'updates' );
+
+		if ( empty( $_POST['slug'] ) ) {
+			wp_send_json_error(
+				array(
+					'slug'         => '',
+					'errorCode'    => 'no_plugin_specified',
+					'errorMessage' => __( 'No plugin specified.' ),
+				)
+			);
+		}
+
+		$slug   = sanitize_key( wp_unslash( $_POST['slug'] ) );
+		$status = array( 'slug' => $slug );
+
+		if ( ! isset( $this->plugin_dirnames[ $slug ] ) ) {
+			$status['errorCode']    = 'plugin_not_installed';
+			$status['errorMessage'] = __( 'The plugin is not installed.' );
+			wp_send_json_error( $status );
+		}
+
+		$plugin_file = $this->plugin_dirnames[ $slug ];
+
+		if ( ! isset( $this->requires_plugins[ $plugin_file ]['RequiresPlugins'] ) ) {
+			$status['message'] = __( 'The plugin has no required plugins.' );
+			wp_send_json_success( $status );
+		}
+
+		$dependencies          = explode( ',', $this->requires_plugins[ $plugin_file ]['RequiresPlugins'] );
+		$inactive_dependencies = array();
+		foreach ( $dependencies as $dependency ) {
+			if ( is_plugin_inactive( $this->plugin_dirnames[ $dependency ] ) ) {
+				$inactive_dependencies[] = $dependency;
+			}
+		}
+
+		if ( ! empty( $inactive_dependencies ) ) {
+			$status['errorCode']    = 'inactive_dependencies';
+			$status['errorMessage'] = sprintf(
+				/* translators: %s: A list of inactive dependency plugin slugs. */
+				__( 'The following plugins must be activated first: %s.' ),
+				implode( ', ', $inactive_dependencies )
+			);
+			$status['errorData'] = $inactive_dependencies;
+
+			wp_send_json_error( $status );
+		}
+
+		$status['message'] = __( 'All required plugins are installed and activated.' );
+		wp_send_json_success( $status );
 	}
 }
 
