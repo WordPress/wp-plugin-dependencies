@@ -79,9 +79,6 @@ class Init {
 			}
 		);
 
-		// Switch to simple plugin card.
-		add_filter( 'pd_simple_card', '__return_true' );
-
 		if ( ! WP_PLUGIN_DEPENDENCIES1_COMMITTED ) {
 			require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
 
