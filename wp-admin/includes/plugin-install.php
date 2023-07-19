@@ -81,7 +81,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 						);
 					} else {
 						$button = sprintf(
-							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
+							'<button type="button" class="install-now button button-disabled" disabled="disabled">%s</button>',
 							_x( 'Cannot Install', 'plugin' )
 						);
 					}
