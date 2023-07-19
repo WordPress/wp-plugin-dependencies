@@ -146,7 +146,7 @@ class WP_Plugin_Dependencies_2 {
 	 * @return array
 	 */
 	public function upgrader_package_options( $options ) {
-		$options['hook_extra']['slug'] = $this->args->slug;
+		$options['hook_extra']['slug'] = $options['hook_extra']['temp_backup']['slug'];
 		remove_filter( 'upgrader_package_options', array( $this, 'upgrader_package_options' ), 10 );
 
 		return $options;

@@ -1,5 +1,6 @@
 [unreleased]
 * update _More details_ link
+* fixed strange error between slug from different sources
 
 #### 1.13.0 / 2023-07-10
 * update version check
