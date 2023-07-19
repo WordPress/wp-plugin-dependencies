@@ -7,11 +7,13 @@
  *
  * @package WordPress
  * @subpackage Administration
- * @since 6.3.0
+ * @since 6.4.0
  */
 
 /**
  * Gets the markup for the plugin install action button.
+ *
+ * @since 6.4.0
  *
  * @param string       $name           Plugin name.
  * @param array|object $data           {
@@ -23,7 +25,6 @@
  * }
  * @param bool         $compatible_php   The result of a PHP compatibility check.
  * @param bool         $compatible_wp    The result of a WP compatibility check.
- *
  * @return string $button The markup for the dependency row button.
  */
 function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible_wp ) {
@@ -53,10 +54,6 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 	}
 	$all_plugin_dependencies_installed = $installed_plugin_dependencies_count === $plugin_dependencies_count;
 	$all_plugin_dependencies_active    = $active_plugin_dependencies_count === $plugin_dependencies_count;
-
-	if ( apply_filters( 'pd_simple_card', false ) ) {
-		$plugin_dependency_met = true;
-	}
 
 	sprintf(
 		'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
