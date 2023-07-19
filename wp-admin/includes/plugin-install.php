@@ -508,11 +508,14 @@ function pd_install_plugin_information() {
 	echo "</div>\n"; // #plugin-information-scrollable
 	echo "<div id='$tab-footer'>\n";
 	if ( ! empty( $api->download_link ) && ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) ) {
-		echo str_replace(
-			'class="',
-			'id="plugin_install_from_iframe" class="right ',
-			wp_get_plugin_action_button( $api->name, $api, $compatible_php, $compatible_wp )
-		);
+		$button = wp_get_plugin_action_button( $api->name, $api, $compatible_php, $compatible_wp );
+		$button = str_replace( 'class="', 'class="right ', $button );
+
+		if ( ! str_contains( $button, __( 'Activate' ) ) ) {
+			$button = str_replace( 'class="', 'id="plugin_install_from_iframe" class="', $button );
+		}
+
+		echo $button;
 	}
 	echo "</div>\n";
 
