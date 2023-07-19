@@ -1,6 +1,9 @@
 [unreleased]
+
+#### 1.14.0 / 2023-07-19
 * update _More details_ link
 * fixed strange error between slug from different sources in PD part 2
+* update JS to correctly display Plugin Card button, thanks @costdev
 
 #### 1.13.0 / 2023-07-10
 * update version check

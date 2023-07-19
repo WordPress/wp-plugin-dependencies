@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.3
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 
 ## Description
 
@@ -47,6 +47,11 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 1.14.0 / 2023-07-19
+* update _More details_ link
+* fixed strange error between slug from different sources in PD part 2
+* update JS to correctly display Plugin Card button, thanks @costdev
 
 #### 1.13.0 / 2023-07-10
 * update version check
