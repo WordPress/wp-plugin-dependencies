@@ -510,7 +510,7 @@ function pd_install_plugin_information() {
 	if ( ! empty( $api->download_link ) && ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) ) {
 		echo str_replace(
 			'class="',
-			'class="right ',
+			'id="plugin_install_from_iframe" class="right ',
 			wp_get_plugin_action_button( $api->name, $api, $compatible_php, $compatible_wp )
 		);
 	}
