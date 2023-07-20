@@ -166,7 +166,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 /**
  * Displays plugin information in dialog box form.
  *
- * NOT FOR CORE MERGE
+ * ONLY PART IS FOR CORE MERGE. See "// START CORE MERGE".
  *
  * @global string $tab
  */
@@ -508,6 +508,7 @@ function pd_install_plugin_information() {
 	echo "</div>\n"; // #plugin-information-scrollable
 	echo "<div id='$tab-footer'>\n";
 	if ( ! empty( $api->download_link ) && ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) ) {
+		// START CORE MERGE.
 		$button = wp_get_plugin_action_button( $api->name, $api, $compatible_php, $compatible_wp );
 		$button = str_replace( 'class="', 'class="right ', $button );
 
@@ -515,7 +516,8 @@ function pd_install_plugin_information() {
 			$button = str_replace( 'class="', 'id="plugin_install_from_iframe" class="', $button );
 		}
 
-		echo $button;
+		echo wp_kses_post( $button );
+		// END CORE MERGE.
 	}
 	echo "</div>\n";
 
