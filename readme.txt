@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.3
-Stable tag: 1.14.0
+Stable tag: 1.14.1
 
 ## Description
 
@@ -47,6 +47,9 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 1.14.1 / 2023-07-20
+* update modal button on plugin-install.php
 
 #### 1.14.0 / 2023-07-19
 * update _More details_ link

@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 1.14.1 / 2023-07-20
+* update modal button on plugin-install.php
+
 #### 1.14.0 / 2023-07-19
 * update _More details_ link
 * fixed strange error between slug from different sources in PD part 2
