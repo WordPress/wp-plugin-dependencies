@@ -508,7 +508,7 @@ function pd_install_plugin_information() {
 	echo "</div>\n"; // #plugin-information-scrollable
 	echo "<div id='$tab-footer'>\n";
 	if ( ! empty( $api->download_link ) && ( current_user_can( 'install_plugins' ) || current_user_can( 'update_plugins' ) ) ) {
-		// START CORE MERGE.
+		// TODO: START CORE MERGE.
 		$button = wp_get_plugin_action_button( $api->name, $api, $compatible_php, $compatible_wp );
 		$button = str_replace( 'class="', 'class="right ', $button );
 
@@ -517,7 +517,7 @@ function pd_install_plugin_information() {
 		}
 
 		echo wp_kses_post( $button );
-		// END CORE MERGE.
+		// TODO: END CORE MERGE.
 	}
 	echo "</div>\n";
 
