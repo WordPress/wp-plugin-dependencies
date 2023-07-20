@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 1.14.1 / 2023-07-20
 * update modal button on plugin-install.php
 
 #### 1.14.0 / 2023-07-19
