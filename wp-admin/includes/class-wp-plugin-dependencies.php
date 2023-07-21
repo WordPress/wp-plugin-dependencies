@@ -883,7 +883,7 @@ final class WP_Plugin_Dependencies {
 	private function get_dependency_filepaths() {
 		$dependency_filepaths = array();
 
-		if ( empty( $this->slugs ) || empty( $this->plugins ) ) {
+		if ( empty( $this->plugins ) ) {
 			return $dependency_filepaths;
 		}
 
