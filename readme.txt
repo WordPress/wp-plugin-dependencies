@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 5.6
 Tested up to: 6.3
-Stable tag: 1.14.1
+Stable tag: 1.14.2
 
 ## Description
 
@@ -47,6 +47,9 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 1.14.2 / 2023-07-20
+* update guard in `get_dependency_filepaths()`
 
 #### 1.14.1 / 2023-07-20
 * update modal button on plugin-install.php
