@@ -1,4 +1,5 @@
 [unreleased]
+* add null coalesce
 
 #### 1.14.2 / 2023-07-20
 * update guard in `get_dependency_filepaths()`
