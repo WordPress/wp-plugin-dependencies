@@ -663,7 +663,7 @@ final class WP_Plugin_Dependencies {
 				$activate  = _x( 'Cannot Activate', 'plugin' );
 				$activate .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 				unset( $actions['activate'] );
-				$actions = array_merge( array( 'activate' => $activate),$actions);
+				$actions = array_merge( array( 'activate' => $activate ), $actions );
 
 				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
 				break;
