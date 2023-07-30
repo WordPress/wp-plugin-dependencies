@@ -1,6 +1,6 @@
 {
   "name": "wordpress/wp-plugin-dependencies",
-  "description": "Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.",
+  "description": "Parses 'Requires Plugins' header and information about dependencies.",
   "type": "wordpress-plugin",
   "license": "MIT",
   "authors": [

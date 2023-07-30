@@ -11,9 +11,9 @@
 /**
  * Plugin Name: Plugin Dependencies
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
- * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
+ * Description: Parses 'Requires Plugins' header and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 1.14.3
+ * Version: 1.14.3.1
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -39,19 +39,6 @@ if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
 	define( 'WP_PLUGIN_DEPENDENCIES1_COMMITTED', false );
 }
 
-// TODO: update with correct version.
-if ( version_compare( get_bloginfo( 'version' ), '6.5-beta1', '>=' ) ) {
-	define( 'WP_PLUGIN_DEPENDENCIES2_COMMITTED', true );
-} else {
-	define( 'WP_PLUGIN_DEPENDENCIES2_COMMITTED', false );
-}
-
-// Deactivate plugin when committed to core.
-if ( WP_PLUGIN_DEPENDENCIES2_COMMITTED ) {
-	require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	deactivate_plugins( __FILE__ );
-}
-
 /**
  * Class Init
  */
@@ -64,7 +51,6 @@ class Init {
 	 */
 	public function __construct() {
 		require_once __DIR__ . '/wp-admin/includes/plugin-install.php';
-		require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies-2.php';
 
 		// Override WP_Plugin_Install_List_Table with our own.
 		require_once __DIR__ . '/wp-admin/includes/class-pd-install-list-table.php';
@@ -81,53 +67,7 @@ class Init {
 
 		if ( ! WP_PLUGIN_DEPENDENCIES1_COMMITTED ) {
 			require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
-
-			add_filter( 'install_plugins_tabs', array( $this, 'add_install_tab' ), 10, 1 );
-			add_filter( 'install_plugins_table_api_args_dependencies', array( $this, 'add_install_dependency_args' ), 10, 1 );
-
-			add_action( 'install_plugins_dependencies', 'display_plugins_table' );
-			add_action(
-				'install_plugins_table_header',
-				static function() {
-					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
-					if ( 'dependencies' === $tab ) {
-						echo '<p>' . esc_html__( 'These suggestions are based on dependencies required by installed plugins.' ) . '</p>';
-					}
-				}
-			);
 		}
-	}
-
-	/**
-	 * Add 'Dependencies' tab to 'Plugin > Add New'.
-	 *
-	 * @param array $tabs Array of plugin install tabs.
-	 *
-	 * @return array
-	 */
-	public function add_install_tab( $tabs ) {
-		$tabs['dependencies'] = _x( 'Dependencies', 'Plugin Installer' );
-
-		return $tabs;
-	}
-
-	/**
-	 * Add args to plugins_api().
-	 *
-	 * @param array $args Array of arguments to plugins_api().
-	 *
-	 * @return array
-	 */
-	public function add_install_dependency_args( $args ) {
-		$args = array(
-			'page'     => 1,
-			'per_page' => 36,
-			'locale'   => get_user_locale(),
-			'browse'   => 'dependencies',
-		);
-
-		return $args;
 	}
 }
 

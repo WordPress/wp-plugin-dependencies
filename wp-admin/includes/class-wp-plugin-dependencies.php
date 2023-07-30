@@ -91,7 +91,6 @@ final class WP_Plugin_Dependencies {
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description_installed' ), 10, 2 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description_uninstalled' ), 10, 2 );
 			add_filter( 'plugin_install_description', array( $this, 'set_plugin_card_data' ), 10, 1 );
-			add_filter( 'plugin_install_action_links', array( $this, 'modify_plugin_install_action_links' ), 10, 2 );
 			add_filter( 'plugin_install_action_links', array( $this, 'empty_package_remove_install_button' ), 10, 2 );
 
 			add_action( 'admin_init', array( $this, 'modify_plugin_row' ), 15 );
@@ -491,9 +490,6 @@ final class WP_Plugin_Dependencies {
 					$action_links[0]  = str_replace( __( 'Activate' ), _x( 'Cannot Activate', 'plugin' ), $action_links[0] );
 					$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 					$action_links[0]  = str_replace( 'activate-now', 'button-disabled', $action_links[0] );
-					if ( 'plugin-install.php' !== $pagenow ) {
-						$action_links[] = $this->get_dependency_link();
-					}
 					break;
 				}
 			}
@@ -744,14 +740,12 @@ final class WP_Plugin_Dependencies {
 
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
 			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
-				$activate     = _x( 'Cannot Activate', 'plugin' );
-				$activate    .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
-				$dependencies = $this->get_dependency_link();
+				$activate  = _x( 'Cannot Activate', 'plugin' );
+				$activate .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 				unset( $actions['activate'] );
 				$actions = array_merge(
 					array(
-						'activate'     => $activate,
-						'dependencies' => $dependencies,
+						'activate' => $activate,
 					),
 					$actions
 				);
@@ -806,10 +800,9 @@ final class WP_Plugin_Dependencies {
 				printf(
 					'<div class="notice-error notice is-dismissible"><p>'
 					/* translators: 1: plugin names, 2: link to Dependencies install page */
-					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies. Go to the %2$s install page.' )
+					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies.' )
 					. '</p></div>',
-					'<strong>' . esc_html( $deactivated_plugins ) . '</strong>',
-					wp_kses_post( $this->get_dependency_link( true ) )
+					'<strong>' . esc_html( $deactivated_plugins ) . '</strong>'
 				);
 			} else {
 				// More dependencies to install.
@@ -817,19 +810,7 @@ final class WP_Plugin_Dependencies {
 				$intersect       = array_intersect( $this->slugs, $installed_slugs );
 				asort( $intersect );
 				if ( $intersect !== $this->slugs ) {
-					$message_html = __( 'There are additional plugins that must be installed.' );
-
-					// Display link (if not already on Dependencies install page).
-					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-					$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
-					if ( 'plugin-install.php' !== $pagenow || 'dependencies' !== $tab ) {
-						$message_html .= ' ' . sprintf(
-							/* translators: 1: link to Dependencies install page */
-							__( 'Go to the %s install page.' ),
-							wp_kses_post( $this->get_dependency_link( true ) ),
-							'</a>'
-						);
-					}
+					$message_html = __( 'There are additional plugin dependencies that must be installed.' );
 
 					printf(
 						'<div class="notice-warning notice is-dismissible"><p>%s</p></div>',
@@ -939,21 +920,6 @@ final class WP_Plugin_Dependencies {
 		return $sources;
 	}
 
-	/**
-	 * Get Dependencies link.
-	 *
-	 * @param bool $notice Usage in admin notice.
-	 * @return string
-	 */
-	private function get_dependency_link( $notice = false ) {
-		$link_text = $notice ? __( 'Dependencies' ) : __( 'Manage Dependencies' );
-		$link      = sprintf(
-			'<a href=' . esc_url( network_admin_url( 'plugin-install.php?tab=dependencies' ) ) . ' aria-label="' . __( 'Go to Dependencies tab of Add Plugins page.' ) . '">%s</a>',
-			$link_text
-		);
-
-		return $link;
-	}
 	/**
 	 * Get array of plugin requirement filepaths.
 	 *
