@@ -86,9 +86,6 @@ final class WP_Plugin_Dependencies {
 	 */
 	public function start() {
 		if ( is_admin() ) {
-			add_filter( 'plugins_api_result', array( $this, 'plugins_api_result' ), 10, 3 );
-			add_filter( 'plugins_api_result', array( $this, 'empty_plugins_api_result' ), 10, 3 );
-			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description_installed' ), 10, 2 );
 			add_filter( 'plugin_install_description', array( $this, 'plugin_install_description_uninstalled' ), 10, 2 );
 			add_filter( 'plugin_install_description', array( $this, 'set_plugin_card_data' ), 10, 1 );
 			add_filter( 'plugin_install_action_links', array( $this, 'empty_package_remove_install_button' ), 10, 2 );
@@ -266,44 +263,6 @@ final class WP_Plugin_Dependencies {
 		}
 		deactivate_plugins( $deactivate_requires );
 		set_site_transient( 'wp_plugin_dependencies_deactivate_plugins', $deactivate_requires, 10 );
-	}
-
-	/**
-	 * Modify plugins_api() response.
-	 *
-	 * @param stdClass $res    Object of results.
-	 * @param string   $action Variable for plugins_api().
-	 * @param stdClass $args   Object of plugins_api() args.
-	 * @return stdClass
-	 */
-	public function plugins_api_result( $res, $action, $args ) {
-		if ( property_exists( $args, 'browse' ) && 'dependencies' === $args->browse ) {
-			$res->info = array(
-				'page'    => 1,
-				'pages'   => 1,
-				'results' => count( (array) $this->plugin_data ),
-			);
-
-			$res->plugins = $this->plugin_data;
-		}
-
-		return $res;
-	}
-
-	/**
-	 * Get default empty API response for non-dot org plugin.
-	 *
-	 * @param stdClass $res    Object of results.
-	 * @param string   $action Variable for plugins_api().
-	 * @param stdClass $args   Object of plugins_api() args.
-	 * @return stdClass
-	 */
-	public function empty_plugins_api_result( $res, $action, $args ) {
-		if ( is_wp_error( $res ) ) {
-			$res = $this->get_empty_plugins_api_response( $res, (array) $args );
-		}
-
-		return $res;
 	}
 
 	/**
@@ -514,7 +473,6 @@ final class WP_Plugin_Dependencies {
 		$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
 
 		if ( 'plugin-install.php' !== $pagenow
-			|| 'dependencies' !== $tab
 			|| ! empty( $plugin['download_link'] ) || ! str_contains( $action_links[0], 'install-now' )
 		) {
 			return $action_links;
@@ -526,44 +484,6 @@ final class WP_Plugin_Dependencies {
 		$action_links[0]  = str_replace( 'install-now', 'install-now button-disabled', $action_links[0] );
 
 		return $action_links;
-	}
-
-	/**
-	 * Add 'Required by: ...' and 'Requires: ...' to plugin install cards.
-	 *
-	 * @param string $description Short description of plugin.
-	 * @param array  $plugin      Array of plugin data.
-	 * @return string
-	 */
-	public function plugin_install_description_installed( $description, $plugin ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
-		if ( 'dependencies' !== $tab ) {
-			return $description;
-		}
-
-		$required = array();
-		$requires = array();
-		if ( ! isset( $plugin['requires_plugins'] ) ) {
-			$plugin['requires_plugins'] = array();
-		}
-		if ( in_array( $plugin['slug'], array_keys( $this->plugin_data ), true ) ) {
-			$dependents = $this->get_dependency_sources( $plugin );
-			$dependents = explode( ', ', $dependents );
-			$required[] = '<strong>' . __( 'Required by:' ) . '</strong>';
-			$required   = array_merge( $required, $dependents );
-		}
-
-		foreach ( (array) $plugin['requires_plugins']as $slug ) {
-			if ( isset( $this->plugin_data[ $slug ] ) ) {
-				$require_names = $this->plugin_data[ $slug ]['name'];
-				$requires[]    = $require_names;
-			}
-		}
-
-		self::$plugin_card_data = array_merge( self::$plugin_card_data, $requires, $required );
-
-		return $description;
 	}
 
 	/**
@@ -743,12 +663,7 @@ final class WP_Plugin_Dependencies {
 				$activate  = _x( 'Cannot Activate', 'plugin' );
 				$activate .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 				unset( $actions['activate'] );
-				$actions = array_merge(
-					array(
-						'activate' => $activate,
-					),
-					$actions
-				);
+				$actions = array_merge( array( 'activate' => $activate),$actions);
 
 				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
 				break;
@@ -799,7 +714,7 @@ final class WP_Plugin_Dependencies {
 				$deactivated_plugins = implode( ', ', $deactivated_plugins );
 				printf(
 					'<div class="notice-error notice is-dismissible"><p>'
-					/* translators: 1: plugin names, 2: link to Dependencies install page */
+					/* translators: 1: plugin names */
 					. esc_html__( '%1$s plugin(s) have been deactivated. There are uninstalled or inactive dependencies.' )
 					. '</p></div>',
 					'<strong>' . esc_html( $deactivated_plugins ) . '</strong>'
@@ -942,62 +857,6 @@ final class WP_Plugin_Dependencies {
 		sort( $paths );
 
 		return $paths;
-	}
-
-	/**
-	 * Return empty plugins_api() response.
-	 *
-	 * @param stdClass|WP_Error $response Response from plugins_api().
-	 * @param array             $args     Array of arguments passed to plugins_api().
-	 * @return stdClass
-	 */
-	private function get_empty_plugins_api_response( $response, $args ) {
-		$slug = $args['slug'];
-		$args = array(
-			'Name'        => $args['slug'],
-			'Version'     => '',
-			'Author'      => '',
-			'Description' => '',
-			'RequiresWP'  => '',
-			'RequiresPHP' => '',
-			'PluginURI'   => '',
-		);
-		if ( is_wp_error( $response ) || property_exists( $response, 'error' )
-			|| ! property_exists( $response, 'slug' )
-			|| ! property_exists( $response, 'short_description' )
-		) {
-			$dependencies      = $this->get_dependency_filepaths();
-			$file              = $dependencies[ $slug ];
-			$args              = $file ? $this->plugins[ $file ] : $args;
-			$short_description = __( 'You will need to manually install this dependency. Please contact the plugin\'s developer and ask them to add plugin dependencies support and for information on how to install the this dependency.' );
-			$response          = array(
-				'name'              => $args['Name'],
-				'slug'              => $slug,
-				'version'           => $args['Version'],
-				'author'            => $args['Author'],
-				'contributors'      => array(),
-				'requires'          => $args['RequiresWP'],
-				'tested'            => '',
-				'requires_php'      => $args['RequiresPHP'],
-				'sections'          => array(
-					'description'  => '<p>' . $args['Description'] . '</p>' . $short_description,
-					'installation' => __( 'Ask the plugin developer where to download and install this plugin dependency.' ),
-				),
-				'short_description' => '<p>' . $args['Description'] . '</p>' . $short_description,
-				'download_link'     => '',
-				'banners'           => array(),
-				'icons'             => array( 'default' => "https://s.w.org/plugins/geopattern-icon/{$slug}.svg" ),
-				'last_updated'      => '',
-				'num_ratings'       => 0,
-				'rating'            => 0,
-				'active_installs'   => 0,
-				'homepage'          => $args['PluginURI'],
-				'external'          => 'xxx',
-			);
-			$response          = (object) $response;
-		}
-
-		return $response;
 	}
 
 	/**

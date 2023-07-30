@@ -1,5 +1,6 @@
 [unreleased]
 * remove Dependencies tab, Manage Dependencies link, etc, per @azaozz
+* skip associated PHPUnit tests
 
 #### 1.14.3 / 2023-70-30
 * add null coalesce
