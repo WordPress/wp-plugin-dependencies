@@ -926,7 +926,7 @@ final class WP_Plugin_Dependencies {
 		foreach ( $this->plugins as $plugin ) {
 			if ( ! empty( $plugin['RequiresPlugins'] ) ) {
 				// Default TextDomain derived from plugin directory name, should be slug equivalent.
-				$plugin_data['slug'] = isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : $plugin_data['TextDomain'];
+				$plugin_data['slug'] = $plugin_data['slug'] ?? $plugin_data['TextDomain'];
 				if ( in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
 					$sources[] = $plugin['Name'];
 				}
@@ -965,7 +965,7 @@ final class WP_Plugin_Dependencies {
 		foreach ( $this->plugins as $filepath => $plugin ) {
 			if ( ! empty( $plugin['RequiresPlugins'] ) ) {
 				// Default TextDomain derived from plugin directory name, should be slug equivalent.
-				$plugin_data['slug'] = isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : $plugin_data['TextDomain'];
+				$plugin_data['slug'] = $plugin_data['slug'] ?? $plugin_data['TextDomain'];
 				if ( in_array( $plugin_data['slug'], $plugin['RequiresPlugins'], true ) ) {
 					$paths[] = $filepath;
 				}
@@ -1061,7 +1061,7 @@ final class WP_Plugin_Dependencies {
 			$names = implode( ', ', $names );
 		}
 
-		return isset( $names ) ? $names : '';
+		return $names ?? '';
 	}
 
 	/**

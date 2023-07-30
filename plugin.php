@@ -13,11 +13,11 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 1.14.2
+ * Version: 1.14.3
  * License: MIT
  * Network: true
  * Requires at least: 6.0
- * Requires PHP: 5.6
+ * Requires PHP: 7.0
  * GitHub Plugin URI: https://github.com/WordPress/wp-plugin-dependencies
  * Primary Branch: trunk
  */
@@ -33,14 +33,14 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // TODO: update with correct version.
-if ( version_compare( get_bloginfo( 'version' ), '6.4-alpha-99999', '>=' ) ) {
+if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
 	define( 'WP_PLUGIN_DEPENDENCIES1_COMMITTED', true );
 } else {
 	define( 'WP_PLUGIN_DEPENDENCIES1_COMMITTED', false );
 }
 
 // TODO: update with correct version.
-if ( version_compare( get_bloginfo( 'version' ), '6.5-beta-1', '>=' ) ) {
+if ( version_compare( get_bloginfo( 'version' ), '6.5-beta1', '>=' ) ) {
 	define( 'WP_PLUGIN_DEPENDENCIES2_COMMITTED', true );
 } else {
 	define( 'WP_PLUGIN_DEPENDENCIES2_COMMITTED', false );

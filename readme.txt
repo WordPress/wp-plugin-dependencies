@@ -5,9 +5,9 @@ Description: Parses 'Requires Plugins' header, add plugin install dependencies t
 License: MIT
 Network: true
 Requires at least: 6.0
-Requires PHP: 5.6
+Requires PHP: 7.0
 Tested up to: 6.3
-Stable tag: 1.14.2
+Stable tag: 1.14.3
 
 ## Description
 
@@ -47,6 +47,11 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 1.14.3 / 2023-70-30
+* add null coalesce
+* require PHP 7.0
+* make commit guard more permissive
 
 #### 1.14.2 / 2023-07-20
 * update guard in `get_dependency_filepaths()`

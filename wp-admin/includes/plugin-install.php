@@ -31,7 +31,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 	$button           = '';
 	$data             = (object) $data;
 	$status           = install_plugin_install_status( $data );
-	$requires_plugins = isset( $data->requires_plugins ) ? $data->requires_plugins : array();
+	$requires_plugins = $data->requires_plugins ?? array();
 
 	// Determine the status of plugin dependencies.
 	$installed_plugins                   = get_plugins();
