@@ -13,7 +13,7 @@
  * It is designed to add plugin dependencies as designated in the
  * `Requires Plugins` header to a new view in the plugins install page.
  */
-final class WP_Plugin_Dependencies {
+class WP_Plugin_Dependencies {
 
 	/**
 	 * Holds 'get_plugins()'.
@@ -55,21 +55,21 @@ final class WP_Plugin_Dependencies {
 	 *
 	 * @var array
 	 */
-	private $plugin_dirnames = array();
+	protected $plugin_dirnames = array();
 
 	/**
 	 * Holds cached plugin directory names.
 	 *
 	 * @var array
 	 */
-	private $plugin_dirnames_cache = array();
+	protected $plugin_dirnames_cache = array();
 
 	/**
 	 * Holds data for plugin card.
 	 *
 	 * @var array
 	 */
-	private static $plugin_card_data = array();
+	protected static $plugin_card_data = array();
 
 	/**
 	 * Constructor.
