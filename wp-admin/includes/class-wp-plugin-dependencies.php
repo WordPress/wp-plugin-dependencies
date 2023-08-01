@@ -153,7 +153,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return array
 	 */
-	private function get_plugins() {
+	protected function get_plugins() {
 		if ( ! function_exists( 'get_plugins' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
@@ -170,7 +170,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return array
 	 */
-	private function parse_plugin_headers() {
+	protected function parse_plugin_headers() {
 		global $wp_filesystem;
 
 		if ( ! $wp_filesystem ) {
@@ -201,7 +201,7 @@ class WP_Plugin_Dependencies {
 	 * @param array $required_headers Array of required plugin headers.
 	 * @return array
 	 */
-	private function sanitize_required_headers( $required_headers ) {
+	protected function sanitize_required_headers( $required_headers ) {
 		$all_slugs = array();
 		foreach ( $required_headers as $key => $headers ) {
 			$sanitized_slugs = array();
@@ -238,7 +238,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return void
 	 */
-	private function deactivate_unmet_dependencies() {
+	protected function deactivate_unmet_dependencies() {
 		$dependencies        = $this->get_dependency_filepaths();
 		$deactivate_requires = array();
 
@@ -752,7 +752,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return array
 	 */
-	private function get_circular_dependencies() {
+	protected function get_circular_dependencies() {
 		$circular_dependencies = array( 'names' => array() );
 		foreach ( $this->requires_plugins as $file => $requires ) {
 			if ( in_array( dirname( $file ), $this->slugs, true )
