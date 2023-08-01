@@ -739,7 +739,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return array
 	 */
-	private function get_dependency_filepaths() {
+	protected function get_dependency_filepaths() {
 		$dependency_filepaths = array();
 
 		if ( empty( $this->plugins ) ) {
@@ -780,7 +780,7 @@ class WP_Plugin_Dependencies {
 	 * @param array $plugin_data Array of plugin data.
 	 * @return string
 	 */
-	private function get_dependency_sources( $plugin_data ) {
+	protected function get_dependency_sources( $plugin_data ) {
 		$sources = array();
 		foreach ( $this->plugins as $plugin ) {
 			if ( ! empty( $plugin['RequiresPlugins'] ) ) {
@@ -804,7 +804,7 @@ class WP_Plugin_Dependencies {
 	 * @param array $plugin_data Array of plugin data.
 	 * @return array
 	 */
-	private function get_requires_paths( $plugin_data ) {
+	protected function get_requires_paths( $plugin_data ) {
 		$paths = array();
 		foreach ( $this->plugins as $filepath => $plugin ) {
 			if ( ! empty( $plugin['RequiresPlugins'] ) ) {
@@ -828,7 +828,7 @@ class WP_Plugin_Dependencies {
 	 * @param string $data Plugin file.
 	 * @return string
 	 */
-	private function get_requires_plugins_names( $data ) {
+	protected function get_requires_plugins_names( $data ) {
 		$this->plugin_data = get_site_transient( 'wp_plugin_dependencies_plugin_data' );
 
 		// Exit if no plugin data found.
