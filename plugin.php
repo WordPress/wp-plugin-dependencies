@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 1.14.3.3
+ * Version: 1.14.3.4
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -38,33 +38,17 @@ if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
 	deactivate_plugins(__FILE__);
 }
 
-/**
- * Class Init
- */
-class Init {
+require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
+require_once __DIR__ . '/wp-admin/includes/plugin-install.php';
 
-	/**
-	 * Initialize, load filters, and get started.
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-		require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
-		require_once __DIR__ . '/wp-admin/includes/plugin-install.php';
-
-		// Override WP_Plugin_Install_List_Table with our own.
-		require_once __DIR__ . '/wp-admin/includes/class-pd-install-list-table.php';
-		add_filter(
-			'wp_list_table_class_name',
-			static function( $class_name ) {
-				if ( 'WP_Plugin_Install_List_Table' === $class_name ) {
-					$class_name = __NAMESPACE__ . '\PD_Install_List_Table';
-				}
-
-				return $class_name;
-			}
-		);
+// Override WP_Plugin_Install_List_Table with our own.
+require_once __DIR__ . '/wp-admin/includes/class-pd-install-list-table.php';
+add_filter(
+	'wp_list_table_class_name',
+	static function( $class_name ) {
+		if ( 'WP_Plugin_Install_List_Table' === $class_name ) {
+			$class_name = __NAMESPACE__ . '\PD_Install_List_Table';
+		}
+		return $class_name;
 	}
-}
-
-new Init();
+);
