@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 1.14.3.2
+ * Version: 1.14.3.3
  * License: MIT
  * Network: true
  * Requires at least: 6.0
@@ -34,9 +34,8 @@ if ( ! defined( 'WPINC' ) ) {
 
 // TODO: update with correct version.
 if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
-	define( 'WP_PLUGIN_DEPENDENCIES1_COMMITTED', true );
-} else {
-	define( 'WP_PLUGIN_DEPENDENCIES1_COMMITTED', false );
+	require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	deactivate_plugins(__FILE__);
 }
 
 /**
@@ -50,6 +49,7 @@ class Init {
 	 * @return void
 	 */
 	public function __construct() {
+		require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
 		require_once __DIR__ . '/wp-admin/includes/plugin-install.php';
 
 		// Override WP_Plugin_Install_List_Table with our own.
@@ -64,10 +64,6 @@ class Init {
 				return $class_name;
 			}
 		);
-
-		if ( ! WP_PLUGIN_DEPENDENCIES1_COMMITTED ) {
-			require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
-		}
 	}
 }
 
