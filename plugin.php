@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
 // TODO: update with correct version.
 if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
-	deactivate_plugins(__FILE__);
+	deactivate_plugins( __FILE__ );
 }
 
 require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
