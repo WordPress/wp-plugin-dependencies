@@ -1,4 +1,6 @@
 [unreleased]
+
+#### 2.0.0 / 2023-08-08
 * remove Dependencies tab, Manage Dependencies link, etc, per @azaozz
 * skip associated PHPUnit tests
 * increase scope to protected for many things

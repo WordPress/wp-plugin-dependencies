@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 7.0
 Tested up to: 6.3
-Stable tag: 1.14.3
+Stable tag: 2.0.0
 
 ## Description
 
@@ -41,6 +41,13 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 2.0.0 / 2023-08-08
+* remove Dependencies tab, Manage Dependencies link, etc, per @azaozz
+* skip associated PHPUnit tests
+* increase scope to protected for many things
+* remove `class Init`, not needed
+* deactivate buttons, don't change text
 
 #### 1.14.3 / 2023-70-30
 * add null coalesce
