@@ -1,5 +1,12 @@
 [unreleased]
 
+#### 2.0.0 / 2023-08-08
+* remove Dependencies tab, Manage Dependencies link, etc, per @azaozz
+* skip associated PHPUnit tests
+* increase scope to protected for many things
+* remove `class Init`, not needed
+* deactivate buttons, don't change text
+
 #### 1.14.3 / 2023-70-30
 * add null coalesce
 * require PHP 7.0

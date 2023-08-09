@@ -7,11 +7,11 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 7.0
 Tested up to: 6.3
-Stable tag: 1.14.3
+Stable tag: 2.0.0
 
 ## Description
 
-Parses a 'Requires Plugins' header and adds a Dependencies tab in the plugin install page. If a requiring plugin does not have all its dependencies installed and active, it will not activate.
+Parses a 'Requires Plugins' header. If a requiring plugin does not have all its dependencies installed and active, it will not activate.
 
 [Make post for Plugin Dependencies Feature Project](https://make.wordpress.org/core/2022/02/24/feature-project-plugin-dependencies/)
 
@@ -20,16 +20,10 @@ Please open issues at [WordPress/wp-plugin-dependencies issues](https://github.c
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #3032](https://github.com/WordPress/wordpress-develop/pull/3032)
 
 * Parses the **Requires Plugins** header that defines plugin dependencies using a comma separated list of wp.org slugs. To test, you will need to add the header and content to a plugin.
-* Plugins not in dot org may use the format `<slug>|<URI>` in the **Requires Plugins** header. `URI` should return a JSON compatible with the `plugins_api()` response or be a JSON file at the plugin root, `<slug>|<slug>.json`.
-* For a plugin in dot org, the JSON response value of `download_link` must be empty.
-* Adds a new view/tab to plugins install page ( **Plugins > Add New** ) titled **Dependencies** that contains plugin cards for all plugin dependencies.
-* This view also lists which plugins require which plugin dependencies in the plugin card.
 * In the plugins page, a dependent plugin is unable to be deleted or deactivated if the requiring plugin is active.
 * Plugin dependencies can be deactivated or deleted if the requiring plugin is not active.
 * Messaging in the plugin row description is inserted; as is data noting which plugins require the dependency.
-* Displays a single admin notice with link to **Plugins > Add New > Dependencies** if not all plugin dependencies have been installed.
 * Ensures that plugins with unmet dependencies cannot be activated.
-* If the dependency API data is not available a generic plugin card will be displayed in the Dependencies tab.
 * Circular dependencies cannot be activated and an admin notice noting the circular dependencies is displayed.
 * Ensures that plugins with unmet dependencies cannot be activated.
 
@@ -47,6 +41,13 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 2.0.0 / 2023-08-08
+* remove Dependencies tab, Manage Dependencies link, etc, per @azaozz
+* skip associated PHPUnit tests
+* increase scope to protected for many things
+* remove `class Init`, not needed
+* deactivate buttons, don't change text
 
 #### 1.14.3 / 2023-70-30
 * add null coalesce
