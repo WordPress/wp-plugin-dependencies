@@ -441,8 +441,6 @@ class WP_Plugin_Dependencies {
 			return $action_links;
 		}
 
-		$action_links[0]  = str_replace( __( 'Network Install' ), __( 'Install' ), $action_links[0] );
-		$action_links[0]  = str_replace( __( 'Install Now' ), _x( 'Cannot Install', 'plugin' ), $action_links[0] );
 		$action_links[0] .= '<span class="screen-reader-text">' . __( 'Cannot install due to empty package' ) . '</span>';
 		$action_links[0]  = str_replace( 'install-now', 'install-now button-disabled', $action_links[0] );
 
@@ -606,7 +604,7 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Exchange 'Activate' link for 'Cannot Activate' text if dependencies not met.
+	 * Disable 'Activate' link if dependencies not met.
 	 * Add 'Dependencies' link to install plugin tab.
 	 *
 	 * @param array  $actions     Plugin action links.
@@ -623,7 +621,7 @@ class WP_Plugin_Dependencies {
 
 		foreach ( $plugin_dependencies as $plugin_dependency ) {
 			if ( ! $dependencies[ $plugin_dependency ] || is_plugin_inactive( $dependencies[ $plugin_dependency ] ) ) {
-				$activate  = _x( 'Cannot Activate', 'plugin' );
+				$activate  = _x( 'Activate', 'plugin' );
 				$activate .= '<span class="screen-reader-text">' . __( 'Cannot activate due to unmet dependency' ) . '</span>';
 				unset( $actions['activate'] );
 				$actions = array_merge( array( 'activate' => $activate ), $actions );

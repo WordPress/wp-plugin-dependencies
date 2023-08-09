@@ -3,6 +3,7 @@
 * skip associated PHPUnit tests
 * increase scope to protected for many things
 * remove `class Init`, not needed
+* deactivate buttons, don't change text
 
 #### 1.14.3 / 2023-70-30
 * add null coalesce

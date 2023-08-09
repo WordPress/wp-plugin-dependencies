@@ -82,7 +82,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 					} else {
 						$button = sprintf(
 							'<button type="button" class="install-now button button-disabled" disabled="disabled">%s</button>',
-							_x( 'Cannot Install', 'plugin' )
+							_x( 'Install Now', 'plugin' )
 						);
 					}
 				}
@@ -104,7 +104,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 					} else {
 						$button = sprintf(
 							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
-							_x( 'Cannot Update', 'plugin' )
+							_x( 'Update Now', 'plugin' )
 						);
 					}
 				}
@@ -147,7 +147,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 					} else {
 						$button = sprintf(
 							'<button type="button" class="button button-disabled" disabled="disabled">%s</button>',
-							_x( 'Cannot Activate', 'plugin' )
+							is_network_admin() ? _x( 'Network Activate %s', 'plugin' ) : _x( 'Activate', 'plugin' )
 						);
 					}
 				} else {

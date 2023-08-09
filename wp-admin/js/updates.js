@@ -73,7 +73,7 @@
 										error.errorMessage
 									)
 								)
-								.text( __( 'Cannot Activate' ) );
+								.text( __( 'Activate' ) );
 						}
 					}
 				);
