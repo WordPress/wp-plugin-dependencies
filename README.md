@@ -16,7 +16,6 @@ Parses a 'Requires Plugins' header. If a requiring plugin does not have all its 
 My solution to [#22316](https://core.trac.wordpress.org/ticket/22316). Feature plugin version of [PR #3032](https://github.com/WordPress/wordpress-develop/pull/3032)
 
 * Parses the **Requires Plugins** header that defines plugin dependencies using a comma separated list of wp.org slugs.
-* This view also lists which plugins require which plugin dependencies in the plugin card.
 * In the plugins page, a dependent plugin is unable to be deleted or deactivated if the requiring plugin is active.
 * Plugin dependencies can be deactivated or deleted if the requiring plugin is not active.
 * Messaging in the plugin row description is inserted; as is data noting which plugins require the dependency.
