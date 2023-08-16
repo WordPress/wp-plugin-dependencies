@@ -421,7 +421,7 @@ class WP_Plugin_Dependencies {
 	}
 
 	/**
-	 * Convert 'Install Now' into 'Cannot Install' for empty packages.
+	 * Disable 'Install Now' for empty packages.
 	 *
 	 * @global $pagenow Current page.
 	 *
@@ -431,9 +431,6 @@ class WP_Plugin_Dependencies {
 	 */
 	public function empty_package_remove_install_button( $action_links, $plugin ) {
 		global $pagenow;
-
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$tab = isset( $_GET['tab'] ) ? sanitize_title_with_dashes( wp_unslash( $_GET['tab'] ) ) : '';
 
 		if ( 'plugin-install.php' !== $pagenow
 			|| ! empty( $plugin['download_link'] ) || ! str_contains( $action_links[0], 'install-now' )
