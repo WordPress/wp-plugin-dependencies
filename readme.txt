@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.0
 Requires PHP: 7.0
 Tested up to: 6.3
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 
 ## Description
 
@@ -41,6 +41,9 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 2.0.1 / 2023-08-16
+* cleanup
 
 #### 2.0.0 / 2023-08-08
 * remove Dependencies tab, Manage Dependencies link, etc, per @azaozz
