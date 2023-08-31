@@ -387,14 +387,13 @@ class WP_Plugin_Dependencies {
 	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
 		$sources            = $this->get_dependency_sources( $plugin_data );
 		$requires_filepaths = $this->get_requires_paths( $plugin_data );
-		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
 		foreach ( $requires_filepaths as $filepath ) {
 			if ( is_plugin_active( $filepath ) ) {
-				print 'jQuery(".active[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
-				break;
+				$this->hide_column_checkbox( $plugin_file, true );
 			}
 		}
+		print '<script>';
+		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
 		print '</script>';
 	}
 
@@ -612,9 +611,10 @@ class WP_Plugin_Dependencies {
 	 * @param string $plugin_file File name.
 	 * @return void
 	 */
-	public function hide_column_checkbox( $plugin_file ) {
+	public function hide_column_checkbox( $plugin_file, $active = false ) {
+		$active = $active ? 'active' : 'inactive';
 		print '<script>';
-		print 'jQuery(".inactive[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
+		print 'jQuery(".' . esc_attr( $active ) . '[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
 		print '</script>';
 	}
 
