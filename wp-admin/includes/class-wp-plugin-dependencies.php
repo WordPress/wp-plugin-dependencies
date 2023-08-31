@@ -358,7 +358,7 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_dependency_plugin_row( $plugin_file ) {
-		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements' ), 10, 2 );
+		add_filter( 'post_plugin_row_meta', array( $this, 'modify_plugin_row_elements' ), 10, 3 );
 		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 	}
@@ -370,7 +370,7 @@ class WP_Plugin_Dependencies {
 	 * @return void
 	 */
 	public function modify_requires_plugin_row( $plugin_file ) {
-		add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'modify_plugin_row_elements_requires' ), 10, 1 );
+		add_filter( 'post_plugin_row_meta', array( $this, 'modify_plugin_row_elements_requires' ), 10, 2 );
 		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'cannot_activate_unmet_dependencies' ), 10, 2 );
 		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'cannot_activate_unmet_dependencies' ), 10, 2 );
 	}
@@ -380,42 +380,49 @@ class WP_Plugin_Dependencies {
 	 * Removes plugin row checkbox.
 	 * Adds 'Required by: ...' information.
 	 *
+	 * @param string $message     Text to add after plugin row meta.
 	 * @param string $plugin_file Plugin file.
 	 * @param array  $plugin_data Array of plugin data.
-	 * @return void
+	 * @return string
 	 */
-	public function modify_plugin_row_elements( $plugin_file, $plugin_data ) {
-		$sources            = $this->get_dependency_sources( $plugin_data );
+	public function modify_plugin_row_elements( $message, $plugin_file, $plugin_data ) {
+		$sources = $this->get_dependency_sources( $plugin_data );
+
+		if ( empty( $sources ) ) {
+			return $message;
+		}
+
 		$requires_filepaths = $this->get_requires_paths( $plugin_data );
 		foreach ( $requires_filepaths as $filepath ) {
 			if ( is_plugin_active( $filepath ) ) {
 				$this->hide_column_checkbox( $plugin_file, true );
 			}
 		}
-		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '");';
-		print '</script>';
+		$message .= '<div style="margin-top: 1em;"><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '</div>';
+
+		return $message;
 	}
 
 	/**
 	 * Modify the plugin row elements.
 	 * Add `Requires: ...` information
 	 *
+	 * @param string $message     Text to add after plugin row meta.
 	 * @param string $plugin_file Plugin file.
-	 * @return void
+	 * @return string
 	 */
-	public function modify_plugin_row_elements_requires( $plugin_file ) {
+	public function modify_plugin_row_elements_requires( $message, $plugin_file ) {
 		$names = $this->get_requires_plugins_names( $plugin_file );
 
 		if ( empty( $names ) ) {
-			return;
+			return $message;
 		}
 
 		$links = $this->get_view_details_links( $plugin_file, $names );
 
-		print '<script>';
-		print 'jQuery("tr[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .plugin-version-author-uri").append("<br><br><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . wp_kses_post( $links ) . '");';
-		print '</script>';
+		$message .= '<div style="margin-top: 1em;"><strong>' . esc_html__( 'Requires:' ) . '</strong> ' . wp_kses_post( $links ) . '</div>';
+
+		return $message;
 	}
 
 	/**
