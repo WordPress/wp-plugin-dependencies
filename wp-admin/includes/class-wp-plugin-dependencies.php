@@ -609,6 +609,7 @@ class WP_Plugin_Dependencies {
 	 * Hide plugin row column checkbox for plugins with unmet dependencies.
 	 *
 	 * @param string $plugin_file File name.
+	 * @param bool   $active      Status of plugin.
 	 * @return void
 	 */
 	public function hide_column_checkbox( $plugin_file, $active = false ) {
