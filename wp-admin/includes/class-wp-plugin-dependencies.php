@@ -313,7 +313,10 @@ class WP_Plugin_Dependencies {
 				continue;
 			}
 
-			$this->plugin_data[ $response->slug ] = (array) $response;
+			// Ensure self::$plugin_data has data, sometimes resets after plugins_api().
+			self::$plugin_data                    = (array) get_site_transient( 'wp_plugin_dependencies_plugin_data' );
+			self::$plugin_data[ $response->slug ] = (array) $response;
+			set_site_transient( 'wp_plugin_dependencies_plugin_data', self::$plugin_data, 0 );
 		}
 
 		// Remove from self::$plugin_data if slug no longer a dependency.
