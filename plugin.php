@@ -43,24 +43,17 @@ require_once __DIR__ . '/wp-admin/includes/plugin-install.php';
 
 // Override WP_Plugin_Install_List_Table with our own.
 require_once __DIR__ . '/wp-admin/includes/class-pd-install-list-table.php';
-add_filter(
-	'wp_list_table_class_name',
-	static function( $class_name ) {
-		if ( 'WP_Plugin_Install_List_Table' === $class_name ) {
-			$class_name = __NAMESPACE__ . '\PD_Install_List_Table';
-		}
-		return $class_name;
-	}
-);
-
 // Override WP_Plugins_List_Table with our own.
 require_once __DIR__ . '/wp-admin/includes/class-pd-list-table.php';
 add_filter(
 	'wp_list_table_class_name',
 	static function( $class_name ) {
-		if ( 'WP_Plugins_List_Table' === $class_name ) {
+		if ( 'WP_Plugin_Install_List_Table' === $class_name ) {
+			$class_name = __NAMESPACE__ . '\PD_Install_List_Table';
+		} elseif ( 'WP_Plugins_List_Table' === $class_name ) {
 			$class_name = __NAMESPACE__ . '\PD_List_Table';
 		}
+
 		return $class_name;
 	}
 );
