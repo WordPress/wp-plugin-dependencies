@@ -86,16 +86,15 @@ class WP_Plugin_Dependencies {
 	 */
 	public static function start() {
 		if ( is_admin() ) {
-			add_filter( 'plugin_install_description', array( __CLASS__, 'plugin_install_description_uninstalled' ), 10, 2 );
-			add_filter( 'plugin_install_description', array( __CLASS__, 'set_plugin_card_data' ), 10, 1 );
+			add_filter( 'plugin_install_description', array( 'WP_Plugin_Dependencies', 'plugin_install_description_uninstalled' ), 10, 2 );
+			add_filter( 'plugin_install_description', array( 'WP_Plugin_Dependencies', 'set_plugin_card_data' ), 10, 1 );
 
-			add_action( 'admin_init', array( __CLASS__, 'modify_plugin_row' ), 15 );
-			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_styles' ) );
-			add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
-			add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
-			add_action( 'network_admin_notices', array( __CLASS__, 'admin_notices' ) );
-
-			add_action( 'wp_ajax_check_plugin_dependencies', array( __CLASS__, 'check_plugin_dependencies' ) );
+			add_action( 'admin_init', array( 'WP_Plugin_Dependencies', 'modify_plugin_row' ), 15 );
+			add_action( 'admin_notices', array( 'WP_Plugin_Dependencies', 'admin_notices' ) );
+			add_action( 'network_admin_notices', array( 'WP_Plugin_Dependencies', 'admin_notices' ) );
+			add_action( 'wp_ajax_check_plugin_dependencies', array( 'WP_Plugin_Dependencies', 'check_plugin_dependencies' ) );
+			add_action( 'admin_enqueue_scripts', array( 'WP_Plugin_Dependencies', 'enqueue_styles' ) );
+			add_action( 'admin_enqueue_scripts', array( 'WP_Plugin_Dependencies', 'enqueue_scripts' ) );
 		}
 
 		$required_headers = self::parse_plugin_headers();
