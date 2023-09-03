@@ -1,6 +1,7 @@
 [unreleased]
 * refactor hide checkbox to single function
 * override `WP_Plugins_List_Table` to add filter and restructuring of PR
+* add filter to hide plugin row checkbox
 
 #### 2.0.2 / 2023-08-18
 * add single file plugin to `$plugin_dirnames`

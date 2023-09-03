@@ -361,6 +361,7 @@ class WP_Plugin_Dependencies {
 		add_filter( 'post_plugin_row_meta', array( $this, 'modify_plugin_row_elements' ), 10, 3 );
 		add_filter( 'plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
 		add_filter( 'network_admin_plugin_action_links_' . $plugin_file, array( $this, 'unset_action_links' ), 10, 2 );
+		add_filter( 'plugin_row_hide_checkbox_' . $plugin_file, '__return_true', 10, 2 );
 	}
 
 	/**
@@ -392,12 +393,6 @@ class WP_Plugin_Dependencies {
 			return $message;
 		}
 
-		$requires_filepaths = $this->get_requires_paths( $plugin_data );
-		foreach ( $requires_filepaths as $filepath ) {
-			if ( is_plugin_active( $filepath ) ) {
-				$this->hide_column_checkbox( $plugin_file, true );
-			}
-		}
 		$message .= '<div style="margin-top: 1em;"><strong>' . esc_html__( 'Required by:' ) . '</strong> ' . esc_html( $sources ) . '</div>';
 
 		return $message;
@@ -604,26 +599,12 @@ class WP_Plugin_Dependencies {
 				unset( $actions['activate'] );
 				$actions = array_merge( array( 'activate' => $activate ), $actions );
 
-				add_action( 'after_plugin_row_' . $plugin_file, array( $this, 'hide_column_checkbox' ), 10, 1 );
+				add_filter( 'plugin_row_hide_checkbox_' . $plugin_file, '__return_true', 10, 2 );
 				break;
 			}
 		}
 
 		return $actions;
-	}
-
-	/**
-	 * Hide plugin row column checkbox for plugins with unmet dependencies.
-	 *
-	 * @param string $plugin_file File name.
-	 * @param bool   $active      Status of plugin.
-	 * @return void
-	 */
-	public function hide_column_checkbox( $plugin_file, $active = false ) {
-		$active = $active ? 'active' : 'inactive';
-		print '<script>';
-		print 'jQuery(".' . esc_attr( $active ) . '[data-plugin=\'' . esc_attr( $plugin_file ) . '\'] .check-column input").remove();';
-		print '</script>';
 	}
 
 	/**
