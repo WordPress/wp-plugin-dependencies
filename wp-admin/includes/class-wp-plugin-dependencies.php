@@ -400,7 +400,9 @@ class WP_Plugin_Dependencies {
 
 	/**
 	 * Modify the plugin row elements.
-	 * Add `Requires: ...` information
+	 * Add `Requires: ...` information.
+	 *
+	 * @since 6.4.0
 	 *
 	 * @param string $message     Text to add after plugin row meta.
 	 * @param string $plugin_file Plugin file.
@@ -422,6 +424,8 @@ class WP_Plugin_Dependencies {
 
 	/**
 	 * Add 'Require Plugins: ...' to plugin install cards when dependent plugin not installed.
+	 *
+	 * @since 6.4.0
 	 *
 	 * @param string $description Short description of plugin.
 	 * @param array  $plugin      Array of plugin data.
@@ -561,6 +565,8 @@ class WP_Plugin_Dependencies {
 	 * Unset plugin action links so required plugins can't be removed or deactivated.
 	 * Only when the requiring plugin is active.
 	 *
+	 * @since 6.4.0
+	 *
 	 * @param array  $actions     Action links.
 	 * @param string $plugin_file Plugin file.
 	 * @return array
@@ -579,6 +585,8 @@ class WP_Plugin_Dependencies {
 	/**
 	 * Disable 'Activate' link if dependencies not met.
 	 * Add 'Dependencies' link to install plugin tab.
+	 *
+	 * @since 6.4.0
 	 *
 	 * @param array  $actions     Plugin action links.
 	 * @param string $plugin_file File name.
