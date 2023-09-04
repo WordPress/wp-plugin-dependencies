@@ -84,7 +84,7 @@ class WP_Plugin_Dependencies {
 	 *
 	 * @return void
 	 */
-	public function initialize() {
+	public static function initialize() {
 		if ( is_admin() ) {
 			add_filter( 'plugin_install_description', array( 'WP_Plugin_Dependencies', 'plugin_install_description_uninstalled' ), 10, 2 );
 			add_filter( 'plugin_install_description', array( 'WP_Plugin_Dependencies', 'set_plugin_card_data' ), 10, 1 );
