@@ -38,6 +38,9 @@ if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
 	deactivate_plugins( __FILE__ );
 }
 
+require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
+( new \WP_Plugin_Dependencies() )->initialize();
+
 // Add new function to wp-admin/includes/plugin-install.php.
 require_once __DIR__ . '/wp-admin/includes/plugin-install.php';
 // Override WP_Plugin_Install_List_Table with our own.
@@ -56,6 +59,3 @@ add_filter(
 		return $class_name;
 	}
 );
-
-require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
-( new \WP_Plugin_Dependencies() )->initialize();
