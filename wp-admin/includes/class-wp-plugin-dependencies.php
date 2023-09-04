@@ -180,6 +180,11 @@ class WP_Plugin_Dependencies {
 
 				self::$requires_plugins[ $plugin ]['RequiresPlugins'] = $sanitized_requires_slugs;
 			}
+
+			//TODO: remove for PR
+			if ( empty( $requires_plugins['RequiresPlugins'] ) ) {
+				self::$plugins[ $plugin ]['RequiresPlugins'] = '';
+			}
 		}
 
 		return $all_requires_headers;
