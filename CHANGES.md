@@ -1,5 +1,4 @@
 [unreleased]
-* refactor hide checkbox to single function
 * override `WP_Plugins_List_Table` to add filter and restructuring of PR
 * add filter to hide plugin row checkbox
 * convert to static class
