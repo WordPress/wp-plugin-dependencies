@@ -1,9 +1,23 @@
-/*
- * Some of this file contains a temporary kludge that is not a11y-friendly.
- *
- * It won't be necessary when merging to Core, as Core's markup will be
- * modified to achieve what the kludge does here.
- */
+.plugin-card .desc {
+	margin-inline: 0;
+}
+
+.plugin-card .name, .plugin-card .desc > p {
+	margin-left: 148px;
+}
+
+@media (min-width: 1101px) {
+	.plugin-card .name, .plugin-card .desc > p {
+		margin-right: 128px;
+	}
+}
+
+@media (min-width: 481px) and (max-width: 781px) {
+	.plugin-card .name, .plugin-card .desc > p {
+		margin-right: 128px;
+	}
+}
+
 .plugin-card .column-description {
 	display: flex;
 	flex-direction: column;
@@ -26,41 +40,6 @@
 	display: none;
 }
 
-/*.plugin-card .plugin-dependency-name:before {
-	font: normal 20px/.5 dashicons;
-	position: relative;
-	top: 4px;
-	left: -2px;
-}
-.plugin-card .plugin-dependencies .plugin-dependency-compatible:before {
-	content: "\f147";
-	color: #007017;
-}
-.plugin-card .plugin-dependencies .plugin-dependency-incompatible:before {
-	content: "\f158";
-	color: #d63638;
-}*/
-
-.plugin-card .desc {
-	margin-inline: 0;
-}
-
-.plugin-card .desc > p {
-	margin-left: 148px;
-}
-
-@media (min-width: 1101px) {
-	.plugin-card .desc > p {
-		margin-right: 128px;
-	}
-}
-
-@media (min-width: 481px) and (max-width: 781px) {
-	.plugin-card .desc > p {
-		margin-right: 128px;
-	}
-}
-
 .plugin-card .plugin-dependencies {
 	background-color: #e5f5fa;
 	border-left: 3px solid #72aee6;
@@ -77,6 +56,8 @@
 	display: flex;
 	flex-wrap: wrap;
 	margin-top: .5em;
+	column-gap: 1%;
+	row-gap: .5em;
 }
 
 .plugin-card .plugin-dependency:nth-child(2),
@@ -85,16 +66,24 @@
 }
 
 .plugin-card .plugin-dependency-name {
-	margin-right: 1em;
-	flex-basis: 50%;
+	flex-basis: 74%;
 }
 
-.plugin-card .plugin-dependency .notice {
-	flex-basis: 100%;
-	margin-bottom: .5em;
-	margin-inline: 0;
+.plugin-card .plugin-dependency .more-details-link {
+	flex-basis: 25%;
+	text-align: right;
 }
 
-.plugin-card .plugin-dependency .button {
-	margin-inline: auto 1em;
+@media (max-width: 939px) {
+	.plugin-card .plugin-dependency-name {
+		flex-basis: 69%;
+	}
+	.plugin-card .plugin-dependency .more-details-link {
+		flex-basis: 30%;
+	}
+}
+
+.plugins #the-list .required-by,
+.plugins #the-list .requires {
+	margin-top: 1em;
 }
