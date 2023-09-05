@@ -860,7 +860,7 @@ class WP_Plugin_Dependencies {
 
 		if ( ! empty( $inactive_dependencies ) ) {
 			$inactive_dependency_names = array_map(
-				function( $dependency ) {
+				function ( $dependency ) {
 					return self::$plugin_data[ $dependency ]['name'];
 				},
 				$inactive_dependencies
