@@ -112,7 +112,10 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function test_get_plugins_should_return_an_array_of_plugin_data() {
 		$wppd        = new WP_Plugin_Dependencies();
 		$get_plugins = $this->make_method_accessible( $wppd, 'get_plugins' );
-		$actual      = $get_plugins->invoke( $wppd );
+		$get_plugins->invoke( $wppd );
+
+		$plugins = $this->make_prop_accessible( $wppd, 'plugins' );
+		$actual = $plugins->getValue( $wppd );
 
 		$this->assertIsArray( $actual, 'Did not return an array.' );
 		$this->assertNotEmpty( $actual, 'The plugin data array is empty.' );
@@ -121,63 +124,20 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	/**
 	 * Tests that plugin headers are correctly parsed.
 	 *
-	 * @dataProvider data_parse_plugin_headers
+	 * @dataProvider data_sanitize_dependency_slugs
 	 *
-	 * @covers WP_Plugin_Dependencies::parse_plugin_headers
+	 * @covers WP_Plugin_Dependencies::sanitize_dependency_slugs
 	 *
-	 * @param array    $plugins_data Raw plugins data.
-	 * @param stdClass $expected     The expected parsed headers.
+	 * @param array $requires_plugins Raw value of the 'Requires Plugins' header.
+	 * @param array $expected         The expected parsed headers.
 	 */
-	public function test_parse_plugin_headers( $plugins_data, $expected ) {
-		$plugin_names = array();
+	public function test_sanitize_dependency_slugs( $requires_plugins, $expected ) {
+		$wppd = new WP_Plugin_Dependencies();
 
-		foreach ( $plugins_data as $name => $data ) {
-			$plugin_data = array_map(
-				static function ( $value, $header ) {
-					return $header . ': ' . $value;
-				},
-				$data,
-				array_keys( $data )
-			);
+		$sanitize_dependency_slugs = $this->make_method_accessible( $wppd, 'sanitize_dependency_slugs' );
+		$actual                    = $sanitize_dependency_slugs->invoke( $wppd, $requires_plugins );
 
-			$plugin_data = "<?php\n/*\n" . implode( "\n", $plugin_data ) . "\n*/\n";
-
-			$plugin_file = $this->create_plugin(
-				$name . '.php',
-				$plugin_data,
-				self::$plugins_dir
-			);
-
-			$plugin_names[] = $plugin_file[1];
-		}
-
-		get_plugins();
-
-		$wppd    = new WP_Plugin_Dependencies();
-		$plugins = $this->make_prop_accessible( $wppd, 'plugins' );
-		$plugins->setValue( $wppd, $plugins_data );
-
-		$parse_plugin_headers = $this->make_method_accessible( $wppd, 'parse_plugin_headers' );
-		$actual               = $parse_plugin_headers->invoke( $wppd );
-
-		// Remove any non testing data, may be single file plugins in test environment.
-		$test_plugin = basename( self::$plugins_dir ) . '/' . $plugin_file[0];
-		$actual      = array_filter(
-			$actual,
-			function ( $key ) use ( $test_plugin ) {
-				return $test_plugin === $key;
-			},
-			ARRAY_FILTER_USE_KEY
-		);
-
-		foreach ( $plugin_names as $plugin_name ) {
-			if ( $expected ) {
-				$expected = array( str_replace( WP_PLUGIN_DIR . '/', '', $plugin_name ) => $expected );
-			}
-			unlink( $plugin_name );
-		}
-
-		$this->assertEquals( $expected, $actual );
+		$this->assertEqualSets( $expected, $actual );
 	}
 
 	/**
@@ -185,142 +145,63 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @return array[]
 	 */
-	public function data_parse_plugin_headers() {
+	public function data_sanitize_dependency_slugs() {
 		return array(
 			'no dependencies'                        => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name' => 'Test Plugin',
-					),
-				),
+				'',
 				'expected'     => array(),
 			),
 			'one dependency'                         => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'hello-dolly',
-					),
-				),
-				'expected'     => array(
-					'RequiresPlugins' => 'hello-dolly',
-				),
+				'requires_plugins' => 'hello-dolly',
+				'expected'     => array( 'hello-dolly' ),
 			),
 			'two dependencies in alphabetical order' => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'hello-dolly, woocommerce',
-					),
-				),
-				'expected'     => array(
-					'RequiresPlugins' => 'hello-dolly, woocommerce',
-				),
+				'requires_plugins' => 'hello-dolly, woocommerce',
+				'expected'     => array( 'hello-dolly', 'woocommerce' ),
 			),
 			'two dependencies in reverse alphabetical order' => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'woocommerce, hello-dolly',
-					),
-				),
-				'expected'     => array(
-					'RequiresPlugins' => 'woocommerce, hello-dolly',
-				),
+				'requires_plugins' => 'woocommerce, hello-dolly',
+				'expected'     => array( 'woocommerce', 'hello-dolly' ),
 			),
 			'two dependencies with a space'          => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'hello-dolly , woocommerce',
-					),
-				),
-				'expected'     => array(
-					'RequiresPlugins' => 'hello-dolly , woocommerce',
-				),
+				'requires_plugins' => 'hello-dolly , woocommerce',
+				'expected'     => array( 'hello-dolly', 'woocommerce' ),
 			),
 			'a repeated dependency'                  => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'hello-dolly, woocommerce, hello-dolly',
-					),
-				),
-				'expected'     => array(
-					'RequiresPlugins' => 'hello-dolly, woocommerce, hello-dolly',
-				),
+				'requires_plugins' => 'hello-dolly, woocommerce, hello-dolly',
+				'expected'     => array( 'hello-dolly', 'woocommerce' ),
 			),
 			'a dependency with an underscore'        => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'hello_dolly',
-					),
-				),
-				'expected'     => array( 'RequiresPlugins' => 'hello_dolly' ),
+				'requires_plugins' => 'hello_dolly',
+				'expected'     => array(),
 			),
 			'a dependency with a space'              => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'hello dolly',
-					),
-				),
-				'expected'     => array( 'RequiresPlugins' => 'hello dolly' ),
+				'requires_plugins' => 'hello dolly',
+				'expected'     => array(),
 			),
 			'a dependency in quotes'                 => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => '"hello-dolly"',
-					),
-				),
-				'expected'     => array( 'RequiresPlugins' => '"hello-dolly"' ),
+				'requires_plugins' => '"hello-dolly"',
+				'expected'     => array(),
 			),
 			'two dependencies in quotes'             => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => '"hello-dolly, woocommerce"',
-					),
-				),
-				'expected'     => array( 'RequiresPlugins' => '"hello-dolly, woocommerce"' ),
+				'requires_plugins' => '"hello-dolly, woocommerce"',
+				'expected'     => array(),
 			),
 			'cyrillic dependencies'                  => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'я-делюсь',
-					),
-				),
-				'expected'     => array( 'RequiresPlugins' => 'я-делюсь' ),
+				'requires_plugins' => 'я-делюсь',
+				'expected'     => array(),
 			),
 			'arabic dependencies'                    => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => 'لينوكس-ويكى',
-					),
-				),
-				'expected'     => array( 'RequiresPlugins' => 'لينوكس-ويكى' ),
+				'requires_plugins' => 'لينوكس-ويكى',
+				'expected'     => array(),
 			),
 			'chinese dependencies'                   => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress',
-					),
-				),
-				'expected'     => array( 'RequiresPlugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress' ),
+				'requires_plugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress',
+				'expected'     => array(),
 			),
 			'symbol dependencies'                    => array(
-				'plugins_data' => array(
-					'test-plugin' => array(
-						'Plugin Name'      => 'Test Plugin',
-						'Requires Plugins' => '★-wpsymbols-★',
-					),
-				),
-				'expected'     => array( 'RequiresPlugins' => '★-wpsymbols-★' ),
+				'requires_plugins' => '★-wpsymbols-★',
+				'expected'     => array(),
 			),
 		);
 	}
@@ -443,20 +324,21 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @dataProvider data_get_dependency_filepaths
 	 *
-	 * @param string[] $dependency_slugs    An array of slugs.
+	 * @param string[] $slugs    An array of slugs.
 	 * @param string[] $plugins  An array of plugin paths.
 	 * @param array    $expected An array of expected filepath results.
 	 */
-	public function test_get_dependency_filepaths( $dependency_slugs, $plugins, $expected ) {
-		$wppd          = new WP_Plugin_Dependencies();
-		$get_filepaths = $this->make_method_accessible( $wppd, 'get_dependency_filepaths' );
-		// $dependency_slugs   = $this->make_prop_accessible( $wppd, 'dependency_slugs' );
+	public function test_get_dependency_filepaths( $slugs, $plugins, $expected ) {
+		$wppd               = new WP_Plugin_Dependencies();
+		$dependency_slugs   = $this->make_prop_accessible( $wppd, 'dependency_slugs' );
 		$dependency_plugins = $this->make_prop_accessible( $wppd, 'plugins' );
+		$get_filepaths      = $this->make_method_accessible( $wppd, 'get_dependency_filepaths' );
 
-		// $dependency_slugs->setValue( $wppd, $dependency_slugs );
+		$dependency_slugs->setValue( $wppd, $slugs );
 		$dependency_plugins->setValue( $wppd, array_flip( $plugins ) );
 
-		$this->assertSame( $expected, $get_filepaths->invoke( $wppd ) );
+		$actual = $get_filepaths->invoke( $wppd );
+		$this->assertSame( $expected, $actual );
 	}
 
 	/**
