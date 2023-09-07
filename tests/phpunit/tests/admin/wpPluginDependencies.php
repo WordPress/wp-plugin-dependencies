@@ -351,7 +351,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		return array(
 			'one dependency'                         => array(
 				'requires_plugins' => 'hello-dolly',
-				'expected'         => 'hello-dolly',
+				'expected'         => array('hello-dolly'),
 			),
 			'two dependencies in alphabetical order' => array(
 				'requires_plugins' => 'hello-dolly, woocommerce',
@@ -459,7 +459,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function data_get_dependency_filepaths() {
 		return array(
 			'no slugs'                                     => array(
-				//'dependency_slugs' => array(),
+				'dependency_slugs' => array(),
 				'plugins'          => array( 'plugin1/plugin1.php', 'plugin2/plugin2.php' ),
 				'expected'         => array(),
 			),
