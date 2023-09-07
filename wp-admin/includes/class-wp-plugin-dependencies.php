@@ -493,7 +493,6 @@ class WP_Plugin_Dependencies {
 			}
 		}
 
-		array_unshift( self::$plugin_card_data );
 		self::$plugin_card_data = array_merge( self::$plugin_card_data, $more_details_link );
 
 		return $description;
