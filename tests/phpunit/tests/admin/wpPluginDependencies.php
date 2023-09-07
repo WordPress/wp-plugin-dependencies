@@ -85,21 +85,21 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Tests that the `$requires_plugins` and `$plugin_data` properties are set to
+	 * Tests that the `$dependencies` and `$dependency_api_data` properties are set to
 	 * empty arrays on instantiation.
 	 *
 	 * @covers WP_Plugin_Dependencies::__construct
 	 */
 	public function test_construct_should_set_requires_plugins_and_plugin_data_to_empty_arrays() {
-		$dependencies        = new WP_Plugin_Dependencies();
-		$requires_plugins    = $this->make_prop_accessible( $dependencies, 'requires_plugins' );
-		$dependency_api_data = $this->make_prop_accessible( $dependencies, 'dependency_api_data' );
+		$wppd                = new WP_Plugin_Dependencies();
+		$dependencies        = $this->make_prop_accessible( $wppd, 'dependencies' );
+		$dependency_api_data = $this->make_prop_accessible( $wppd, 'dependency_api_data' );
 
-		$actual_requires_plugins    = $requires_plugins->getValue( $dependencies );
-		$actual_dependency_api_data = $dependency_api_data->getValue( $dependencies );
+		$actual_dependencies        = $dependencies->getValue( $wppd );
+		$actual_dependency_api_data = $dependency_api_data->getValue( $wppd );
 
-		$this->assertIsArray( $actual_requires_plugins, '$requires_plugins is not an array.' );
-		$this->assertEmpty( $actual_requires_plugins, '$requires_plugins is not empty.' );
+		$this->assertIsArray( $actual_dependencies, '$dependencies is not an array.' );
+		$this->assertEmpty( $actual_dependencies, '$dependencies is not empty.' );
 		$this->assertIsArray( $actual_dependency_api_data, '$dependency_api_data is not an array.' );
 		$this->assertEmpty( $actual_dependency_api_data, '$dependency_api_data is not empty.' );
 	}
@@ -110,9 +110,9 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @covers WP_Plugin_Dependencies::get_plugins
 	 */
 	public function test_get_plugins_should_return_an_array_of_plugin_data() {
-		$dependencies = new WP_Plugin_Dependencies();
-		$get_plugins  = $this->make_method_accessible( $dependencies, 'get_plugins' );
-		$actual       = $get_plugins->invoke( $dependencies );
+		$wppd        = new WP_Plugin_Dependencies();
+		$get_plugins = $this->make_method_accessible( $wppd, 'get_plugins' );
+		$actual      = $get_plugins->invoke( $wppd );
 
 		$this->assertIsArray( $actual, 'Did not return an array.' );
 		$this->assertNotEmpty( $actual, 'The plugin data array is empty.' );
@@ -153,12 +153,12 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 		get_plugins();
 
-		$dependencies = new WP_Plugin_Dependencies();
-		$plugins      = $this->make_prop_accessible( $dependencies, 'plugins' );
-		$plugins->setValue( $dependencies, $plugins_data );
+		$wppd    = new WP_Plugin_Dependencies();
+		$plugins = $this->make_prop_accessible( $wppd, 'plugins' );
+		$plugins->setValue( $wppd, $plugins_data );
 
-		$parse_plugin_headers = $this->make_method_accessible( $dependencies, 'parse_plugin_headers' );
-		$actual               = $parse_plugin_headers->invoke( $dependencies );
+		$parse_plugin_headers = $this->make_method_accessible( $wppd, 'parse_plugin_headers' );
+		$actual               = $parse_plugin_headers->invoke( $wppd );
 
 		// Remove any non testing data, may be single file plugins in test environment.
 		$test_plugin = basename( self::$plugins_dir ) . '/' . $plugin_file[0];
@@ -336,10 +336,10 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @param array  $expected         The sanitized dependency slug(s).
 	 */
 	public function test_slugs_are_correctly_sanitized_from_the_requiresplugins_header( $requires_plugins, $expected ) {
-		$dependencies = new WP_Plugin_Dependencies();
-		$sanitize     = $this->make_method_accessible( $dependencies, 'sanitize_required_headers' );
-		$headers      = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
-		$actual       = $sanitize->invoke( $dependencies, $headers );
+		$wppd     = new WP_Plugin_Dependencies();
+		$sanitize = $this->make_method_accessible( $wppd, 'sanitize_required_headers' );
+		$headers  = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
+		$actual   = $sanitize->invoke( $wppd, $headers );
 		$this->assertSame( $expected, $actual );
 	}
 
@@ -437,15 +437,15 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @param array    $expected An array of expected filepath results.
 	 */
 	public function test_get_dependency_filepaths( $slugs, $plugins, $expected ) {
-		$dependencies       = new WP_Plugin_Dependencies();
-		$get_filepaths      = $this->make_method_accessible( $dependencies, 'get_dependency_filepaths' );
-		$dependency_slugs   = $this->make_prop_accessible( $dependencies, 'slugs' );
-		$dependency_plugins = $this->make_prop_accessible( $dependencies, 'plugins' );
+		$wppd               = new WP_Plugin_Dependencies();
+		$get_filepaths      = $this->make_method_accessible( $wppd, 'get_dependency_filepaths' );
+		$dependency_slugs   = $this->make_prop_accessible( $wppd, 'slugs' );
+		$dependency_plugins = $this->make_prop_accessible( $wppd, 'plugins' );
 
-		$dependency_slugs->setValue( $dependencies, $slugs );
-		$dependency_plugins->setValue( $dependencies, array_flip( $plugins ) );
+		$dependency_slugs->setValue( $wppd, $slugs );
+		$dependency_plugins->setValue( $wppd, array_flip( $plugins ) );
 
-		$this->assertSame( $expected, $get_filepaths->invoke( $dependencies ) );
+		$this->assertSame( $expected, $get_filepaths->invoke( $wppd ) );
 	}
 
 	/**
@@ -535,15 +535,15 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @covers WP_Plugin_Dependencies::get_dependency_filepaths
 	 */
 	public function test_get_dependency_filepaths_with_unmatched_dirnames_and_dirnames_cache() {
-		$dependencies              = new WP_Plugin_Dependencies();
-		$get_filepaths             = $this->make_method_accessible( $dependencies, 'get_dependency_filepaths' );
-		$dependency_slugs          = $this->make_prop_accessible( $dependencies, 'slugs' );
-		$dependency_plugins        = $this->make_prop_accessible( $dependencies, 'plugins' );
-		$dependency_dirnames       = $this->make_prop_accessible( $dependencies, 'plugin_dirnames' );
-		$dependency_dirnames_cache = $this->make_prop_accessible( $dependencies, 'plugin_dirnames_cache' );
+		$wppd                      = new WP_Plugin_Dependencies();
+		$get_filepaths             = $this->make_method_accessible( $wppd, 'get_dependency_filepaths' );
+		$dependency_slugs          = $this->make_prop_accessible( $wppd, 'slugs' );
+		$dependency_plugins        = $this->make_prop_accessible( $wppd, 'plugins' );
+		$dependency_dirnames       = $this->make_prop_accessible( $wppd, 'plugin_dirnames' );
+		$dependency_dirnames_cache = $this->make_prop_accessible( $wppd, 'plugin_dirnames_cache' );
 
 		$dependency_dirnames_cache->setValue(
-			$dependencies,
+			$wppd,
 			array(
 				'plugin1/plugin1.php',
 				'plugin2/plugin2.php',
@@ -551,9 +551,9 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		);
 
 		// An additional plugin has been added during runtime.
-		$dependency_slugs->setValue( $dependencies, array( 'plugin1', 'plugin2', 'plugin3' ) );
+		$dependency_slugs->setValue( $wppd, array( 'plugin1', 'plugin2', 'plugin3' ) );
 		$dependency_plugins->setValue(
-			$dependencies,
+			$wppd,
 			// This is flipped as paths are stored in the keys.
 			array(
 				'plugin1/plugin1.php' => '',
@@ -569,8 +569,8 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		);
 
 		// The cache no longer matches the stored directory names and should be refreshed.
-		$dependency_dirnames->setValue( $dependencies, $expected );
+		$dependency_dirnames->setValue( $wppd, $expected );
 
-		$this->assertSame( $expected, $get_filepaths->invoke( $dependencies ) );
+		$this->assertSame( $expected, $get_filepaths->invoke( $wppd ) );
 	}
 }
