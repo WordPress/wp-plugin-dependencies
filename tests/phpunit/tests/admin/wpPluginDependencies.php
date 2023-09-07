@@ -90,7 +90,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @covers WP_Plugin_Dependencies::__construct
 	 */
-	public function test_construct_should_set_requires_plugins_and_plugin_data_to_empty_arrays() {
+	public function test_construct_should_set_dependencies_and_dependency_api_data_to_empty_arrays() {
 		$wppd                = new WP_Plugin_Dependencies();
 		$dependencies        = $this->make_prop_accessible( $wppd, 'dependencies' );
 		$dependency_api_data = $this->make_prop_accessible( $wppd, 'dependency_api_data' );
@@ -121,17 +121,17 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	/**
 	 * Tests that plugin headers are correctly parsed.
 	 *
-	 * @dataProvider data_parse_plugin_headers
+	 * @dataProvider data_read_dependencies_from_plugin_headers
 	 *
-	 * @covers WP_Plugin_Dependencies::parse_plugin_headers
+	 * @covers WP_Plugin_Dependencies::read_dependencies_from_plugin_headers
 	 *
-	 * @param array    $plugins_data Raw plugins data.
+	 * @param array    $dependency_api_data Raw plugins data.
 	 * @param stdClass $expected     The expected parsed headers.
 	 */
-	public function test_parse_plugin_headers( $plugins_data, $expected ) {
+	public function test_parse_plugin_headers( $dependency_api_data, $expected ) {
 		$plugin_names = array();
 
-		foreach ( $plugins_data as $name => $data ) {
+		foreach ( $dependency_api_data as $name => $data ) {
 			$plugin_data = array_map(
 				static function ( $value, $header ) {
 					return $header . ': ' . $value;
@@ -155,9 +155,9 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 		$wppd    = new WP_Plugin_Dependencies();
 		$plugins = $this->make_prop_accessible( $wppd, 'plugins' );
-		$plugins->setValue( $wppd, $plugins_data );
+		$plugins->setValue( $wppd, $dependency_api_data );
 
-		$parse_plugin_headers = $this->make_method_accessible( $wppd, 'parse_plugin_headers' );
+		$parse_plugin_headers = $this->make_method_accessible( $wppd, 'read_dependencies_from_plugin_headers' );
 		$actual               = $parse_plugin_headers->invoke( $wppd );
 
 		// Remove any non testing data, may be single file plugins in test environment.
@@ -185,7 +185,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @return array[]
 	 */
-	public function data_parse_plugin_headers() {
+	public function data_read_dependencies_from_plugin_headers() {
 		return array(
 			'no dependencies'                        => array(
 				'plugins_data' => array(
