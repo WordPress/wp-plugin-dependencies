@@ -338,8 +338,6 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function test_slugs_are_correctly_sanitized_from_the_requiresplugins_header( $requires_plugins, $expected ) {
 		$wppd     = new WP_Plugin_Dependencies();
 		$sanitize = $this->make_method_accessible( $wppd, 'sanitize_dependency_slugs' );
-		// $headers  = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
-		//$headers = array( 'test-plugin' => $requires_plugins );
 		$actual  = $sanitize->invoke( $wppd, $requires_plugins );
 		$this->assertSame( $expected, $actual );
 	}
@@ -542,7 +540,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function test_get_dependency_filepaths_with_unmatched_dirnames_and_dirnames_cache() {
 		$wppd                      = new WP_Plugin_Dependencies();
 		$get_filepaths             = $this->make_method_accessible( $wppd, 'get_dependency_filepaths' );
-		$dependency_slugs          = $this->make_prop_accessible( $wppd, 'slugs' );
+		$dependency_slugs          = $this->make_prop_accessible( $wppd, 'dependency_slugs' );
 		$dependency_plugins        = $this->make_prop_accessible( $wppd, 'plugins' );
 		$dependency_dirnames       = $this->make_prop_accessible( $wppd, 'plugin_dirnames' );
 		$dependency_dirnames_cache = $this->make_prop_accessible( $wppd, 'plugin_dirnames_cache' );
