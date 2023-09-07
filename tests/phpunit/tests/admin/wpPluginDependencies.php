@@ -91,17 +91,17 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 * @covers WP_Plugin_Dependencies::__construct
 	 */
 	public function test_construct_should_set_requires_plugins_and_plugin_data_to_empty_arrays() {
-		$dependencies     = new WP_Plugin_Dependencies();
-		$requires_plugins = $this->make_prop_accessible( $dependencies, 'requires_plugins' );
-		$plugin_data      = $this->make_prop_accessible( $dependencies, 'plugin_data' );
+		$dependencies        = new WP_Plugin_Dependencies();
+		$requires_plugins    = $this->make_prop_accessible( $dependencies, 'requires_plugins' );
+		$dependency_api_data = $this->make_prop_accessible( $dependencies, 'dependency_api_data' );
 
-		$actual_requires_plugins = $requires_plugins->getValue( $dependencies );
-		$actual_plugin_data      = $plugin_data->getValue( $dependencies );
+		$actual_requires_plugins    = $requires_plugins->getValue( $dependencies );
+		$actual_dependency_api_data = $dependency_api_data->getValue( $dependencies );
 
 		$this->assertIsArray( $actual_requires_plugins, '$requires_plugins is not an array.' );
 		$this->assertEmpty( $actual_requires_plugins, '$requires_plugins is not empty.' );
-		$this->assertIsArray( $actual_plugin_data, '$plugin_data is not an array.' );
-		$this->assertEmpty( $actual_plugin_data, '$plugin_data is not empty.' );
+		$this->assertIsArray( $actual_dependency_api_data, '$dependency_api_data is not an array.' );
+		$this->assertEmpty( $actual_dependency_api_data, '$dependency_api_data is not empty.' );
 	}
 
 	/**
@@ -133,7 +133,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 
 		foreach ( $plugins_data as $name => $data ) {
 			$plugin_data = array_map(
-				static function( $value, $header ) {
+				static function ( $value, $header ) {
 					return $header . ': ' . $value;
 				},
 				$data,
@@ -164,7 +164,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$test_plugin = basename( self::$plugins_dir ) . '/' . $plugin_file[0];
 		$actual      = array_filter(
 			$actual,
-			function( $key ) use ( $test_plugin ) {
+			function ( $key ) use ( $test_plugin ) {
 				return $test_plugin === $key;
 			},
 			ARRAY_FILTER_USE_KEY
