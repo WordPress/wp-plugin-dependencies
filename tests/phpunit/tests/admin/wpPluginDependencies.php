@@ -90,7 +90,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @covers WP_Plugin_Dependencies::__construct
 	 */
-	public function test_construct_should_set_requires_plugins_and_plugin_data_to_empty_arrays() {
+	public function test_construct_should_set_dependencies_and_dependency_api_data_to_empty_arrays() {
 		$wppd                = new WP_Plugin_Dependencies();
 		$dependencies        = $this->make_prop_accessible( $wppd, 'dependencies' );
 		$dependency_api_data = $this->make_prop_accessible( $wppd, 'dependency_api_data' );
