@@ -353,75 +353,79 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		return array(
 			'one dependency'                         => array(
 				'requires_plugins' => 'hello-dolly',
-				'expected'         => array( 'hello-dolly' ),
+				'expected'         => 'hello-dolly',
 			),
 			'two dependencies in alphabetical order' => array(
 				'requires_plugins' => 'hello-dolly, woocommerce',
-				'expected'         => array( 'hello-dolly', 'woocommerce' ),
+				'expected'         => 'hello-dolly',
+				'woocommerce',
 			),
 			'two dependencies in reverse alphabetical order' => array(
 				'requires_plugins' => 'woocommerce, hello-dolly',
-				'expected'         => array( 'hello-dolly', 'woocommerce' ),
+				'expected'         => 'hello-dolly',
+				'woocommerce',
 			),
 			'two dependencies with a space'          => array(
 				'requires_plugins' => 'hello-dolly , woocommerce',
-				'expected'         => array( 'hello-dolly', 'woocommerce' ),
+				'expected'         => 'hello-dolly',
+				'woocommerce',
 			),
 			'a repeated dependency'                  => array(
 				'requires_plugins' => 'hello-dolly, woocommerce, hello-dolly',
-				'expected'         => array( 'hello-dolly', 'woocommerce' ),
+				'expected'         => 'hello-dolly',
+				'woocommerce',
 			),
 			'a dependency with an underscore'        => array(
 				'requires_plugins' => 'hello_dolly',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'a dependency with a space'              => array(
 				'requires_plugins' => 'hello dolly',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'a dependency in quotes'                 => array(
 				'requires_plugins' => '"hello-dolly"',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'two dependencies in quotes'             => array(
 				'requires_plugins' => '"hello-dolly, woocommerce"',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'a dependency with multiple dashes'      => array(
 				'requires_plugins' => 'this-is-a-valid-slug',
-				'expected'         => array( 'this-is-a-valid-slug' ),
+				'expected'         => 'this-is-a-valid-slug',
 			),
 			'a dependency with trailing dash'        => array(
 				'requires_plugins' => 'ending-dash-',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'a dependency with leading dash'         => array(
 				'requires_plugins' => '-slug',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'a dependency with double dashes'        => array(
 				'requires_plugins' => 'abc--123',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'a dependency starting with numbers'     => array(
 				'requires_plugins' => '123slug',
-				'expected'         => array( '123slug' ),
+				'expected'         => '123slug',
 			),
 			'cyrillic dependencies'                  => array(
 				'requires_plugins' => 'я-делюсь',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'arabic dependencies'                    => array(
 				'requires_plugins' => 'لينوكس-ويكى',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'chinese dependencies'                   => array(
 				'requires_plugins' => '唐诗宋词chinese-poem,社交登录,腾讯微博一键登录,豆瓣秀-for-wordpress',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 			'symbol dependencies'                    => array(
 				'requires_plugins' => '★-wpsymbols-★',
-				'expected'         => array(),
+				'expected'         => '',
 			),
 		);
 	}
