@@ -332,14 +332,15 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	 *
 	 * @covers WP_Plugin_Dependencies::sanitize_dependency_slugs
 	 *
-	 * @param string $dependency_api_data The unsanitized dependency slug(s).
+	 * @param string $requires_plugins The unsanitized dependency slug(s).
 	 * @param array  $expected         The sanitized dependency slug(s).
 	 */
 	public function test_slugs_are_correctly_sanitized_from_the_requiresplugins_header( $requires_plugins, $expected ) {
 		$wppd     = new WP_Plugin_Dependencies();
 		$sanitize = $this->make_method_accessible( $wppd, 'sanitize_dependency_slugs' );
-		$headers  = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
-		$actual   = $sanitize->invoke( $wppd, $headers );
+		// $headers  = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
+		$headers = array( 'test-plugin' => $requires_plugins );
+		$actual  = $sanitize->invoke( $wppd, $headers );
 		$this->assertSame( $expected, $actual );
 	}
 
