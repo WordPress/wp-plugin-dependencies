@@ -955,7 +955,7 @@ class WP_Plugin_Dependencies {
 				 */
 				$circular_dependencies = array_merge(
 					$circular_dependencies,
-					self::check_for_circular_dependencies( $dependents, array_unique($dependencies_of_the_dependency ))
+					self::check_for_circular_dependencies( $dependents, array_unique( $dependencies_of_the_dependency ) )
 				);
 			}
 		}
