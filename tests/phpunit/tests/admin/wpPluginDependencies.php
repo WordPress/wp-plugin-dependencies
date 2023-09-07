@@ -339,8 +339,8 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 		$wppd     = new WP_Plugin_Dependencies();
 		$sanitize = $this->make_method_accessible( $wppd, 'sanitize_dependency_slugs' );
 		// $headers  = array( 'test-plugin' => array( 'RequiresPlugins' => $requires_plugins ) );
-		$headers = array( 'test-plugin' => $requires_plugins );
-		$actual  = $sanitize->invoke( $wppd, $headers );
+		//$headers = array( 'test-plugin' => $requires_plugins );
+		$actual  = $sanitize->invoke( $wppd, $requires_plugins );
 		$this->assertSame( $expected, $actual );
 	}
 
