@@ -442,10 +442,10 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function test_get_dependency_filepaths( $dependency_slugs, $plugins, $expected ) {
 		$wppd               = new WP_Plugin_Dependencies();
 		$get_filepaths      = $this->make_method_accessible( $wppd, 'get_dependency_filepaths' );
-		$dependency_slugs   = $this->make_prop_accessible( $wppd, 'dependency_slugs' );
+		//$dependency_slugs   = $this->make_prop_accessible( $wppd, 'dependency_slugs' );
 		$dependency_plugins = $this->make_prop_accessible( $wppd, 'plugins' );
 
-		$dependency_slugs->setValue( $wppd, $dependency_slugs );
+		//$dependency_slugs->setValue( $wppd, $dependency_slugs );
 		$dependency_plugins->setValue( $wppd, array_flip( $plugins ) );
 
 		$this->assertSame( $expected, $get_filepaths->invoke( $wppd ) );
@@ -459,7 +459,7 @@ class Tests_Admin_WpPluginDependencies extends WP_UnitTestCase {
 	public function data_get_dependency_filepaths() {
 		return array(
 			'no slugs'                                     => array(
-				'dependency_slugs' => array(),
+				//'dependency_slugs' => array(),
 				'plugins'          => array( 'plugin1/plugin1.php', 'plugin2/plugin2.php' ),
 				'expected'         => array(),
 			),
