@@ -40,6 +40,7 @@ abstract class WP_PluginDependencies_UnitTestCase extends WP_UnitTestCase {
 	 */
 	public static function set_up_before_class() {
 		parent::set_up_before_class();
+		
 		self::$instance    = new WP_Plugin_Dependencies();
 		self::$plugins_dir = WP_PLUGIN_DIR . '/wp_plugin_dependencies_plugin';
 		@mkdir( self::$plugins_dir );
@@ -49,8 +50,9 @@ abstract class WP_PluginDependencies_UnitTestCase extends WP_UnitTestCase {
 	 * Removes the plugins directory after all tests run.
 	 */
 	public static function tear_down_after_class() {
-		$this->rmdir( self::$plugins_dir );
-		$this->delete_folders( self::$plugins_dir );
+		array_map( 'unlink', array_filter( (array) glob( self::$plugins_dir . '/*' ) ) );
+		rmdir( self::$plugins_dir );
+		
 		parent::tear_down_after_class();
 	}
 
