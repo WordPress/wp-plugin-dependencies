@@ -61,7 +61,7 @@ abstract class WP_PluginDependencies_UnitTestCase extends WP_UnitTestCase {
 	 * Resets all static properties to a default value after each test.
 	 */
 	public function tear_down() {
-		foreach( self::$static_properties as $name => $default_value ) {
+		foreach ( self::$static_properties as $name => $default_value ) {
 			$this->set_property_value( $name, $default_value );
 		}
 
@@ -72,7 +72,7 @@ abstract class WP_PluginDependencies_UnitTestCase extends WP_UnitTestCase {
 	 * Temporarily modifies the accessibility of a property to change its value.
 	 *
 	 * @param string $property The property's name.
-	 * @param mixed $value The new value.
+	 * @param mixed  $value The new value.
 	 */
 	public function set_property_value( $property, $value ) {
 		$reflection_property = new ReflectionProperty( self::$instance, $property );
@@ -106,5 +106,4 @@ abstract class WP_PluginDependencies_UnitTestCase extends WP_UnitTestCase {
 		$method->setAccessible( true );
 		return $method;
 	}
-
 }

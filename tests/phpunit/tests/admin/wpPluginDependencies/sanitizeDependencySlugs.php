@@ -142,5 +142,4 @@ class Tests_Admin_WPPluginDependencies_SanitizeDependencySlugs extends WP_Plugin
 			),
 		);
 	}
-
 }

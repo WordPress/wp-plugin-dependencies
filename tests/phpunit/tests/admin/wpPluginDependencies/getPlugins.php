@@ -27,5 +27,4 @@ class Tests_Admin_WPPluginDependencies_GetPlugins extends WP_PluginDependencies_
 		$this->assertIsArray( $actual, 'Did not return an array.' );
 		$this->assertNotEmpty( $actual, 'The plugin data array is empty.' );
 	}
-
 }

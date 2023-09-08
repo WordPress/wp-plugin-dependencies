@@ -166,5 +166,4 @@ class Tests_Admin_WPPluginDependencies_GetDependencyFilepaths extends WP_PluginD
 
 		$this->assertSame( $expected, $actual );
 	}
-
 }
