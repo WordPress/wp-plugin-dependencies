@@ -52,7 +52,7 @@ abstract class WP_PluginDependencies_UnitTestCase extends WP_UnitTestCase {
 	public static function tear_down_after_class() {
 		array_map( 'unlink', array_filter( (array) glob( self::$plugins_dir . '/*' ) ) );
 		rmdir( self::$plugins_dir );
-		
+
 		parent::tear_down_after_class();
 	}
 
