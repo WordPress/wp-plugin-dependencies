@@ -4,9 +4,9 @@ Contributors: afragen, costdev, pbiron
 Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 License: MIT
 Network: true
-Requires at least: 6.0
+Requires at least: 6.4
 Requires PHP: 7.0
-Tested up to: 6.3
+Tested up to: 6.4
 Stable tag: 2.0.2
 
 ## Description

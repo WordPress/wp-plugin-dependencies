@@ -3,6 +3,7 @@
 * add filter to hide plugin row checkbox
 * convert to static class
 * update plugin card description for clarity
+* update Requires WP to 6.4 due to `wp_admin_notice()` use
 
 #### 2.0.2 / 2023-08-18
 * add single file plugin to `$plugin_dirnames`

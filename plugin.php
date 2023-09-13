@@ -13,10 +13,10 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 2.0.2.5
+ * Version: 2.0.2.6
  * License: MIT
  * Network: true
- * Requires at least: 6.0
+ * Requires at least: 6.4
  * Requires PHP: 7.0
  * GitHub Plugin URI: https://github.com/WordPress/wp-plugin-dependencies
  * Primary Branch: trunk
