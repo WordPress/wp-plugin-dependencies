@@ -7,13 +7,13 @@
  *
  * @package WordPress
  * @subpackage Administration
- * @since 6.4.0
+ * @since 6.5.0
  */
 
 /**
  * Gets the markup for the plugin install action button.
  *
- * @since 6.4.0
+ * @since 6.5.0
  *
  * @param string       $name           Plugin name.
  * @param array|object $data           {
