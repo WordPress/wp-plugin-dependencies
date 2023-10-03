@@ -26,6 +26,7 @@
  * @param bool         $compatible_php   The result of a PHP compatibility check.
  * @param bool         $compatible_wp    The result of a WP compatibility check.
  * @return string $button The markup for the dependency row button.
+ * phpcs:disable
  */
 function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible_wp ) {
 	$button           = '';
