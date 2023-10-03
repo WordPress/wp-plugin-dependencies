@@ -17,15 +17,6 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-plugins-list-table.php';
  */
 class PD_List_Table extends \WP_Plugins_List_Table {
 
-
-	/**
-	 * @global string $status
-	 * @global int $page
-	 * @global string $s
-	 * @global array $totals
-	 *
-	 * @param array $item
-	 */
 	/**
 	 * @global string $status
 	 * @global int $page
