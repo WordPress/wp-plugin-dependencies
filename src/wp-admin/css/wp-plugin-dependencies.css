@@ -1,4 +1,10 @@
+.check-column .label-covers-full-cell:hover + input:not(:disabled) {
+	box-shadow: 0 0 0 1px #2271b1;
+}
+
 .plugin-card .desc {
+	margin-left: 148px; /* icon + margin */
+	margin-right: 128px; /* action links + margin */
 	margin-inline: 0;
 }
 
@@ -70,8 +76,11 @@
 }
 
 .plugin-card .plugin-dependency .more-details-link {
-	flex-basis: 25%;
-	text-align: right;
+	margin-left: auto;
+}
+
+.rtl .plugin-card .plugin-dependency .more-details-link {
+	margin-right: auto;
 }
 
 @media (max-width: 939px) {
@@ -79,7 +88,6 @@
 		flex-basis: 69%;
 	}
 	.plugin-card .plugin-dependency .more-details-link {
-		flex-basis: 30%;
 	}
 }
 
