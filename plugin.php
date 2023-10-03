@@ -38,24 +38,14 @@ if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
 	deactivate_plugins( __FILE__ );
 }
 
-require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
+require_once __DIR__ . '/src/wp-includes/class-wp-plugin-dependencies.php';
 \WP_Plugin_Dependencies::initialize();
 
-// Add new function to wp-admin/includes/plugin-install.php.
-require_once __DIR__ . '/wp-admin/includes/plugin-install.php';
-// Override WP_Plugin_Install_List_Table with our own.
-require_once __DIR__ . '/wp-admin/includes/class-pd-install-list-table.php';
-// Override WP_Plugins_List_Table with our own.
-require_once __DIR__ . '/wp-admin/includes/class-pd-list-table.php';
-add_filter(
-	'wp_list_table_class_name',
-	static function ( $class_name ) {
-		if ( 'WP_Plugin_Install_List_Table' === $class_name ) {
-			$class_name = __NAMESPACE__ . '\PD_Install_List_Table';
-		} elseif ( 'WP_Plugins_List_Table' === $class_name ) {
-			$class_name = __NAMESPACE__ . '\PD_List_Table';
-		}
-
-		return $class_name;
+// Let's get started.
+add_action(
+	'plugins_loaded',
+	function () {
+		require_once __DIR__ . '/src/Init_Plugin.php';
+		Init_Plugin::init();
 	}
 );
