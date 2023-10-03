@@ -37,6 +37,8 @@ class Init_Plugin {
 			global $pagenow;
 			if ( in_array( $pagenow, array( 'plugins.php', 'plugin-install.php' ), true ) ) {
 				add_action( 'admin_notices', array( 'WP_Plugin_Dependencies', 'display_admin_notice_for_unmet_dependencies' ) );
+				add_action( 'admin_notices', array( 'WP_Plugin_Dependencies', 'display_admin_notice_for_deactivated_dependents' ) );
+				add_action( 'admin_notices', array( 'WP_Plugin_Dependencies', 'display_admin_notice_for_circular_dependencies' ) );
 			}
 
 			add_filter(
