@@ -527,7 +527,8 @@ class WP_Plugin_Dependencies {
 				continue;
 			}
 
-			self::$plugins[ $plugin ]['RequiresPlugins'] = $header['RequiresPlugins'];
+			self::$plugins[ $plugin ]['RequiresPlugins'] = $header['RequiresPlugins']; // TODO: remove for PR.
+
 			$dependency_slugs                            = self::sanitize_dependency_slugs( $header['RequiresPlugins'] );
 			self::$dependencies[ $plugin ]               = $dependency_slugs;
 			self::$dependency_slugs                      = array_merge( self::$dependency_slugs, $dependency_slugs );
