@@ -13,7 +13,7 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 2.0.2.6
+ * Version: 2.0.2.7
  * License: MIT
  * Network: true
  * Requires at least: 6.4
@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // TODO: update with correct version.
-if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
+if ( version_compare( get_bloginfo( 'version' ), '6.5-beta1', '>=' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	deactivate_plugins( __FILE__ );
 }
