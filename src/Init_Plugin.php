@@ -32,7 +32,7 @@ class Init_Plugin {
 		if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array( __NAMESPACE__ . '\Init_Plugin', 'enqueue_styles' ) );
 			add_action( 'admin_enqueue_scripts', array( __NAMESPACE__ . '\Init_Plugin', 'enqueue_scripts' ) );
-			add_action( 'wp_ajax_check_plugin_dependencies', array( 'WP_Plugin_Dependencies', 'check_plugin_dependencies' ) );
+			add_action( 'wp_ajax_check_plugin_dependencies', array( 'WP_Plugin_Dependencies', 'check_plugin_dependencies_during_ajax' ) );
 
 			global $pagenow;
 			if ( in_array( $pagenow, array( 'plugins.php', 'plugin-install.php' ), true ) ) {

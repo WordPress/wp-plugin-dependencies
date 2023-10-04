@@ -340,36 +340,36 @@ class PD_Install_List_Table extends \WP_Plugin_Install_List_Table {
 		return $dependencies_notice;
 	}
 
-/**
- * Creates a 'More details' link for the plugin.
- *
- * @since 6.5.0
- *
- * @param string $name The plugin's name.
- * @param string $slug The plugin's slug.
- * @return string The 'More details' link for the plugin.
- */
-protected function get_more_details_link( $name, $slug ) {
-	$url = add_query_arg(
-		array(
-			'tab'       => 'plugin-information',
-			'plugin'    => $slug,
-			'TB_iframe' => 'true',
-			'width'     => '600',
-			'height'    => '550',
-		),
-		network_admin_url( 'plugin-install.php' )
-	);
+	/**
+	 * Creates a 'More details' link for the plugin.
+	 *
+	 * @since 6.5.0
+	 *
+	 * @param string $name The plugin's name.
+	 * @param string $slug The plugin's slug.
+	 * @return string The 'More details' link for the plugin.
+	 */
+	protected function get_more_details_link( $name, $slug ) {
+		$url = add_query_arg(
+			array(
+				'tab'       => 'plugin-information',
+				'plugin'    => $slug,
+				'TB_iframe' => 'true',
+				'width'     => '600',
+				'height'    => '550',
+			),
+			network_admin_url( 'plugin-install.php' )
+		);
 
-	$more_details_link = sprintf(
-		'<a href="%1$s" class="more-details-link thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%4$s</a>',
-		esc_url( $url ),
-		/* translators: %s: Plugin name. */
-		sprintf( __( 'More information about %s' ), esc_html( $name ) ),
-		esc_attr( $name ),
-		__( 'More Details' )
-	);
+		$more_details_link = sprintf(
+			'<a href="%1$s" class="more-details-link thickbox open-plugin-details-modal" aria-label="%2$s" data-title="%3$s">%4$s</a>',
+			esc_url( $url ),
+			/* translators: %s: Plugin name. */
+			sprintf( __( 'More information about %s' ), esc_html( $name ) ),
+			esc_attr( $name ),
+			__( 'More Details' )
+		);
 
-	return $more_details_link;
-}
+		return $more_details_link;
+	}
 }
