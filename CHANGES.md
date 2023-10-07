@@ -1,6 +1,7 @@
 [unreleased]
+
+#### 3.0.0 / 2023-10-06
 * override `WP_Plugins_List_Table` to add filter and restructuring of PR
-* add filter to hide plugin row checkbox
 * convert to static class
 * update plugin card description for clarity
 * update Requires WP to 6.4 due to `wp_admin_notice()` use
