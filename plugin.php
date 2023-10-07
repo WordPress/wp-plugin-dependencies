@@ -13,10 +13,10 @@
  * Plugin URI:  https://wordpress.org/plugins/wp-plugin-dependencies
  * Description: Parses 'Requires Plugins' header and information about dependencies.
  * Author: Andy Fragen, Colin Stewart, Paul Biron
- * Version: 2.0.2
+ * Version: 3.0.0
  * License: MIT
  * Network: true
- * Requires at least: 6.0
+ * Requires at least: 6.4
  * Requires PHP: 7.0
  * GitHub Plugin URI: https://github.com/WordPress/wp-plugin-dependencies
  * Primary Branch: trunk
@@ -33,22 +33,19 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // TODO: update with correct version.
-if ( version_compare( get_bloginfo( 'version' ), '6.4-beta1', '>=' ) ) {
+if ( version_compare( get_bloginfo( 'version' ), '6.5-beta1', '>=' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	deactivate_plugins( __FILE__ );
 }
 
-require_once __DIR__ . '/wp-admin/includes/class-wp-plugin-dependencies.php';
-require_once __DIR__ . '/wp-admin/includes/plugin-install.php';
+require_once __DIR__ . '/src/wp-includes/class-wp-plugin-dependencies.php';
+\WP_Plugin_Dependencies::initialize();
 
-// Override WP_Plugin_Install_List_Table with our own.
-require_once __DIR__ . '/wp-admin/includes/class-pd-install-list-table.php';
-add_filter(
-	'wp_list_table_class_name',
-	static function( $class_name ) {
-		if ( 'WP_Plugin_Install_List_Table' === $class_name ) {
-			$class_name = __NAMESPACE__ . '\PD_Install_List_Table';
-		}
-		return $class_name;
+// Let's get started.
+add_action(
+	'plugins_loaded',
+	function () {
+		require_once __DIR__ . '/src/Init_Plugin.php';
+		Init_Plugin::init();
 	}
 );

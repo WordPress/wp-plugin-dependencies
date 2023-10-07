@@ -13,9 +13,14 @@
 			<exclude>./tests/test-sample.php</exclude>
 		</testsuite>
 	</testsuites>
-	<filter>
-		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">./wp-admin</directory>
-		</whitelist>
-	</filter>
+
+	<coverage includeUncoveredFiles="true" processUncoveredFiles="false" pathCoverage="true" cacheDirectory="./tests/phpunit/build/logs/phpunit-cache">
+        <include>
+            <directory suffix=".php">wp-admin</directory>
+        </include>
+        <report>
+            <text outputFile="php://stdout" showOnlySummary="true"/>
+            <html outputDirectory="./tests/phpunit/build/logs/coverage-html"/>
+        </report>
+    </coverage>
 </phpunit>

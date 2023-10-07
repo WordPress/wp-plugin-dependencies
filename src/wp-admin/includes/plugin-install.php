@@ -7,13 +7,13 @@
  *
  * @package WordPress
  * @subpackage Administration
- * @since 6.4.0
+ * @since 6.5.0
  */
 
 /**
  * Gets the markup for the plugin install action button.
  *
- * @since 6.4.0
+ * @since 6.5.0
  *
  * @param string       $name           Plugin name.
  * @param array|object $data           {
@@ -26,6 +26,7 @@
  * @param bool         $compatible_php   The result of a PHP compatibility check.
  * @param bool         $compatible_wp    The result of a WP compatibility check.
  * @return string $button The markup for the dependency row button.
+ * phpcs:disable
  */
 function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible_wp ) {
 	$button           = '';
@@ -69,7 +70,7 @@ function wp_get_plugin_action_button( $name, $data, $compatible_php, $compatible
 		switch ( $status['status'] ) {
 			case 'install':
 				if ( $status['url'] ) {
-					if ( $compatible_php && $compatible_wp && $all_plugin_dependencies_installed ) {
+					if ( $compatible_php && $compatible_wp && $all_plugin_dependencies_installed && ! empty( $data->download_link ) ) {
 						$button = sprintf(
 							'<a class="install-now button" data-slug="%s" href="%s" aria-label="%s" data-name="%s">%s</a>',
 							esc_attr( $data->slug ),

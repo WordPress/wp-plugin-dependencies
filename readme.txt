@@ -4,10 +4,10 @@ Contributors: afragen, costdev, pbiron
 Description: Parses 'Requires Plugins' header, add plugin install dependencies tab, and information about dependencies.
 License: MIT
 Network: true
-Requires at least: 6.0
+Requires at least: 6.4
 Requires PHP: 7.0
-Tested up to: 6.3
-Stable tag: 2.0.2
+Tested up to: 6.4
+Stable tag: 3.0.0
 
 ## Description
 
@@ -41,6 +41,13 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 3.0.0 / 2023-10-06
+* override `WP_Plugins_List_Table` to add filter and restructuring of PR
+* convert to static class
+* update plugin card description for clarity
+* update Requires WP to 6.4 due to `wp_admin_notice()` use
+* many more updates to coincide with refactoring of PR
 
 #### 2.0.2 / 2023-08-18
 * add single file plugin to `$plugin_dirnames`
