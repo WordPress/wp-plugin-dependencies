@@ -1,5 +1,8 @@
 [unreleased]
 
+#### 3.0.1 / 2023-11-21
+* fix for multisite, too many `%s`
+
 #### 3.0.0 / 2023-10-06
 * override `WP_Plugins_List_Table` to add filter and restructuring of PR
 * convert to static class

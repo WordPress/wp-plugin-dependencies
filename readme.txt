@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.4
 Requires PHP: 7.0
 Tested up to: 6.4
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 
 ## Description
 
@@ -41,6 +41,9 @@ PRs should be made against the `develop` branch.
 4. Search page with dependencies
 
 ## Changelog
+
+#### 3.0.1 / 2023-11-21
+* fix for multisite, too many `%s`
 
 #### 3.0.0 / 2023-10-06
 * override `WP_Plugins_List_Table` to add filter and restructuring of PR
