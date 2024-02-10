@@ -11,6 +11,7 @@
 		<testsuite name="wp-plugin-dependencies">
 			<directory suffix=".php">./tests/</directory>
 			<exclude>./tests/test-sample.php</exclude>
+			<exclude>./tests/invalid</exclude>
 		</testsuite>
 	</testsuites>
 

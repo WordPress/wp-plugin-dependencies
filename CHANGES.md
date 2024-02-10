@@ -1,4 +1,6 @@
 [unreleased]
+#### 3.0.2 / 2024-02-09
+* update kill switch
 
 #### 3.0.1 / 2023-11-21
 * fix for multisite, too many `%s`
