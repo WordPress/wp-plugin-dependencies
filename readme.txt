@@ -7,7 +7,7 @@ Network: true
 Requires at least: 6.4
 Requires PHP: 7.0
 Tested up to: 6.4
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 
 ## Description
 
